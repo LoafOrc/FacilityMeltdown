@@ -75,9 +75,9 @@ namespace FacilityMeltdown {
         }
 
         void OnDestroy() {
-            logger.LogInfo("========== DEBUG");
-            var unlitHandler = new GameObject("UnlitModeHandler").AddComponent<UnlitModeHandler>();
-            DontDestroyOnLoad(unlitHandler);
+            //logger.LogInfo("========== DEBUG");
+            //var unlitHandler = new GameObject("UnlitModeHandler").AddComponent<UnlitModeHandler>();
+            //DontDestroyOnLoad(unlitHandler);
         }
 
         private static void AppratusIncrease() {

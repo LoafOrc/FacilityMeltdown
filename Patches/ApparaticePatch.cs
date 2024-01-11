@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading.Tasks;   
 using FacilityMeltdown.Util;
 using HarmonyLib;
 using Unity.Netcode;
@@ -27,7 +27,7 @@ namespace FacilityMeltdown.Patches {
 
                 MeltdownHandler handler = meltdown.AddComponent<MeltdownHandler>();
                 handler.causedBy = (int) __instance.playerHeldBy.playerClientId;
-            } catch(Exception ex) {
+            } catch(Exception ex) { 
                 MeltdownPlugin.logger.LogError(ex);
             }
         }

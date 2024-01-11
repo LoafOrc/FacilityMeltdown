@@ -24,6 +24,10 @@ target = "./plugins/FacilityMeltdown/FacilityMeltdown.dll"
 source = "./bin/Release/facilitymeltdown"
 target = "./plugins/FacilityMeltdown/facilitymeltdown"
 
+[[build.copy]]
+source = "./CHANGELOG.md"
+target = "./CHANGELOG.md"
+
 [publish]
 repository = "https://thunderstore.io"
 communities = [ "riskofrain2", ]

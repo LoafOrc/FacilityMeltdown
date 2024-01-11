@@ -13,4 +13,4 @@ Only the host needs to change their config as it is synced.
 [lethalconfig](https://thunderstore.io/c/lethal-company/p/AinaVT/LethalConfig/) or [lethalsettings](https://thunderstore.io/c/lethal-company/p/willis81808/LethalSettings/) will let you edit the settings in-game.
 
 ## Known Issues
-Known incompatibility with modded moon: Starlancer. Other modded moons may have issues as well.
+There has been previous reports of modded moons not playing well with this mod! As always go over to the [lethal company modding discord](https://discord.gg/lcmod) and I can try and take a look. There seems to be no problem with Lethal Level Loader or LECore so it could be map dependent. In which case I wil NOT be fixing it. I can not fix every modded moon in this mod otherwise I would get nothing done.
