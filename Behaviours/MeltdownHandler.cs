@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
+using FacilityMeltdown.Behaviours;
 using FacilityMeltdown.Util;
 using GameNetcodeStuff;
 using RuntimeNetcodeRPCValidator;
@@ -10,22 +12,20 @@ using UnityEngine.Rendering.HighDefinition;
 
 namespace FacilityMeltdown {
     public class MeltdownHandler : MonoBehaviour {
-        private AudioSource musicSource, warningSound, shockwaveSound;
+        PlayerControllerB player => GameNetworkManager.Instance.localPlayerController;
+
+        private AudioSource musicSource, warningSound;
         internal static MeltdownHandler Instance;
 
-        internal float meltdownTimer = 2 * 60, explosionTime = 0;
-        private float timeUntilNextWarning = 3, timeUntilNextShake = 10, timeUntilNextShockwave = 20, timeUntilMoreEffects = 15;
+        internal float meltdownTimer = 2 * 60;
         internal int causedBy;
 
-        private bool explosionOccured = false, radiationIncrease = false, shockwaveShookCamera = false;
-        LocalVolumetricFog explosionSmoke;
-        GameObject Shockwave;
-        private float explosionSize, shockwaveSize;
+        private bool radiationIncrease = false;
+        GameObject shockwave, explosion;
         List<GameObject> spawnedParticleEffects = new List<GameObject>();
 
         Vector3 effectOrigin;
 
-        Coroutine emergencyLightsCoroutine;
         DialogueSegment[] shipTakeOffDialogue = new DialogueSegment[] { 
             new DialogueSegment { bodyText = "The company has deemed the current levels of radiation too high." },
             new DialogueSegment { bodyText = "The company can not risk damaging it's equipment." }
@@ -45,17 +45,16 @@ namespace FacilityMeltdown {
             musicSource.loop = false;
             musicSource.Play();
 
-            shockwaveSound = gameObject.AddComponent<AudioSource>();
-            shockwaveSound.clip = Assets.shockwave;
-            shockwaveSound.spatialBlend = 0;
-            shockwaveSound.loop = false;
-
             warningSound = gameObject.AddComponent<AudioSource>();
             warningSound.spatialBlend = 0;
             warningSound.loop = false;
 
+            // Effect Handlers
+            StartCoroutine(EmergencyLights());
+            StartCoroutine(EffectSpawningHandler());
+            StartCoroutine(WarningAnnouncerHandler());
+            StartCoroutine(ShockwaveSpawningHandler());
 
-            emergencyLightsCoroutine = StartCoroutine(EmergencyLights());
             if (GameNetworkManager.Instance.localPlayerController.IsServer) {
                 List<EnemyVent> avaliableVents = new List<EnemyVent>();
                 for (int i = 0; i < RoundManager.Instance.allEnemyVents.Length; i++) {
@@ -64,7 +63,7 @@ namespace FacilityMeltdown {
                     }
                 }
                 avaliableVents.Shuffle();
-                for (int i = 0; i < Mathf.Min(MeltdownConfig.Instance.MONSTER_SPAWN_AMOUNT.Value, avaliableVents.Count); i++) {
+                for (int i = 0; i < Mathf.Min(MeltdownConfig.Instance.MONSTER_SPAWN_AMOUNT, avaliableVents.Count); i++) {
                     RoundManager.Instance.SpawnEnemyFromVent(avaliableVents[i]);
                 }
                 foreach (Turret turret in GameObject.FindObjectsOfType<Turret>()) {
@@ -95,10 +94,15 @@ namespace FacilityMeltdown {
                     bodyText = "2 MINUTES UNTIL CATASTRPOHIC NUCLEAR REACTOR EVENT"
                 }
             });
-            if (MeltdownConfig.Default.SCREEN_SHAKE.Value) {
+            if (MeltdownConfig.Default.CFG_SCREEN_SHAKE.Value) {
                 HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
                 HUDManager.Instance.ShakeCamera(ScreenShakeType.Long);
             }
+        }
+
+        Vector3 GetRandomPositionNearPlayer(float radius = 15f) {
+            Vector3 position = player.transform.position + (Random.insideUnitSphere * radius);
+            return RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(position, 10f, layerMask: -1, randomSeed: new System.Random());
         }
 
         Vector3 GetRandomPositionInsideFacility() {
@@ -120,20 +124,18 @@ namespace FacilityMeltdown {
 
 
         void CreateShockwave() {
-            if(Shockwave != null) Destroy(Shockwave);
+            if(shockwave != null) Destroy(shockwave);
 
-            Shockwave = Instantiate(Assets.shockwavePrefab);
-            Shockwave.transform.position = effectOrigin;
-            shockwaveShookCamera = false;
-            shockwaveSize = 0;
+            shockwave = Instantiate(Assets.shockwavePrefab);
+            shockwave.transform.position = effectOrigin;
+            shockwave.AddComponent<Shockwave>();
         }
         
         void OnDisable() { 
-            StopCoroutine(emergencyLightsCoroutine);
-            if(explosionSmoke != null)
-            Destroy(explosionSmoke.transform.parent.gameObject);
-            if(Shockwave != null)
-                Destroy(Shockwave);
+            if(explosion != null)
+                Destroy(explosion);
+            if(shockwave != null)
+                Destroy(shockwave);
             Instance = null;
 
             foreach(GameObject effect in spawnedParticleEffects) {
@@ -149,7 +151,7 @@ namespace FacilityMeltdown {
                 RoundManager.Instance.allPoweredLights[i].color = Color.red;
             }
 
-            while (!explosionOccured) {
+            while (!HasExplosionOccured()) {
                 for (int i = 0; i < RoundManager.Instance.allPoweredLightsAnimators.Count; i++) {
                     RoundManager.Instance.allPoweredLightsAnimators[i].SetBool("on", true);
                 }
@@ -167,105 +169,78 @@ namespace FacilityMeltdown {
         }
 
         void Update() {
-            PlayerControllerB player = GameNetworkManager.Instance.localPlayerController;
             StartOfRound shipManager = StartOfRound.Instance;
 
-            musicSource.volume = (float) MeltdownConfig.Default.MUSIC_VOLUME.Value / 100f;
-            warningSound.volume = (float) MeltdownConfig.Default.MUSIC_VOLUME.Value / 100f;
+            musicSource.volume = (float)MeltdownConfig.Default.CFG_MUSIC_VOLUME.Value / 100f;
+            warningSound.volume = (float)MeltdownConfig.Default.CFG_MUSIC_VOLUME.Value / 100f;
 
-            if(!player.isInsideFactory && !MeltdownConfig.Default.MUSIC_PLAYS_OUTSIDE.Value) {
-                musicSource.volume = 0;   
+            if (!player.isInsideFactory && !MeltdownConfig.Default.CFG_MUSIC_PLAYS_OUTSIDE.Value) {
+                musicSource.volume = 0;
                 warningSound.volume = 0;
             }
 
-            if(Shockwave != null) {
-                shockwaveSize += Time.deltaTime * 20;
-                Shockwave.transform.localScale = Vector3.one * shockwaveSize;
-            }
-
-            if(timeUntilNextShockwave <= 0) {
-                CreateShockwave();
-                timeUntilNextShockwave = Random.Range(20, 30);
-            }
-
-            if(!player.isInsideFactory && !shockwaveShookCamera && MeltdownConfig.Default.SCREEN_SHAKE.Value && Vector3.Distance(Shockwave.transform.position, player.transform.position) < shockwaveSize) {
-                HUDManager.Instance.ShakeCamera(ScreenShakeType.Big);
-                shockwaveSound.Play();
-                shockwaveShookCamera = true;
-            }
-
-            if (explosionOccured) {
-                explosionTime += Time.deltaTime * 10;
-                explosionSize = Mathf.Log(explosionTime) + 3 + 2*explosionTime;
-
-                if(explosionSmoke != null) {
-                    explosionSmoke.transform.parent.localScale = Vector3.one * explosionSize;
-                    explosionSmoke.parameters.size = Vector3.one * explosionSize * 1.25f;
-                }
-
-                if (player.isPlayerDead || (player.isInElevator && shipManager.shipIsLeaving)) return;
-                if (Vector3.Distance(explosionSmoke.transform.parent.position, player.transform.position) < explosionSize*.4f) {
-                    player.KillPlayer(Vector3.zero, false, CauseOfDeath.Blast);
-                }
-                 
-                return;
-            }
             meltdownTimer -= Time.deltaTime;
-            timeUntilNextWarning -= Time.deltaTime;
-            timeUntilNextShake -= Time.deltaTime;
-            timeUntilMoreEffects -= Time.deltaTime;
-            timeUntilNextShockwave -= Time.deltaTime;
 
-            if(timeUntilMoreEffects <= 0) {
-                for (int i = 0; i < Random.Range(5, 15); i++) { // todo: make this scale based on map size
-                    SpawnRandomEffect();
-                }
-                timeUntilMoreEffects = Random.Range(8f, 14f);
-            }
-
-            if(timeUntilNextWarning <= 0) {
-                PlayRandomWarningSound();
-                timeUntilNextWarning = Random.Range(10f, 17f); // TODO: Make this speed up towards the end. Maybe a quadratic?
-            }
-
-            if(meltdownTimer <= 60 && !radiationIncrease) {
+            if (meltdownTimer <= 60 && !radiationIncrease) {
                 radiationIncrease = true;
                 HUDManager.Instance.RadiationWarningHUD();
             }
 
-            if(meltdownTimer <= 3 && !shipManager.shipIsLeaving) {
-                shipManager.shipLeftAutomatically = true;
-                shipManager.shipIsLeaving = true;
-                StartCoroutine(shipTakeOff());
+            if (meltdownTimer <= 3 && !shipManager.shipIsLeaving) { 
+                StartCoroutine(ShipTakeOff());
             }
 
             if (meltdownTimer <= 0) {
-                explosionOccured = true;
-                timeUntilNextShockwave = 0;
-                if(player.isInsideFactory) {
-                    player.KillPlayer(Vector3.zero, false, CauseOfDeath.Blast);
-                }
-
                 musicSource.Stop();
                 warningSound.Stop();
 
-                if (MeltdownConfig.Default.SCREEN_SHAKE.Value) {
-                    HUDManager.Instance.ShakeCamera(ScreenShakeType.Small);
-                    HUDManager.Instance.ShakeCamera(ScreenShakeType.Big);
-                    HUDManager.Instance.ShakeCamera(ScreenShakeType.Long);
-                    HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
-                }
-
-                GameObject explosion = GameObject.Instantiate(Assets.facilityExplosionPrefab);
+                explosion = GameObject.Instantiate(Assets.facilityExplosionPrefab);
                 explosion.transform.position = effectOrigin;
-                explosionSmoke = explosion.GetComponentInChildren<LocalVolumetricFog>();
+            }
+        }
 
+        IEnumerator WarningAnnouncerHandler() {
+            yield return null;
+
+            while (!HasExplosionOccured()) {
+                AudioClip sound = Assets.warnings[Random.Range(0, Assets.warnings.Length)];
+                warningSound.clip = sound;
+                warningSound.Play();
+
+                yield return new WaitForSeconds(Random.Range(10f, 17f));
             }
 
-            if (timeUntilNextShake <= 0) {
-                if(GameNetworkManager.Instance.localPlayerController.isInsideFactory)
-                    GameObject.Instantiate(StartOfRound.Instance.explosionPrefab, GetRandomPositionInsideFacility(), Quaternion.Euler(-90f, 0f, 0f), RoundManager.Instance.mapPropsContainer.transform);
-                if (MeltdownConfig.Default.SCREEN_SHAKE.Value) {
+            yield break;
+        }
+
+        IEnumerator ShockwaveSpawningHandler() {
+            yield return null;
+
+            while (!HasExplosionOccured()) {
+                if (shockwave != null) Destroy(shockwave);
+
+                shockwave = Instantiate(Assets.shockwavePrefab);
+                shockwave.transform.position = effectOrigin;
+                shockwave.AddComponent<Shockwave>();
+
+
+                yield return new WaitForSeconds(Random.Range(20f, 30f));
+            }
+
+            yield break;
+        }
+
+        IEnumerator EffectSpawningHandler() {
+            yield return null;
+
+            while(!HasExplosionOccured()) {
+                for (int i = 0; i < Random.Range(5, 15); i++) { // todo: make this scale based on map size
+                    SpawnRandomEffect();
+                }
+
+                if (player.isInsideFactory)
+                    Instantiate(StartOfRound.Instance.explosionPrefab, GetRandomPositionNearPlayer(), Quaternion.Euler(-90f, 0f, 0f), RoundManager.Instance.mapPropsContainer.transform);
+                if (MeltdownConfig.Default.CFG_SCREEN_SHAKE.Value) {
                     if (meltdownTimer > 60) {
                         HUDManager.Instance.ShakeCamera(ScreenShakeType.Big);
                     } else {
@@ -273,12 +248,17 @@ namespace FacilityMeltdown {
                     }
                 }
 
-                timeUntilNextShake = Random.Range(6f, 10f);
+                yield return new WaitForSeconds(Random.Range(8f, 14f));
             }
+
+            yield break;
         }
 
-        IEnumerator shipTakeOff() {
+        IEnumerator ShipTakeOff() {
             StartOfRound shipManager = StartOfRound.Instance;
+            shipManager.shipLeftAutomatically = true;
+            shipManager.shipIsLeaving = true;
+
             HUDManager.Instance.ReadDialogue(shipTakeOffDialogue);
 
             yield return new WaitForSeconds(3f); // Wait for explosion
@@ -304,13 +284,7 @@ namespace FacilityMeltdown {
         }
 
         public bool HasExplosionOccured() {
-            return explosionOccured;
-        }
-
-        void PlayRandomWarningSound() {
-            AudioClip sound = Assets.warnings[Random.Range(0, Assets.warnings.Length)];
-            warningSound.clip = sound;
-            warningSound.Play();
+            return explosion != null;
         }
     }
 }

@@ -18,8 +18,8 @@ namespace FacilityMeltdown.Patches {
 
             // We just took it out
             try { // make sure to surround in try catch because this is a prefix
-                if(MeltdownConfig.Instance.OVERRIDE_APPARATUS_VALUE.Value)
-                    __instance.scrapValue = MeltdownConfig.Instance.APPARATUS_VALUE.Value;
+                if(MeltdownConfig.Instance.OVERRIDE_APPARATUS_VALUE)
+                    __instance.scrapValue = MeltdownConfig.Instance.APPARATUS_VALUE;
                 GameObject meltdown = new GameObject();
 
                 SceneManager.MoveGameObjectToScene(meltdown, SceneManager.GetSceneByName(RoundManager.Instance.currentLevel.sceneName));
@@ -40,8 +40,8 @@ namespace FacilityMeltdown.Patches {
             if (!__instance.isInElevator) return;
             // it is inside of the ship
 
-            if (MeltdownConfig.Instance.OVERRIDE_APPARATUS_VALUE.Value)
-                __instance.scrapValue = MeltdownConfig.Instance.APPARATUS_VALUE.Value;
+            if (MeltdownConfig.Instance.OVERRIDE_APPARATUS_VALUE)
+                __instance.scrapValue = MeltdownConfig.Instance.APPARATUS_VALUE;
             ___isLungDocked = false; // fix joining late
         }
     }

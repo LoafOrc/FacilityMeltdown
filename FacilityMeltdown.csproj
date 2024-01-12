@@ -24,7 +24,7 @@
   </Target>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
+    <DebugType>portable</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
@@ -139,6 +139,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Behaviours\FacilityExplosionHandler.cs" />
+    <Compile Include="Behaviours\Shockwave.cs" />
     <Compile Include="Networking\SyncedInstance.cs" />
     <Compile Include="Util\Assets.cs" />
     <Compile Include="Util\MeltdownConfig.cs" />
@@ -146,7 +148,7 @@
     <Compile Include="Behaviours\MeltdownHandler.cs" />
     <Compile Include="Patches\ApparaticePatch.cs" />
     <Compile Include="Patches\EntranceTeleportPatch.cs" />
-    <Compile Include="Patches\RoundManagerPatch.cs" />
+    <Compile Include="Patches\StartOfRoundPatches.cs" />
     <Compile Include="MeltdownPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\UnlitModeHandler.cs" />
@@ -166,8 +168,16 @@
     </PropertyGroup>
     <Error Condition="!Exists('packages\BepInEx.AssemblyPublicizer.MSBuild.0.4.1\build\BepInEx.AssemblyPublicizer.MSBuild.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\BepInEx.AssemblyPublicizer.MSBuild.0.4.1\build\BepInEx.AssemblyPublicizer.MSBuild.props'))" />
   </Target>
-  <PropertyGroup>
-    <PostBuildEvent>cd D:\LethalCompanyMods\netcodepatcher
-NetcodePatcher.dll $(TargetDir) deps/</PostBuildEvent>
-  </PropertyGroup>
+  <Target Name="NetcodePatcher" AfterTargets="Build">
+    <Message Importance="high" Text="Doing Netcode Patcher stuff." />
+    <Exec Command="cd D:\LethalCompanyMods\netcodepatcher\&#xD;&#xA;NetcodePatcher.dll $(TargetDir) deps\" />
+  </Target>
+  <Target Name="PackThunderstore" AfterTargets="NetcodePatcher" Condition="'$(Configuration)' == 'Release'">
+    <Message Importance="high" Text="Building Thunderstore Package" />
+    <Exec Command="tcli build" />
+  </Target>
+  <Target Name="CopyToDebugProfile" AfterTargets="NetcodePatcher" Condition="'$(Configuration)' == 'Debug'">
+    <Message Importance="high" Text="Copying to debug r2modman profile." />
+    <Copy SourceFiles="$(TargetDir)FacilityMeltdown.dll;$(TargetDir)facilitymeltdown" DestinationFolder="C:\Users\rixon\AppData\Roaming\r2modmanPlus-local\LethalCompany\profiles\testing\BepInEx\plugins" />
+  </Target>
 </Project>

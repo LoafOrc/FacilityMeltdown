@@ -17,32 +17,44 @@ using Unity.Netcode;
 using RuntimeNetcodeRPCValidator;
 using GameNetcodeStuff;
 using HarmonyLib;
+using System.Runtime.Serialization;
 
 namespace FacilityMeltdown.Util {
     [Serializable]
     internal class MeltdownConfig : SyncedInstance<MeltdownConfig> {
-        internal ConfigEntry<int> MONSTER_SPAWN_AMOUNT;
-        internal ConfigEntry<int> APPARATUS_VALUE;
+        [NonSerialized]
+        private ConfigEntry<int> CFG_MONSTER_SPAWN_AMOUNT, CFG_APPARATUS_VALUE;
 
-        internal ConfigEntry<bool> OVERRIDE_APPARATUS_VALUE;
+        [NonSerialized]
+        private ConfigEntry<bool> CFG_OVERRIDE_APPARATUS_VALUE;
 
-        internal ConfigEntry<float> MUSIC_VOLUME;
-        internal ConfigEntry<bool> SCREEN_SHAKE;
-        internal ConfigEntry<bool> MUSIC_PLAYS_OUTSIDE;
+        [NonSerialized]
+        internal ConfigEntry<float> CFG_MUSIC_VOLUME;
+        [NonSerialized]
+        internal ConfigEntry<bool> CFG_SCREEN_SHAKE, CFG_MUSIC_PLAYS_OUTSIDE;
 
+        [DataMember]
         private string MOD_VERSION = MeltdownPlugin.modVersion;
+
+        [DataMember]
+        internal int MONSTER_SPAWN_AMOUNT, APPARATUS_VALUE;
+        [DataMember]
+        internal bool OVERRIDE_APPARATUS_VALUE;
 
         internal MeltdownConfig(ConfigFile file) {
             MeltdownPlugin.logger.LogInfo("Setting up config...");
             InitInstance(this);         
 
-            OVERRIDE_APPARATUS_VALUE = file.Bind("GameBalance", "OverrideAppartusValue", true, "Whether or not FacilityMeltdown should override appartus value. Only use for compatibility reasons");
-            APPARATUS_VALUE = file.Bind("GameBalance", "AppartusValue", 240, "What the value of the appartus should be set as IF override appartus value is `true`");
-            MONSTER_SPAWN_AMOUNT = file.Bind("GameBalance", "MonsterSpawnAmount", 5, "How many monsters should spawn during the meltdown sequence? Set to 0 to disable.");
+            CFG_OVERRIDE_APPARATUS_VALUE = file.Bind("GameBalance", "OverrideAppartusValue", true, "Whether or not FacilityMeltdown should override appartus value. Only use for compatibility reasons");
+            OVERRIDE_APPARATUS_VALUE = CFG_OVERRIDE_APPARATUS_VALUE.Value;
+            CFG_APPARATUS_VALUE = file.Bind("GameBalance", "AppartusValue", 240, "What the value of the appartus should be set as IF override appartus value is `true`");
+            APPARATUS_VALUE = CFG_APPARATUS_VALUE.Value;
+            CFG_MONSTER_SPAWN_AMOUNT = file.Bind("GameBalance", "MonsterSpawnAmount", 5, "How many monsters should spawn during the meltdown sequence? Set to 0 to disable.");
+            MONSTER_SPAWN_AMOUNT = CFG_MONSTER_SPAWN_AMOUNT.Value;
 
-            MUSIC_VOLUME = file.Bind("Audio", "MusicVolume", 100f, "What volume the music plays at. Should be between 0 and 100");
-            MUSIC_PLAYS_OUTSIDE = file.Bind("Audio", "MusicPlaysOutside", true, "Does the music play outside the facility?");
-            SCREEN_SHAKE = file.Bind("Visuals", "ScreenShake", true, "Whether or not to shake the screen during the meltdown sequence.");
+            CFG_MUSIC_VOLUME = file.Bind("Audio", "MusicVolume", 100f, "What volume the music plays at. Should be between 0 and 100");
+            CFG_MUSIC_PLAYS_OUTSIDE = file.Bind("Audio", "MusicPlaysOutside", true, "Does the music play outside the facility?");
+            CFG_SCREEN_SHAKE = file.Bind("Visuals", "ScreenShake", true, "Whether or not to shake the screen during the meltdown sequence.");
         }
         public static void RequestSync() {
             if (!IsClient) return;
@@ -101,9 +113,9 @@ namespace FacilityMeltdown.Util {
 
             LethalConfigManager.SetModDescription("Maybe taking the appartus isn't such a great idea...");
 
-            LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(OVERRIDE_APPARATUS_VALUE, false));
+            LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(CFG_OVERRIDE_APPARATUS_VALUE, false));
             LethalConfigManager.AddConfigItem(new IntSliderConfigItem(
-                APPARATUS_VALUE,
+                CFG_APPARATUS_VALUE,
                 new IntSliderOptions {
                     Min = 80,
                     Max = 500,
@@ -111,7 +123,7 @@ namespace FacilityMeltdown.Util {
                 }
             ));
             LethalConfigManager.AddConfigItem(new IntSliderConfigItem(
-                MONSTER_SPAWN_AMOUNT,
+                CFG_MONSTER_SPAWN_AMOUNT,
                 new IntSliderOptions {
                     Min = 0,
                     Max = 10,
@@ -120,7 +132,7 @@ namespace FacilityMeltdown.Util {
             ));
 
             LethalConfigManager.AddConfigItem(new FloatStepSliderConfigItem(
-                MUSIC_VOLUME,
+                CFG_MUSIC_VOLUME,
                 new FloatStepSliderOptions() {
                     Min = 0,
                     Max = 100,
@@ -128,21 +140,21 @@ namespace FacilityMeltdown.Util {
                     RequiresRestart = false
                 }
             ));
-            LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(MUSIC_PLAYS_OUTSIDE, false));
+            LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(CFG_MUSIC_PLAYS_OUTSIDE, false));
 
-            LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(SCREEN_SHAKE, false));
+            LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(CFG_SCREEN_SHAKE, false));
         }
 
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         internal void InitLethalSettings() {
             SliderComponent appratusValueSlider = new SliderComponent {
-                Value = APPARATUS_VALUE.Value,
+                Value = CFG_APPARATUS_VALUE.Value,
                 MinValue = 80,
                 MaxValue = 500,
                 WholeNumbers = true,
                 Text = "Appartus Value",
-                Enabled = OVERRIDE_APPARATUS_VALUE.Value,
-                OnValueChanged = (self, value) => APPARATUS_VALUE.Value = (int) value
+                Enabled = CFG_OVERRIDE_APPARATUS_VALUE.Value,
+                OnValueChanged = (self, value) => { CFG_APPARATUS_VALUE.Value = (int)value; Default.APPARATUS_VALUE = (int)value; }
             };
 
             ModMenu.RegisterMod(new ModMenu.ModSettingsConfig {
@@ -156,44 +168,45 @@ namespace FacilityMeltdown.Util {
                     },
                     new ToggleComponent {
                         Text = "Override Appartus Value?",
-                        Value = OVERRIDE_APPARATUS_VALUE.Value,
+                        Value = CFG_OVERRIDE_APPARATUS_VALUE.Value,
                         OnValueChanged = (self, value) => {
-                            OVERRIDE_APPARATUS_VALUE.Value = value;
+                            CFG_OVERRIDE_APPARATUS_VALUE.Value = value;
+                            OVERRIDE_APPARATUS_VALUE = value;
                             appratusValueSlider.Enabled = value;
                         }
                     },
                     appratusValueSlider,
                     new SliderComponent {
-                        Value = MONSTER_SPAWN_AMOUNT.Value,
+                        Value = CFG_MONSTER_SPAWN_AMOUNT.Value,
                         MinValue = 0,
                         MaxValue = 10,
                         WholeNumbers = true,
                         Text = "Monster Spawn Amount",
-                        OnValueChanged = (self, value) => MONSTER_SPAWN_AMOUNT.Value = (int) value
+                        OnValueChanged = (self, value) => { CFG_MONSTER_SPAWN_AMOUNT.Value = (int)value; Default.MONSTER_SPAWN_AMOUNT = (int)value; }
                     },
                     new LabelComponent {
                         Text = "Audio Settings"
                     },
                     new SliderComponent {
-                        Value = MUSIC_VOLUME.Value,
+                        Value = CFG_MUSIC_VOLUME.Value,
                         MinValue = 0,
                         MaxValue = 100,
                         WholeNumbers = true,
                         Text = "Music Volume",
-                        OnValueChanged = (self, value) => MUSIC_VOLUME.Value = (int) value
+                        OnValueChanged = (self, value) => CFG_MUSIC_VOLUME.Value = (int) value
                     },
                     new ToggleComponent {
                         Text = "Play Music Outside?",
-                        Value = MUSIC_PLAYS_OUTSIDE.Value,
-                        OnValueChanged = (self, value) => MUSIC_PLAYS_OUTSIDE.Value = value
+                        Value = CFG_MUSIC_PLAYS_OUTSIDE.Value,
+                        OnValueChanged = (self, value) => CFG_MUSIC_PLAYS_OUTSIDE.Value = value
                     },
                     new LabelComponent {
                         Text = "Visual Settings"
                     },
                     new ToggleComponent {
                         Text = "Screen Shake",
-                        Value = SCREEN_SHAKE.Value,
-                        OnValueChanged = (self, value) => SCREEN_SHAKE.Value = value
+                        Value = CFG_SCREEN_SHAKE.Value,
+                        OnValueChanged = (self, value) => CFG_SCREEN_SHAKE.Value = value
                     },
                 }
             });

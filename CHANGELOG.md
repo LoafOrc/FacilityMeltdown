@@ -4,3 +4,6 @@
 - Fixed an issue where leaving before the explosion occured caused shockwaves to not be destroyed.
 - *Hopefully* fixed modded moons not working.
 - Mod is also much more resistant to errors occuring
+
+### v1.2.1 Hotfix
+- Fixed config syncing not working and producing an error longer than a highschool essay
