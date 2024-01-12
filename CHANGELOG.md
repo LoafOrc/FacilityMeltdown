@@ -7,3 +7,8 @@
 
 ### v1.2.1 Hotfix
 - Fixed config syncing not working and producing an error longer than a highschool essay
+
+### v1.2.2 Patch
+- Fixed explosion fireball particles not rendering correctly
+- Did a *small, tiny* major rewrite of the meltdown handler
+- Expose an API so other mods can add their own effects on custom modded moons.

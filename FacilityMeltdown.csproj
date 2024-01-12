@@ -139,8 +139,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\MeltdownSequenceEffect.cs" />
     <Compile Include="Behaviours\FacilityExplosionHandler.cs" />
     <Compile Include="Behaviours\Shockwave.cs" />
+    <Compile Include="Effects\InsideFacilityParticleEffects.cs" />
+    <Compile Include="Effects\EmergencyLightsEffect.cs" />
+    <Compile Include="Effects\ShockwaveSpawner.cs" />
+    <Compile Include="Effects\WarningAnnouncerEffect.cs" />
     <Compile Include="Networking\SyncedInstance.cs" />
     <Compile Include="Util\Assets.cs" />
     <Compile Include="Util\MeltdownConfig.cs" />

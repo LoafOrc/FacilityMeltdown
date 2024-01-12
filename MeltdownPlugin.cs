@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using BepInEx;
 using BepInEx.Logging;
+using FacilityMeltdown.Effects;
 using FacilityMeltdown.Patches;
 using FacilityMeltdown.Util;
 using HarmonyLib;
@@ -70,6 +72,11 @@ namespace FacilityMeltdown {
             harmony.PatchAll(typeof(StartOfRoundPatches));
             harmony.PatchAll(typeof(MeltdownConfig));
 
+            logger.LogInfo("Using own API to register sequence effects.");
+            new EmergencyLightsEffect();
+            new InsideFacilityParticleEffects();
+            new ShockwaveSpawner();
+            new WarningAnnouncerEffect();
 
             logger.LogInfo(modName + ":" + modVersion + " has succesfully loaded!");
         }

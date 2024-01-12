@@ -13,7 +13,6 @@ namespace FacilityMeltdown.Behaviours {
         PlayerControllerB player => GameNetworkManager.Instance.localPlayerController;
         float size, time;
 
-
         LocalVolumetricFog internalFog;
 
         void Awake() {

@@ -14,3 +14,33 @@ Only the host needs to change their config as it is synced.
 
 ## Known Issues
 There has been previous reports of modded moons not playing well with this mod! As always go over to the [lethal company modding discord](https://discord.gg/lcmod) and I can try and take a look. There seems to be no problem with Lethal Level Loader or LECore so it could be map dependent. In which case I wil NOT be fixing it. I can not fix every modded moon in this mod otherwise I would get nothing done.
+
+## For Modders
+If you are a modder and you want to add custom effects in general or for your specific moon you can add a refernce to the dll and extend the MeltdownSequenceEffect class. Example:
+```cs
+internal class EmergencyLightsEffect : MeltdownSequenceEffect {
+    public EmergencyLightsEffect() : base(MeltdownPlugin.modGUID, "EmergencyLights") {}
+
+    public override IEnumerator Play(float timeLeftUntilMeltdown) {
+        for (int i = 0; i < RoundManager.Instance.allPoweredLightsAnimators.Count; i++) {
+            RoundManager.Instance.allPoweredLightsAnimators[i].SetBool("on", true);
+        }
+
+        yield return new WaitForSeconds(2f);
+
+        for (int i = 0; i < RoundManager.Instance.allPoweredLightsAnimators.Count; i++) {
+            RoundManager.Instance.allPoweredLightsAnimators[i].SetBool("on", false);
+        }
+
+        yield return new WaitForSeconds(5f);
+        yield break;
+    }
+}
+```
+Then register it by creating an instance in your plugins Awake `new EmergencyLightsEffect()`.
+### Available methods to override
+void Start -> Called the moment the appartice is taken out
+IEnumerator Play -> Called either once (if .IsOneShot is true) or repeatedly until the exposion happens, or the ship leaves
+IEnumerator Stop -> Called when the explosion happens or .Playing is set to False in .Play
+void Cleanup -> Called when the ship leaves
+bool IsEnabledOnThisMoon -> return true if this effect should play on this moon
