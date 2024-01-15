@@ -1,5 +1,45 @@
-.vs/**
-bin/**
-build/**
-obj/**
-packages/**
+# Exclude everything
+/*
+
+# Specific includes
+
+## Editorconfig
+!.editorconfig
+
+## Docs
+!Docs/
+
+## Assets
+!assets/
+
+## Build System/Scripts
+!/.config/
+!NuGet.Config
+!Directory.Build.props
+!build.sh
+!build.ps1
+!build.cmd
+
+## Markdowns
+!*.md
+!LICENSE
+
+## important Git files
+!.gitmodules
+!.gitignore
+!.gitattributes
+!.git-blame-ignore-revs
+
+## GitHub specific
+!.github/
+
+## Solution
+!FacilityMeltdown.sln
+
+### Enhancer
+!/FacilityMeltdown
+/FacilityMeltdown/[Bb]in
+/FacilityMeltdown/[Oo]bj
+
+# Explicit exceptions/ignores
+**.user
