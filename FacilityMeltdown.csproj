@@ -75,6 +75,9 @@
     <Reference Include="LethalConfig">
       <HintPath>Dependencies\LethalConfig.dll</HintPath>
     </Reference>
+    <Reference Include="LethalLib">
+      <HintPath>Dependencies\LethalLib.dll</HintPath>
+    </Reference>
     <Reference Include="LethalSettings">
       <HintPath>Dependencies\LethalSettings.dll</HintPath>
     </Reference>
@@ -226,7 +229,7 @@
       <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Lethal Company\Lethal Company_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Lethal Company\Lethal Company_Data\Managed\UnityEngine.UI.dll</HintPath>
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Lethal Company\Lethal Company_Data\Managed\UnityEngine.UI.dll</HintPath>
     </Reference>
     <Reference Include="UniverseLib.Mono, Version=1.5.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\UniverseLib.Mono.1.5.1\lib\net35\UniverseLib.Mono.dll</HintPath>
@@ -269,18 +272,32 @@
     <Error Condition="!Exists('packages\Microsoft.VisualStudio.Setup.Configuration.Interop.3.2.2146\build\Microsoft.VisualStudio.Setup.Configuration.Interop.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.VisualStudio.Setup.Configuration.Interop.3.2.2146\build\Microsoft.VisualStudio.Setup.Configuration.Interop.targets'))" />
     <Error Condition="!Exists('packages\Evaisa.NetcodePatcher.MSBuild.3.3.4\build\Evaisa.NetcodePatcher.MSBuild.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Evaisa.NetcodePatcher.MSBuild.3.3.4\build\Evaisa.NetcodePatcher.MSBuild.props'))" />
   </Target>
+
+	<Target Name="GetLatestAssetBundle" BeforeTargets="Build">
+		<Message Importance="high" Text="Getting Asset Bundle" />
+		<Copy SourceFiles="D:\LethalCompanyMods\LethalCompanyUnity\AssetBundles\StandaloneWindows\facilitymeltdown" DestinationFolder="$(ProjectDir)" />
+	</Target>
   <Target Name="NetcodePatcher" AfterTargets="Build">
     <Message Importance="high" Text="Doing Netcode Patcher stuff." />
-	  <NetcodePatch Include="$(TargetPath)" />
-	  <!--
-    <Exec Command="dotnet netcode-patch &quot;$(TargetPath)&quot; @(ReferencePathWithRefAssemblies->'&quot;%(Identity)&quot;', ' ')" />
+    <!--
+    <NetcodePatch Include="$(TargetPath)" />
     -->
+    <Exec Command="dotnet netcode-patch &quot;$(TargetPath)&quot; @(ReferencePathWithRefAssemblies->'&quot;%(Identity)&quot;', ' ')" />
   </Target>
+	<Target Name="GetLatestAssetBundleHackFix" AfterTargets="NetcodePatcher"> <!-- huh? -->
+		<Message Importance="high" Text="Getting Asset Bundle" />
+		<Copy SourceFiles="D:\LethalCompanyMods\LethalCompanyUnity\AssetBundles\StandaloneWindows\facilitymeltdown" DestinationFolder="$(TargetDir)" />
+	</Target>
   <Target Name="PackThunderstore" AfterTargets="NetcodePatcher" Condition="'$(Configuration)' == 'Release'">
     <Message Importance="high" Text="Building Thunderstore Package" />
     <Exec Command="tcli build" />
   </Target>
-  <Target Name="CopyToDebugProfile" AfterTargets="NetcodePatcher" Condition="'$(Configuration)' == 'Debug'">
+	
+  <Target Name="CopyToUnity" AfterTargets="GetLatestAssetBundleHackFix">
+    <Message Importance="high" Text="Copying to unity project." />
+    <Copy SourceFiles="$(TargetDir)FacilityMeltdown.dll" DestinationFolder="D:\LethalCompanyMods\LethalCompanyUnity\Assets\FacilityMeltdown\" />
+  </Target>
+  <Target Name="CopyToDebugProfile" AfterTargets="GetLatestAssetBundleHackFix" Condition="'$(Configuration)' == 'Debug'">
     <Message Importance="high" Text="Copying to debug r2modman profile." />
     <Copy SourceFiles="$(TargetDir)FacilityMeltdown.dll;$(TargetDir)facilitymeltdown" DestinationFolder="C:\Program Files (x86)\Steam\steamapps\common\Lethal Company\BepInEx\plugins\" />
   </Target>

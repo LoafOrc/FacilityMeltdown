@@ -11,14 +11,15 @@ using HarmonyLib;
 using LethalConfig;
 using LethalConfig.ConfigItems;
 using LethalConfig.ConfigItems.Options;
+using LethalLib.Modules;
 using RuntimeNetcodeRPCValidator;
-using Unity.Netcode;
 using UnityEngine;
 
 namespace FacilityMeltdown {
     [BepInPlugin(modGUID, modName, modVersion)]
     [BepInDependency("ainavt.lc.lethalconfig", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.willis.lc.lethalsettings", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency(LethalLib.Plugin.ModGUID)]
     public class MeltdownPlugin : BaseUnityPlugin {
         internal const string modGUID = "me.loaforc.facilitymeltdown";
         internal const string modName = "FacilityMeltdown";
@@ -34,6 +35,8 @@ namespace FacilityMeltdown {
             if (instance == null) instance = this; // Signleton
             else return; // Make sure nothing else gets loaded.
             logger = BepInEx.Logging.Logger.CreateLogSource(modGUID);
+            logger.LogInfo("Initalising assets...");
+            Assets.Init();
 
             logger.LogInfo("Doing networky stuff");
             var types = Assembly.GetExecutingAssembly().GetTypes();
@@ -52,6 +55,7 @@ namespace FacilityMeltdown {
                 logger.LogWarning("Caught exception: " + e);
                 logger.LogWarning("why does this not work");
             }
+            NetworkPrefabs.RegisterNetworkPrefab(Assets.meltdownHandlerPrefab);
 
             meltdownConfig = new MeltdownConfig(Config);
 
@@ -63,8 +67,6 @@ namespace FacilityMeltdown {
                 meltdownConfig.InitLethalSettings();
             }
 
-            logger.LogInfo("Initalising assets...");
-            Assets.Init();
 
             logger.LogInfo("Applying patches.");
             harmony.PatchAll(typeof(ApparaticePatch));

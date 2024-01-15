@@ -15,7 +15,7 @@ namespace FacilityMeltdown {
 
         internal static AudioClip[] warnings;
         internal static AudioClip music, shockwave;
-        internal static GameObject facilityExplosionPrefab, shockwavePrefab;
+        internal static GameObject facilityExplosionPrefab, meltdownHandlerPrefab, shockwavePrefab;
         internal static GameObject[] facilityEffects;
         public static void Init() {
             assetBundle = AssetBundle.LoadFromFile(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "facilitymeltdown"));
@@ -31,6 +31,7 @@ namespace FacilityMeltdown {
             shockwave = assetBundle.LoadAsset<AudioClip>("shockwave.mp3");
 
             facilityExplosionPrefab = assetBundle.LoadAsset<GameObject>("FacilityExplosion.prefab");
+            meltdownHandlerPrefab = assetBundle.LoadAsset<GameObject>("MeltdownHandler.prefab");
             shockwavePrefab = assetBundle.LoadAsset<GameObject>("Shockwave.prefab");
 
             facilityEffects = new GameObject[] {

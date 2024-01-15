@@ -26,7 +26,7 @@ namespace FacilityMeltdown.Util {
         private ConfigEntry<int> CFG_MONSTER_SPAWN_AMOUNT, CFG_APPARATUS_VALUE;
 
         [NonSerialized]
-        private ConfigEntry<bool> CFG_OVERRIDE_APPARATUS_VALUE, CFG_FLASHING_LIGHTS;
+        private ConfigEntry<bool> CFG_OVERRIDE_APPARATUS_VALUE, CFG_EMERGENCY_LIGHTS;
 
         [NonSerialized]
         internal ConfigEntry<float> CFG_MUSIC_VOLUME;
@@ -39,7 +39,7 @@ namespace FacilityMeltdown.Util {
         [DataMember]
         internal int MONSTER_SPAWN_AMOUNT, APPARATUS_VALUE;
         [DataMember]
-        internal bool OVERRIDE_APPARATUS_VALUE, FLASHING_LIGHTS;
+        internal bool OVERRIDE_APPARATUS_VALUE, EMERGENCY_LIGHTS;
 
         internal MeltdownConfig(ConfigFile file) {
             MeltdownPlugin.logger.LogInfo("Setting up config...");
@@ -51,8 +51,8 @@ namespace FacilityMeltdown.Util {
             APPARATUS_VALUE = CFG_APPARATUS_VALUE.Value;
             CFG_MONSTER_SPAWN_AMOUNT = file.Bind("GameBalance", "MonsterSpawnAmount", 5, "How many monsters should spawn during the meltdown sequence? Set to 0 to disable.");
             MONSTER_SPAWN_AMOUNT = CFG_MONSTER_SPAWN_AMOUNT.Value;
-            CFG_FLASHING_LIGHTS = file.Bind("GameBalance", "FlashingLights", true, "Should the lights turn on periodically? Disabling this option makes them permanently off. (Matches Vanilla Behaviour)");
-            FLASHING_LIGHTS = CFG_FLASHING_LIGHTS.Value;
+            CFG_EMERGENCY_LIGHTS = file.Bind("GameBalance", "EmergencyLights", true, "Should the lights turn on periodically? Disabling this option makes them permanently off. (Matches Vanilla Behaviour)");
+            EMERGENCY_LIGHTS = CFG_EMERGENCY_LIGHTS.Value;
 
             CFG_MUSIC_VOLUME = file.Bind("Audio", "MusicVolume", 100f, "What volume the music plays at. Should be between 0 and 100");
             CFG_MUSIC_PLAYS_OUTSIDE = file.Bind("Audio", "MusicPlaysOutside", true, "Does the music play outside the facility?");
@@ -134,7 +134,7 @@ namespace FacilityMeltdown.Util {
                 }
             ));
 
-            LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(CFG_FLASHING_LIGHTS, false));
+            LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(CFG_EMERGENCY_LIGHTS, false));
 
             LethalConfigManager.AddConfigItem(new FloatStepSliderConfigItem(
                 CFG_MUSIC_VOLUME,
@@ -191,11 +191,11 @@ namespace FacilityMeltdown.Util {
                         OnValueChanged = (self, value) => { CFG_MONSTER_SPAWN_AMOUNT.Value = (int)value; Default.MONSTER_SPAWN_AMOUNT = (int)value; }
                     },
                     new ToggleComponent {
-                        Text = "Lights turn on periodically?",
-                        Value = CFG_FLASHING_LIGHTS.Value,
+                        Text = "Facility has Emergency Lights?",
+                        Value = CFG_EMERGENCY_LIGHTS.Value,
                         OnValueChanged = (self, value) => {
-                            CFG_FLASHING_LIGHTS.Value = value;
-                            FLASHING_LIGHTS = value;
+                            CFG_EMERGENCY_LIGHTS.Value = value;
+                            EMERGENCY_LIGHTS = value;
                         }
                     },
                     new LabelComponent {

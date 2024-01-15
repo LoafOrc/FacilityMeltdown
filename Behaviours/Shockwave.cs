@@ -25,7 +25,7 @@ namespace FacilityMeltdown.Behaviours {
             PlayerControllerB player = GameNetworkManager.Instance.localPlayerController;
 
 
-            size += Time.deltaTime * 20;
+            size += Time.deltaTime * 50;
             transform.localScale = Vector3.one * size;
 
             if(player.isInsideFactory) {

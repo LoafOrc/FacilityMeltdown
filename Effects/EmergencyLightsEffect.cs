@@ -34,7 +34,7 @@ namespace FacilityMeltdown.Effects {
         }
 
         public override bool IsEnabledOnThisMoon(SelectableLevel level) {
-            return MeltdownConfig.Instance.FLASHING_LIGHTS;
+            return MeltdownConfig.Instance.EMERGENCY_LIGHTS;
         }
     }
 }

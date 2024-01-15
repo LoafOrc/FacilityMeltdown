@@ -13,3 +13,4 @@ C:\Users\rixon\Documents\LethalCompanyModding\FacilityMeltdown\obj\Release\Facil
 C:\Users\rixon\Documents\LethalCompanyModding\FacilityMeltdown\obj\Release\FacilityMeltdown.dll
 C:\Users\rixon\Documents\LethalCompanyModding\FacilityMeltdown\obj\Release\FacilityMeltdown.pdb
 C:\Users\rixon\Documents\LethalCompanyModding\FacilityMeltdown\bin\Release\FacilityMeltdown.dll.config
+D:\LethalCompanyMods\FacilityMeltdown\bin\Release\FacilityMeltdown.dll.config

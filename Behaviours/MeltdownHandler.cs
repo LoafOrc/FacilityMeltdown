@@ -13,14 +13,13 @@ using UnityEngine.AI;
 using UnityEngine.Rendering.HighDefinition;
 
 namespace FacilityMeltdown {
-    public class MeltdownHandler : MonoBehaviour {
+    public class MeltdownHandler : NetworkBehaviour {
         static PlayerControllerB Player => GameNetworkManager.Instance.localPlayerController;
 
         private AudioSource musicSource;
         internal static MeltdownHandler Instance;
 
         internal float meltdownTimer = 2 * 60;
-        internal int causedBy;
 
         private bool radiationIncrease = false;
         GameObject explosion;
@@ -75,9 +74,6 @@ namespace FacilityMeltdown {
                 avaliableVents.Shuffle();
                 for (int i = 0; i < Mathf.Min(MeltdownConfig.Instance.MONSTER_SPAWN_AMOUNT, avaliableVents.Count); i++) {
                     RoundManager.Instance.SpawnEnemyFromVent(avaliableVents[i]);
-                }
-                foreach (Turret turret in GameObject.FindObjectsOfType<Turret>()) {
-                    turret.EnterBerserkModeServerRpc(causedBy);
                 }
             }
 

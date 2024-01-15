@@ -27,7 +27,9 @@ namespace FacilityMeltdown.Effects {
             warningAudioSource.clip = sound;
             warningAudioSource.Play();
 
-            yield return new WaitForSeconds(Random.Range(10f, 17f));
+            yield return new WaitForSeconds(warningAudioSource.clip.length);
+
+            yield return new WaitForSeconds(Random.Range(5f, 10f));
         }
 
         public override IEnumerator Stop() {
