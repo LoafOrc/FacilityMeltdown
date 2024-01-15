@@ -10,6 +10,8 @@
     <Product>FacilityMeltdown</Product>
     <Description>Maybe taking the apparatus out isn't such a great idea...</Description>
 
+    <PackageId>LoafOrc.FacilityMeltdown</PackageId>
+
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
 
