@@ -32,5 +32,9 @@ namespace FacilityMeltdown.Effects {
             yield return new WaitForSeconds(5f);
             yield break;
         }
+
+        public override bool IsEnabledOnThisMoon(SelectableLevel level) {
+            return MeltdownConfig.Instance.FLASHING_LIGHTS;
+        }
     }
 }

@@ -12,3 +12,11 @@ D:\LethalCompanyMods\FacilityMeltdown\obj\Debug\FacilityMeltdown.csproj.Assembly
 D:\LethalCompanyMods\FacilityMeltdown\obj\Debug\FacilityMeltdown.csproj.CoreCompileInputs.cache
 D:\LethalCompanyMods\FacilityMeltdown\obj\Debug\FacilityMeltdown.dll
 D:\LethalCompanyMods\FacilityMeltdown\obj\Debug\FacilityMeltdown.pdb
+C:\Users\rixon\Documents\LethalCompanyModding\FacilityMeltdown\bin\Debug\facilitymeltdown
+C:\Users\rixon\Documents\LethalCompanyModding\FacilityMeltdown\bin\Debug\FacilityMeltdown.dll.config
+C:\Users\rixon\Documents\LethalCompanyModding\FacilityMeltdown\bin\Debug\FacilityMeltdown.dll
+C:\Users\rixon\Documents\LethalCompanyModding\FacilityMeltdown\bin\Debug\FacilityMeltdown.pdb
+C:\Users\rixon\Documents\LethalCompanyModding\FacilityMeltdown\obj\Debug\FacilityMeltdown.csproj.AssemblyReference.cache
+C:\Users\rixon\Documents\LethalCompanyModding\FacilityMeltdown\obj\Debug\FacilityMeltdown.csproj.CoreCompileInputs.cache
+C:\Users\rixon\Documents\LethalCompanyModding\FacilityMeltdown\obj\Debug\FacilityMeltdown.dll
+C:\Users\rixon\Documents\LethalCompanyModding\FacilityMeltdown\obj\Debug\FacilityMeltdown.pdb

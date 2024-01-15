@@ -42,7 +42,7 @@ namespace FacilityMeltdown {
                     waitTime = 6
                 },
                 new DialogueSegment {
-                    bodyText = "2 MINUTES UNTIL CATASTRPOHIC NUCLEAR REACTOR EVENT"
+                    bodyText = "<color=\"red\">2 MINUTES</color> UNTIL CATASTRPOHIC NUCLEAR REACTOR EVENT"
                 }
             };
 

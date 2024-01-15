@@ -34,9 +34,6 @@ namespace FacilityMeltdown.Patches {
 
         [HarmonyPrefix, HarmonyPatch(nameof(LungProp.Start))]
         internal static void FixLateCompany(LungProp __instance, ref bool ___isLungDocked) {
-            if (!___isLungDocked) return;
-
-            // It is docked
             if (!__instance.isInElevator) return;
             // it is inside of the ship
 

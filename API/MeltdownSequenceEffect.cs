@@ -11,7 +11,7 @@ namespace FacilityMeltdown.API {
         protected PlayerControllerB player => GameNetworkManager.Instance.localPlayerController;
         protected Vector3 mainEntrancePosition { get; private set; }
 
-        internal static List<MeltdownSequenceEffect> effects = new List<MeltdownSequenceEffect>();
+        public static List<MeltdownSequenceEffect> effects = new List<MeltdownSequenceEffect>();
 
         public bool Playing { get; protected set; }
         public bool IsOneShot { get; protected set; }
@@ -40,7 +40,9 @@ namespace FacilityMeltdown.API {
             GameObject.Destroy(gameObject);
         }
 
-        public virtual bool IsEnabledOnThisMoon(SelectableLevel level) { return true; }
+        public virtual bool IsEnabledOnThisMoon(SelectableLevel level) { 
+            return true; 
+        }
 
         protected Vector3 PlacePositionInsideFacility(Vector3 position, float radius = 10f) {
             return RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(position, 10f, layerMask: -1, randomSeed: new System.Random());

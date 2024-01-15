@@ -12,18 +12,20 @@ namespace FacilityMeltdown.Effects {
     internal class InsideFacilityParticleEffects : MeltdownSequenceEffect {
         public InsideFacilityParticleEffects() : base(MeltdownPlugin.modGUID, "InsideFacilityEffects") {}
 
-
+            
         public override IEnumerator Play(float timeLeftUntilMeltdown) {
-            for (int i = 0; i < Random.Range(5, 15); i++) { // todo: make this scale based on map size
-                Vector3 position = GetRandomPositionInsideFacility() + Vector3.up;
-                RaycastHit hit;
-                if (Physics.Raycast(new Ray(position, Vector3.up), out hit, 20f, 256)) {
-                    GameObject prefab = Assets.facilityEffects[Random.Range(0, Assets.facilityEffects.Length)];
-                    GameObject created = GameObject.Instantiate(prefab);
-                    prefab.transform.position = hit.point;
-                    created.transform.parent = gameObject.transform;
+            if (MeltdownConfig.Default.CFG_SCREEN_SHAKE.Value) {
+                for (int i = 0; i < Random.Range(5, 15); i++) { // todo: make this scale based on map size
+                    Vector3 position = GetRandomPositionInsideFacility() + Vector3.up;
+                    RaycastHit hit;
+                    if (Physics.Raycast(new Ray(position, Vector3.up), out hit, 20f, 256)) {
+                        GameObject prefab = Assets.facilityEffects[Random.Range(0, Assets.facilityEffects.Length)];
+                        GameObject created = GameObject.Instantiate(prefab);
+                        prefab.transform.position = hit.point;
+                        created.transform.parent = gameObject.transform;
+                    }
+                    MeltdownPlugin.logger.LogWarning("Failed to spawn effect, raycast failed.");
                 }
-                MeltdownPlugin.logger.LogWarning("Failed to spawn effect, raycast failed.");
             }
 
             if (player.isInsideFactory)

@@ -81,12 +81,6 @@ namespace FacilityMeltdown {
             logger.LogInfo(modName + ":" + modVersion + " has succesfully loaded!");
         }
 
-        void OnDestroy() {
-            //logger.LogInfo("========== DEBUG");
-            //var unlitHandler = new GameObject("UnlitModeHandler").AddComponent<UnlitModeHandler>();
-            //DontDestroyOnLoad(unlitHandler);
-        }
-
         private static void AppratusIncrease() {
             logger.LogInfo("Making the reward worth the risk...");
             UnityEngine.Object[] scriptableObjects = Resources.FindObjectsOfTypeAll(typeof(ScriptableObject));

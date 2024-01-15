@@ -26,12 +26,12 @@ namespace FacilityMeltdown.Util {
         private ConfigEntry<int> CFG_MONSTER_SPAWN_AMOUNT, CFG_APPARATUS_VALUE;
 
         [NonSerialized]
-        private ConfigEntry<bool> CFG_OVERRIDE_APPARATUS_VALUE;
+        private ConfigEntry<bool> CFG_OVERRIDE_APPARATUS_VALUE, CFG_FLASHING_LIGHTS;
 
         [NonSerialized]
         internal ConfigEntry<float> CFG_MUSIC_VOLUME;
         [NonSerialized]
-        internal ConfigEntry<bool> CFG_SCREEN_SHAKE, CFG_MUSIC_PLAYS_OUTSIDE;
+        internal ConfigEntry<bool> CFG_SCREEN_SHAKE, CFG_MUSIC_PLAYS_OUTSIDE, CFG_PARTICLE_EFFECTS;
 
         [DataMember]
         private string MOD_VERSION = MeltdownPlugin.modVersion;
@@ -39,7 +39,7 @@ namespace FacilityMeltdown.Util {
         [DataMember]
         internal int MONSTER_SPAWN_AMOUNT, APPARATUS_VALUE;
         [DataMember]
-        internal bool OVERRIDE_APPARATUS_VALUE;
+        internal bool OVERRIDE_APPARATUS_VALUE, FLASHING_LIGHTS;
 
         internal MeltdownConfig(ConfigFile file) {
             MeltdownPlugin.logger.LogInfo("Setting up config...");
@@ -51,10 +51,13 @@ namespace FacilityMeltdown.Util {
             APPARATUS_VALUE = CFG_APPARATUS_VALUE.Value;
             CFG_MONSTER_SPAWN_AMOUNT = file.Bind("GameBalance", "MonsterSpawnAmount", 5, "How many monsters should spawn during the meltdown sequence? Set to 0 to disable.");
             MONSTER_SPAWN_AMOUNT = CFG_MONSTER_SPAWN_AMOUNT.Value;
+            CFG_FLASHING_LIGHTS = file.Bind("GameBalance", "FlashingLights", true, "Should the lights turn on periodically? Disabling this option makes them permanently off. (Matches Vanilla Behaviour)");
+            FLASHING_LIGHTS = CFG_FLASHING_LIGHTS.Value;
 
             CFG_MUSIC_VOLUME = file.Bind("Audio", "MusicVolume", 100f, "What volume the music plays at. Should be between 0 and 100");
             CFG_MUSIC_PLAYS_OUTSIDE = file.Bind("Audio", "MusicPlaysOutside", true, "Does the music play outside the facility?");
             CFG_SCREEN_SHAKE = file.Bind("Visuals", "ScreenShake", true, "Whether or not to shake the screen during the meltdown sequence.");
+            CFG_PARTICLE_EFFECTS = file.Bind("Visuals", "ParticleEffects", true, "Should meltdown sequence contain particle effects? Doesn't include particle effects on the fireball.");
         }
         public static void RequestSync() {
             if (!IsClient) return;
@@ -131,6 +134,8 @@ namespace FacilityMeltdown.Util {
                 }
             ));
 
+            LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(CFG_FLASHING_LIGHTS, false));
+
             LethalConfigManager.AddConfigItem(new FloatStepSliderConfigItem(
                 CFG_MUSIC_VOLUME,
                 new FloatStepSliderOptions() {
@@ -143,6 +148,7 @@ namespace FacilityMeltdown.Util {
             LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(CFG_MUSIC_PLAYS_OUTSIDE, false));
 
             LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(CFG_SCREEN_SHAKE, false));
+            LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(CFG_PARTICLE_EFFECTS, false));
         }
 
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
@@ -164,7 +170,7 @@ namespace FacilityMeltdown.Util {
                 Description = "Maybe taking the appartus isn't such a great idea...",
                 MenuComponents = new MenuComponent[] {
                     new LabelComponent {
-                        Text = "Game Balance Settings"
+                        Text = "Game Balance Settings [Synced]"
                     },
                     new ToggleComponent {
                         Text = "Override Appartus Value?",
@@ -184,8 +190,16 @@ namespace FacilityMeltdown.Util {
                         Text = "Monster Spawn Amount",
                         OnValueChanged = (self, value) => { CFG_MONSTER_SPAWN_AMOUNT.Value = (int)value; Default.MONSTER_SPAWN_AMOUNT = (int)value; }
                     },
+                    new ToggleComponent {
+                        Text = "Lights turn on periodically?",
+                        Value = CFG_FLASHING_LIGHTS.Value,
+                        OnValueChanged = (self, value) => {
+                            CFG_FLASHING_LIGHTS.Value = value;
+                            FLASHING_LIGHTS = value;
+                        }
+                    },
                     new LabelComponent {
-                        Text = "Audio Settings"
+                        Text = "Audio Settings [Client Side]"
                     },
                     new SliderComponent {
                         Value = CFG_MUSIC_VOLUME.Value,
@@ -201,12 +215,17 @@ namespace FacilityMeltdown.Util {
                         OnValueChanged = (self, value) => CFG_MUSIC_PLAYS_OUTSIDE.Value = value
                     },
                     new LabelComponent {
-                        Text = "Visual Settings"
+                        Text = "Visual Settings [Client Side]"
                     },
                     new ToggleComponent {
                         Text = "Screen Shake",
                         Value = CFG_SCREEN_SHAKE.Value,
                         OnValueChanged = (self, value) => CFG_SCREEN_SHAKE.Value = value
+                    },
+                    new ToggleComponent {
+                        Text = "Particle Effects",
+                        Value = CFG_PARTICLE_EFFECTS.Value,
+                        OnValueChanged = (self, value) => CFG_PARTICLE_EFFECTS.Value = value
                     },
                 }
             });
