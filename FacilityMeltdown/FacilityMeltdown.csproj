@@ -9,7 +9,6 @@
     <AssemblyName>FacilityMeltdown</AssemblyName>
     <Product>FacilityMeltdown</Product>
     <Description>Maybe taking the apparatus out isn't such a great idea...</Description>
-    <Version>1.2.2</Version>
 
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
