@@ -17,16 +17,16 @@ readme = "../../README.md"
 outdir = "../build"
 
 [[build.copy]]
-source = "./bin/Release/FacilityMeltdown.dll"
-target = "./plugins/FacilityMeltdown/FacilityMeltdown.dll"
+source = "../bin/Release/FacilityMeltdown.dll"
+target = "/BepInEx/plugins/FacilityMeltdown/"
 
 [[build.copy]]
-source = "./bin/Release/facilitymeltdown"
-target = "./plugins/FacilityMeltdown/facilitymeltdown"
+source = "bundles/facilitymeltdown"
+target = "/BepInEx/plugins/FacilityMeltdown/"
 
 [[build.copy]]
-source = "./CHANGELOG.md"
-target = "./CHANGELOG.md"
+source = "../../CHANGELOG.md"
+target = "/"
 
 [publish]
 repository = "https://thunderstore.io"
