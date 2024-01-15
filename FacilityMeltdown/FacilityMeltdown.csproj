@@ -11,9 +11,6 @@
     <Description>Maybe taking the apparatus out isn't such a great idea...</Description>
     <Version>1.2.2</Version>
 
-    <DebugType>embedded</DebugType>
-    <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
 
