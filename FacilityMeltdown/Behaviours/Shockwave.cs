@@ -2,46 +2,46 @@
 using GameNetcodeStuff;
 using UnityEngine;
 
-namespace FacilityMeltdown.Behaviours {
-    public class Shockwave : MonoBehaviour {
-        bool localPlayerCameraShake = false;
-        float size = 0;
+namespace FacilityMeltdown.Behaviours;
 
-        AudioSource sound;
+public class Shockwave : MonoBehaviour {
+    bool localPlayerCameraShake = false;
+    float size = 0;
 
-        void Awake() {
-            sound = gameObject.AddComponent<AudioSource>();
-            sound.clip = Assets.shockwave;
-            sound.spatialBlend = 0;
-            sound.loop = false;
-        }
+    AudioSource sound;
 
-        void Update() {
-            PlayerControllerB player = GameNetworkManager.Instance.localPlayerController;
+    void Awake() {
+        sound = gameObject.AddComponent<AudioSource>();
+        sound.clip = Assets.shockwave;
+        sound.spatialBlend = 0;
+        sound.loop = false;
+    }
+
+    void Update() {
+        PlayerControllerB player = GameNetworkManager.Instance.localPlayerController;
 
 
-            size += Time.deltaTime * 50;
-            transform.localScale = Vector3.one * size;
+        size += Time.deltaTime * 50;
+        transform.localScale = Vector3.one * size;
 
-            if(player.isInsideFactory) {
-                // hide the shockwave
-            } else {
-                if(PlayerIsInsideShockwave() && !localPlayerCameraShake && MeltdownConfig.Default.CFG_SCREEN_SHAKE.Value) {
-                    if(MeltdownConfig.Default.CFG_SCREEN_SHAKE.Value) {
-                        ScreenShake();
-                    }
-                    localPlayerCameraShake = true;
-                    sound.Play();
+        if(player.isInsideFactory) {
+            // hide the shockwave
+        } else {
+            if(PlayerIsInsideShockwave() && !localPlayerCameraShake && MeltdownConfig.Default.CFG_SCREEN_SHAKE.Value) {
+                if(MeltdownConfig.Default.CFG_SCREEN_SHAKE.Value) {
+                    ScreenShake();
                 }
+                localPlayerCameraShake = true;
+                sound.Play();
             }
         }
+    }
 
-        void ScreenShake() {
-            HUDManager.Instance.ShakeCamera(ScreenShakeType.Big);
-        }
+    void ScreenShake() {
+        HUDManager.Instance.ShakeCamera(ScreenShakeType.Big);
+    }
 
-        internal bool PlayerIsInsideShockwave() {
-            return Vector3.Distance(transform.position, GameNetworkManager.Instance.localPlayerController.transform.position) <= size;
-        }
+    internal bool PlayerIsInsideShockwave() {
+        return Vector3.Distance(transform.position, GameNetworkManager.Instance.localPlayerController.transform.position) <= size;
     }
 }

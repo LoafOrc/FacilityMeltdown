@@ -3,36 +3,36 @@ using FacilityMeltdown.API;
 using FacilityMeltdown.Util;
 using UnityEngine;
 
-namespace FacilityMeltdown.Effects {
-    internal class WarningAnnouncerEffect : MeltdownSequenceEffect {
-        public WarningAnnouncerEffect() : base(MeltdownPlugin.modGUID, "WarningAnnouncer") {}
+namespace FacilityMeltdown.Effects;
 
-        AudioSource warningAudioSource;
+internal class WarningAnnouncerEffect : MeltdownSequenceEffect {
+    public WarningAnnouncerEffect() : base(MeltdownPlugin.modGUID, "WarningAnnouncer") {}
 
-        public override void Setup() {
-            base.Setup();
-            warningAudioSource = gameObject.AddComponent<AudioSource>();
-            warningAudioSource.loop = false;
-            warningAudioSource.spatialBlend = 0;
-        }
+    AudioSource warningAudioSource;
 
-        public override IEnumerator Play(float timeLeftUntilMeltdown) {
-            warningAudioSource.volume = MeltdownConfig.Default.CFG_MUSIC_VOLUME.Value;
+    public override void Setup() {
+        base.Setup();
+        warningAudioSource = gameObject.AddComponent<AudioSource>();
+        warningAudioSource.loop = false;
+        warningAudioSource.spatialBlend = 0;
+    }
 
-            AudioClip sound = Assets.warnings[Random.Range(0, Assets.warnings.Length)];
-            warningAudioSource.clip = sound;
-            warningAudioSource.Play();
+    public override IEnumerator Play(float timeLeftUntilMeltdown) {
+        warningAudioSource.volume = MeltdownConfig.Default.CFG_MUSIC_VOLUME.Value;
 
-            yield return new WaitForSeconds(warningAudioSource.clip.length);
+        AudioClip sound = Assets.warnings[Random.Range(0, Assets.warnings.Length)];
+        warningAudioSource.clip = sound;
+        warningAudioSource.Play();
 
-            yield return new WaitForSeconds(Random.Range(5f, 10f));
-        }
+        yield return new WaitForSeconds(warningAudioSource.clip.length);
 
-        public override IEnumerator Stop() {
-            warningAudioSource.Stop();
+        yield return new WaitForSeconds(Random.Range(5f, 10f));
+    }
 
-            yield return null;
-            yield break;
-        }
+    public override IEnumerator Stop() {
+        warningAudioSource.Stop();
+
+        yield return null;
+        yield break;
     }
 }
