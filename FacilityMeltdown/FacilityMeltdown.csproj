@@ -71,9 +71,6 @@
   <ItemGroup Condition="$(CI) == 'true'">
     <PackageReference Include="LethalCompany.GameLibs.Steam" Version="49.0.0-alpha.1" PrivateAssets="all"/>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="assets\bundles\" />
-  </ItemGroup>
 
   <Target Name="NetcodePatch" AfterTargets="PostBuildEvent">
     <Message Importance="high" Text="Doing Netcode Patcher stuff." />
