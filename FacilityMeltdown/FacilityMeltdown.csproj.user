@@ -11,16 +11,16 @@
     <Copy SourceFiles="$(UnityProjectDir)AssetBundles/StandaloneWindows/facilitymeltdown" DestinationFolder="$(ProjectDir)assets/bundles" />
   </Target>
 
-  <Target Name="CopyToTestProfile" DependsOnTargets="NetcodePatch;RestoreLatestAssetBundle" AfterTargets="PostBuildEvent" Condition="false">
+  <Target Name="CopyToTestProfile" DependsOnTargets="NetcodePatch;RestoreLatestAssetBundle" AfterTargets="PostBuildEvent" Condition="true">
     <MakeDir
-      Directories="$(TEST_PROFILE_DIR)/BepInEx/plugins/loaforc-FacilityMeltdown"
-      Condition="!Exists('$(TEST_PROFILE_DIR)/BepInEx/plugins/loaforc-FacilityMeltdown')"
+      Directories="$(TestProfileDir)BepInEx/plugins/loaforc-FacilityMeltdown/FacilityMeltdown"
+      Condition="!Exists('$(TestProfileDir)BepInEx/plugins/loaforc-FacilityMeltdown/FacilityMeltdown')"
     />
     <ItemGroup>
       <TestProfileStageFiles Include="$(TargetPath)"/>
       <TestProfileStageFiles Include="$(ProjectDir)assets/bundles/facilitymeltdown"/>
     </ItemGroup>
-    <Copy SourceFiles="@(TestProfileStageFiles)" DestinationFolder="$(TEST_PROFILE_DIR)/BepInEx/plugins/loaforc-FacilityMeltdown/" />
+    <Copy SourceFiles="@(TestProfileStageFiles)" DestinationFolder="$(TestProfileDir)BepInEx/plugins/loaforc-FacilityMeltdown/FacilityMeltdown" />
   </Target>
 
   <Target Name="CopyToUnity" DependsOnTargets="NetcodePatch" AfterTargets="PostBuildEvent">
