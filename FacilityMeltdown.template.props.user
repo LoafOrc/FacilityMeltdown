@@ -2,7 +2,7 @@
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <LethalCompanyDir>C:/Program Files (x86)/Steam/steamapps/common/Lethal Company/</LethalCompanyDir>
-    <TestProfileDir>$(APPDATA)/r2modmanPlus-local/LethalCompany/profiles/Test FacilityMeltdown/</TestProfileDir>
+    <TestProfileDir>$(LethalCompanyDir)</TestProfileDir>
     <UnityProjectDir>D:/LethalCompanyMods/LethalCompanyUnity/</UnityProjectDir>
   </PropertyGroup>
 
