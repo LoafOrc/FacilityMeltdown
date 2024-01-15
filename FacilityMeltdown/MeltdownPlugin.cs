@@ -1,18 +1,12 @@
 ﻿using System;
-using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using BepInEx;
 using BepInEx.Logging;
 using FacilityMeltdown.Effects;
 using FacilityMeltdown.Patches;
 using FacilityMeltdown.Util;
 using HarmonyLib;
-using LethalConfig;
-using LethalConfig.ConfigItems;
-using LethalConfig.ConfigItems.Options;
 using LethalLib.Modules;
-using RuntimeNetcodeRPCValidator;
 using UnityEngine;
 
 namespace FacilityMeltdown {

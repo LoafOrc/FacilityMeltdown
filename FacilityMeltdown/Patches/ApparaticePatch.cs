@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;   
 using FacilityMeltdown.Util;
 using HarmonyLib;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace FacilityMeltdown.Patches {
     [HarmonyPatch(typeof(LungProp))]
