@@ -11,6 +11,7 @@
     <Description>Maybe taking the apparatus out isn't such a great idea...</Description>
 
     <PackageId>LoafOrc.FacilityMeltdown</PackageId>
+    <ThunderstoreId>loaforc-FacilityMeltdown</ThunderstoreId>
 
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>

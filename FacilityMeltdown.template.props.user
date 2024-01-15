@@ -8,13 +8,13 @@
 
   <Target Name="CopyToTestProfile" DependsOnTargets="NetcodePatch;RestoreLatestAssetBundle" AfterTargets="PostBuildEvent" Condition="true">
     <MakeDir
-      Directories="$(TestProfileDir)BepInEx/plugins/$(ThunderstoreMoniker)/$(ProjectName)"
-      Condition="!Exists('$(TestProfileDir)BepInEx/plugins/$(ThunderstoreMoniker)/$(ProjectName)')"
+      Directories="$(TestProfileDir)BepInEx/plugins/$(ThunderstoreId)/$(ProjectName)"
+      Condition="!Exists('$(TestProfileDir)BepInEx/plugins/$(ThunderstoreId)/$(ProjectName)')"
     />
     <ItemGroup>
       <TestProfileStageFiles Include="$(TargetPath)"/>
       <TestProfileStageFiles Include="$(ProjectDir)assets/bundles/*"/>
     </ItemGroup>
-    <Copy SourceFiles="@(TestProfileStageFiles)" DestinationFolder="$(TestProfileDir)BepInEx/plugins/$(ThunderstoreMoniker)/$(ProjectName)" />
+    <Copy SourceFiles="@(TestProfileStageFiles)" DestinationFolder="$(TestProfileDir)BepInEx/plugins/$(ThunderstoreId)/$(ProjectName)" />
   </Target>
 </Project>
