@@ -8,6 +8,7 @@
   <!-- Compiler / MSBuild settings -->
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Nullable>disable</Nullable>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
