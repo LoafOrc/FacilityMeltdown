@@ -33,4 +33,7 @@
   <PropertyGroup Condition="$(Configuration) == 'Release'">
     <Optimize>true</Optimize>
   </PropertyGroup>
+
+  <!-- Import local user-specific props -->
+  <Import Project="$(SolutionDir)FacilityMeltdown.props.user" Condition="$(CI) != 'true'"/>
 </Project>
