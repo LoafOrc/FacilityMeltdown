@@ -14,7 +14,7 @@ Evaisa-LethalLib = "0.13.0"
 [build]
 icon = "./icon.png"
 readme = "./README.md"
-outdir = "./build"
+outdir = "../build"
 
 [[build.copy]]
 source = "./bin/Release/FacilityMeltdown.dll"
