@@ -77,11 +77,6 @@
     <Exec Command="dotnet netcode-patch &quot;$(TargetPath)&quot; @(ReferencePathWithRefAssemblies->'&quot;%(Identity)&quot;', ' ')" />
   </Target>
 
-	<Target Name="GetLatestAssetBundleHackFix" AfterTargets="NetcodePatcher"> <!-- huh? -->
-		<Message Importance="high" Text="Getting Asset Bundle" />
-		<Copy SourceFiles="D:\LethalCompanyMods\LethalCompanyUnity\AssetBundles\StandaloneWindows\facilitymeltdown" DestinationFolder="$(TargetDir)" />
-	</Target>
-
   <Target Name="SetPluginVersion" BeforeTargets="AddGeneratedFile" DependsOnTargets="MinVer">
     <Message Importance="high" Text="MinVer version is $(MinVerVersion)"/>
     <PropertyGroup>
