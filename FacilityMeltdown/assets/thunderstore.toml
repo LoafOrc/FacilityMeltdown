@@ -28,6 +28,10 @@ target = "/BepInEx/plugins/FacilityMeltdown/"
 source = "../../CHANGELOG.md"
 target = "/"
 
+[[build.copy]]
+source = "../../LICENSE"
+target = "/"
+
 [publish]
 repository = "https://thunderstore.io"
 communities = [ "lethal-company", ]
