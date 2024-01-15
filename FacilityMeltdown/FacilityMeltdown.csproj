@@ -30,6 +30,7 @@
   <ItemGroup>
     <PackageReference Include="BepInEx.Core" Version="5.4.21" PrivateAssets="all"/>
     <PackageReference Include="UnityEngine.Modules" Version="2022.3.9" PrivateAssets="all"/>
+    <PackageReference Include="Evaisa.LethalLib" Version="0.13.0" PrivateAssets="all"/>
     <Reference Include="LethalConfig">
       <HintPath>$(ProjectDir)../lib/LethalConfig.dll</HintPath>
     </Reference>
