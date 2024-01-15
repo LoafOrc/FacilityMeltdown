@@ -37,9 +37,6 @@
     <Reference Include="LethalConfig">
       <HintPath>$(ProjectDir)../lib/LethalConfig.dll</HintPath>
     </Reference>
-    <Reference Include="LethalLib">
-      <HintPath>$(ProjectDir)../lib/LethalLib.dll</HintPath>
-    </Reference>
     <Reference Include="LethalSettings">
       <HintPath>$(ProjectDir)../lib/LethalSettings.dll</HintPath>
     </Reference>
