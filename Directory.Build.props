@@ -7,6 +7,7 @@
 
   <!-- Compiler / MSBuild settings -->
   <PropertyGroup>
+    <LangVersion>latest</LangVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
