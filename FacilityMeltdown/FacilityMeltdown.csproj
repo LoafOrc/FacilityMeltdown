@@ -87,8 +87,30 @@
 		<Copy SourceFiles="D:\LethalCompanyMods\LethalCompanyUnity\AssetBundles\StandaloneWindows\facilitymeltdown" DestinationFolder="$(TargetDir)" />
 	</Target>
 
-  <Target Name="PackThunderstore" DependsOnTargets="NetcodePatch" AfterTargets="PostBuildEvent" Condition="'$(Configuration)' == 'Release'">
+  <Target Name="SetPluginVersion" BeforeTargets="AddGeneratedFile" DependsOnTargets="MinVer">
+    <Message Importance="high" Text="MinVer version is $(MinVerVersion)"/>
+    <PropertyGroup>
+      <PlainVersion>$(MinVerMajor).$(MinVerMinor).$(MinVerPatch)</PlainVersion>
+      <BepInExPluginVersion>$(PlainVersion)</BepInExPluginVersion>
+    </PropertyGroup>
+  </Target>
+
+  <Target
+    Name="PackThunderstore"
+    DependsOnTargets="NetcodePatch;SetPluginVersion"
+    AfterTargets="PostBuildEvent"
+    Condition="$(Configuration) == 'Release'"
+  >
     <Message Importance="high" Text="Building Thunderstore Package" />
-    <Exec Command="dotnet tcli build --config-path $(ProjectDir)assets/thunderstore.toml --package-version $(Version)" />
+    <MakeDir Directories="$(ProjectDir)assets/bundles" Condition="!Exists('$(ProjectDir)assets/bundles')"/>
+    <Exec Command="dotnet tcli build --config-path $(ProjectDir)assets/thunderstore.toml.user --package-version $(PlainVersion)"/>
+    <ItemGroup>
+      <FilesToRename Include="$(ProjectDir)dist/*-$(PlainVersion).zip"/>
+    </ItemGroup>
+    <Move SourceFiles="@(FilesToRename)" DestinationFiles="@(FilesToRename -&gt; Replace($(PlainVersion), $(MinVerVersion)))"/>
+  </Target>
+
+  <Target Name="ThunderstorePublish" DependsOnTargets="SetPluginVersion" Condition="$(IsThunderstorePackable) == 'true'">
+    <Exec Command="dotnet tcli publish --config-path $(ProjectDir)assets/thunderstore.toml --file $(ProjectDir)build/*-$(MinVerVersion).zip"/>
   </Target>
 </Project>
