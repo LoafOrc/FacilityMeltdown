@@ -98,7 +98,7 @@
   >
     <Message Importance="high" Text="Building Thunderstore Package" />
     <MakeDir Directories="$(ProjectDir)assets/bundles" Condition="!Exists('$(ProjectDir)assets/bundles')"/>
-    <Exec Command="dotnet tcli build --config-path $(ProjectDir)assets/thunderstore.toml.user --package-version $(PlainVersion)"/>
+    <Exec Command="dotnet tcli build --config-path $(ProjectDir)assets/thunderstore.toml --package-version $(PlainVersion)"/>
     <ItemGroup>
       <FilesToRename Include="$(ProjectDir)dist/*-$(PlainVersion).zip"/>
     </ItemGroup>
