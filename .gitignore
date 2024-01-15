@@ -39,6 +39,7 @@
 ### Enhancer
 !/FacilityMeltdown
 /FacilityMeltdown/[Bb]in
+/FacilityMeltdown/[Bb]uild
 /FacilityMeltdown/[Oo]bj
 
 # Explicit exceptions/ignores
