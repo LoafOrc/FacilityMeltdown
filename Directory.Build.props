@@ -2,7 +2,13 @@
 <Project>
   <!-- Solution metadata -->
   <PropertyGroup>
-
+    <Authors>LoafOrc</Authors>
+    <IsPackable>false</IsPackable>
+    <PackageLicenseExpression></PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/LoafOrc/FacilityMeltdown</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/LoafOrc/FacilityMeltdown</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <!-- Compiler / MSBuild settings -->
