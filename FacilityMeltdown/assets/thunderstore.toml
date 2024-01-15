@@ -12,7 +12,7 @@ BepInEx-BepInExPack = "5.4.2100"
 Evaisa-LethalLib = "0.13.0"
 
 [build]
-icon = "./icon.png"
+icon = "icons/facility-meltdown.png"
 readme = "../../README.md"
 outdir = "../build"
 
