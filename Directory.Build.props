@@ -11,6 +11,11 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Include="$(ProjectDir)../README.md" Pack="true" PackagePath="/"/>
+    <None Include="$(ProjectDir)../CHANGELOG.md" Pack="true" PackagePath="/"/>
+  </ItemGroup>
+
   <!-- Compiler / MSBuild settings -->
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
