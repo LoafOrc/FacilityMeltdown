@@ -7,6 +7,6 @@
 
   <Target Name="CopyToUnity" DependsOnTargets="NetcodePatch" AfterTargets="PostBuildEvent">
     <Message Importance="high" Text="Copying to unity project." />
-    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(UnityProjectDir)Assets/FacilityMeltdown/" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(UnityProjectDir)Assets/$(ProjectName)/" />
   </Target>
 </Project>
