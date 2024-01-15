@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <LethalCompanyDir>C:/Program Files (x86)/Steam/steamapps/common/Lethal Company/</LethalCompanyDir>
+    <TestProfileDir>$(LethalCompanyDir)</TestProfileDir>
+    <UnityProjectDir>D:/LethalCompanyMods/LethalCompanyUnity/</UnityProjectDir>
+  </PropertyGroup>
+
+  <Target Name="CopyToTestProfile" DependsOnTargets="NetcodePatch;RestoreLatestAssetBundle" AfterTargets="PostBuildEvent" Condition="true">
+    <MakeDir
+      Directories="$(TestProfileDir)BepInEx/plugins/$(ThunderstoreId)/$(ProjectName)"
+      Condition="!Exists('$(TestProfileDir)BepInEx/plugins/$(ThunderstoreId)/$(ProjectName)')"
+    />
+    <ItemGroup>
+      <TestProfileStageFiles Include="$(TargetPath)"/>
+      <TestProfileStageFiles Include="$(ProjectDir)assets/bundles/*"/>
+    </ItemGroup>
+    <Copy SourceFiles="@(TestProfileStageFiles)" DestinationFolder="$(TestProfileDir)BepInEx/plugins/$(ThunderstoreId)/$(ProjectName)" />
+  </Target>
+</Project>

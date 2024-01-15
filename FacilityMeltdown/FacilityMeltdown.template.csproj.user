@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <Target Name="RestoreLatestAssetBundle" BeforeTargets="PackThunderstore">
+    <Message Importance="high" Text="Getting Asset Bundle" />
+    <Copy SourceFiles="$(UnityProjectDir)AssetBundles/StandaloneWindows/facilitymeltdown" DestinationFolder="$(ProjectDir)assets/bundles" />
+  </Target>
+
+  <Target Name="CopyToUnity" DependsOnTargets="NetcodePatch" AfterTargets="PostBuildEvent">
+    <Message Importance="high" Text="Copying to unity project." />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(UnityProjectDir)Assets/$(ProjectName)/" />
+  </Target>
+</Project>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <!-- Solution metadata -->
+  <PropertyGroup>
+    <Authors>LoafOrc</Authors>
+    <IsPackable>false</IsPackable>
+    <PackageLicenseExpression></PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/LoafOrc/FacilityMeltdown</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/LoafOrc/FacilityMeltdown</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="$(ProjectDir)../README.md" Pack="true" PackagePath="/"/>
+    <None Include="$(ProjectDir)../CHANGELOG.md" Pack="true" PackagePath="/"/>
+  </ItemGroup>
+
+  <!-- Compiler / MSBuild settings -->
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Nullable>disable</Nullable>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+
+  <!-- MinVer Configuration (Auto-Versioning using Git tags) -->
+  <PropertyGroup>
+    <MinVerDefaultPreReleaseIdentifiers>dev</MinVerDefaultPreReleaseIdentifiers>
+    <MinVerTagPrefix>v</MinVerTagPrefix>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="MinVer" Version="4.3.0" PrivateAssets="all"/>
+  </ItemGroup>
+
+  <!-- Enable debug symbols -->
+  <PropertyGroup>
+    <DebugType>embedded</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <IncludeSymbols>true</IncludeSymbols>
+  </PropertyGroup>
+
+  <!-- Release optimisations -->
+  <PropertyGroup Condition="$(Configuration) == 'Release'">
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+
+  <!-- Import local user-specific props -->
+  <Import Project="$(SolutionDir)FacilityMeltdown.props.user" Condition="$(CI) != 'true'"/>
+</Project>

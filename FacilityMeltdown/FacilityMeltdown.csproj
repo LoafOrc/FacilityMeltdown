@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <ProjectGuid>{1F6F7CB6-1A09-42C7-A7A1-D3ABE809AA7B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <TargetFramework>netstandard2.1</TargetFramework>
+
+    <RootNamespace>FacilityMeltdown</RootNamespace>
+    <AssemblyName>FacilityMeltdown</AssemblyName>
+    <Product>FacilityMeltdown</Product>
+    <Description>Maybe taking the apparatus out isn't such a great idea...</Description>
+
+    <PackageId>LoafOrc.FacilityMeltdown</PackageId>
+    <ThunderstoreId>loaforc-FacilityMeltdown</ThunderstoreId>
+
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+
+  <!-- prevent referenced assemblies from being copied to the output folder -->
+  <Target Name="ClearReferenceCopyLocalPaths" AfterTargets="ResolveAssemblyReferences">
+    <ItemGroup>
+      <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" />
+    </ItemGroup>
+  </Target>
+
+  <!-- development dependencies -->
+  <ItemGroup>
+    <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.1" PrivateAssets="all"/>
+    <PackageReference Include="BepInEx.PluginInfoProps" Version="2.1.0" PrivateAssets="all"/>
+  </ItemGroup>
+
+  <!-- reference dependencies (common) -->
+  <ItemGroup>
+    <PackageReference Include="BepInEx.Core" Version="5.4.21" PrivateAssets="all"/>
+    <PackageReference Include="UnityEngine.Modules" Version="2022.3.9" PrivateAssets="all"/>
+    <PackageReference Include="Evaisa.LethalLib" Version="0.13.0" PrivateAssets="all"/>
+    <Reference Include="LethalConfig">
+      <HintPath>$(ProjectDir)../lib/LethalConfig.dll</HintPath>
+    </Reference>
+    <Reference Include="LethalSettings">
+      <HintPath>$(ProjectDir)../lib/LethalSettings.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <!-- reference dependencies (local) -->
+  <ItemGroup Condition="$(CI) != 'true'">
+    <Reference Include="Assembly-CSharp" Publicize="true">
+      <HintPath>$(LethalCompanyDir)Lethal Company_Data/Managed/Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp-firstpass">
+      <HintPath>$(LethalCompanyDir)Lethal Company_Data/Managed/Assembly-CSharp-firstpass.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Netcode.Runtime">
+      <HintPath>$(LethalCompanyDir)Lethal Company_Data/Managed/Unity.Netcode.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.RenderPipelines.Core.Runtime">
+      <HintPath>$(LethalCompanyDir)Lethal Company_Data/Managed/Unity.RenderPipelines.Core.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.RenderPipelines.HighDefinition.Runtime">
+      <HintPath>$(LethalCompanyDir)Lethal Company_Data/Managed/Unity.RenderPipelines.HighDefinition.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Collections">
+      <HintPath>$(LethalCompanyDir)Lethal Company_Data/Managed/Unity.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>$(LethalCompanyDir)Lethal Company_Data/Managed/UnityEngine.UI.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <!-- reference dependencies (CI) -->
+  <ItemGroup Condition="$(CI) == 'true'">
+    <PackageReference Include="LethalCompany.GameLibs.Steam" Version="49.0.0-alpha.1" PrivateAssets="all"/>
+  </ItemGroup>
+
+  <Target Name="NetcodePatch" AfterTargets="PostBuildEvent">
+    <Message Importance="high" Text="Doing Netcode Patcher stuff." />
+    <Exec Command="dotnet netcode-patch &quot;$(TargetPath)&quot; @(ReferencePathWithRefAssemblies->'&quot;%(Identity)&quot;', ' ')" />
+  </Target>
+
+	<Target Name="GetLatestAssetBundleHackFix" AfterTargets="NetcodePatcher"> <!-- huh? -->
+		<Message Importance="high" Text="Getting Asset Bundle" />
+		<Copy SourceFiles="D:\LethalCompanyMods\LethalCompanyUnity\AssetBundles\StandaloneWindows\facilitymeltdown" DestinationFolder="$(TargetDir)" />
+	</Target>
+
+  <Target Name="SetPluginVersion" BeforeTargets="AddGeneratedFile" DependsOnTargets="MinVer">
+    <Message Importance="high" Text="MinVer version is $(MinVerVersion)"/>
+    <PropertyGroup>
+      <PlainVersion>$(MinVerMajor).$(MinVerMinor).$(MinVerPatch)</PlainVersion>
+      <BepInExPluginVersion>$(PlainVersion)</BepInExPluginVersion>
+    </PropertyGroup>
+  </Target>
+
+  <Target
+    Name="PackThunderstore"
+    DependsOnTargets="NetcodePatch;SetPluginVersion"
+    AfterTargets="PostBuildEvent"
+    Condition="$(Configuration) == 'Release'"
+  >
+    <Message Importance="high" Text="Building Thunderstore Package" />
+    <MakeDir Directories="$(ProjectDir)assets/bundles" Condition="!Exists('$(ProjectDir)assets/bundles')"/>
+    <Exec Command="dotnet tcli build --config-path $(ProjectDir)assets/thunderstore.toml --package-version $(PlainVersion)"/>
+    <ItemGroup>
+      <FilesToRename Include="$(ProjectDir)dist/*-$(PlainVersion).zip"/>
+    </ItemGroup>
+    <Move SourceFiles="@(FilesToRename)" DestinationFiles="@(FilesToRename -&gt; Replace($(PlainVersion), $(MinVerVersion)))"/>
+  </Target>
+
+  <Target Name="ThunderstorePublish" DependsOnTargets="SetPluginVersion" Condition="$(IsThunderstorePackable) == 'true'">
+    <Exec Command="dotnet tcli publish --config-path $(ProjectDir)assets/thunderstore.toml --file $(ProjectDir)build/*-$(MinVerVersion).zip"/>
+  </Target>
+</Project>

@@ -1,0 +1,41 @@
+[config]
+schemaVersion = "0.0.1"
+
+[package]
+namespace = "loaforc"
+name = "FacilityMeltdown"
+description = "Maybe taking the apparatus out isn't such a great idea..."
+websiteUrl = "https://github.com/LoafOrc/FacilityMeltdown"
+containsNsfwContent = false
+[package.dependencies]
+BepInEx-BepInExPack = "5.4.2100"
+Evaisa-LethalLib = "0.13.0"
+
+[build]
+icon = "icons/facility-meltdown.png"
+readme = "../../README.md"
+outdir = "../build"
+
+[[build.copy]]
+source = "../bin/Release/FacilityMeltdown.dll"
+target = "/BepInEx/plugins/FacilityMeltdown/"
+
+[[build.copy]]
+source = "bundles/facilitymeltdown"
+target = "/BepInEx/plugins/FacilityMeltdown/"
+
+[[build.copy]]
+source = "../../CHANGELOG.md"
+target = "/"
+
+[[build.copy]]
+source = "../../LICENSE"
+target = "/"
+
+[publish]
+repository = "https://thunderstore.io"
+communities = [ "lethal-company", ]
+[publish.categories]
+lethal-company = [ "mods", ]
+
+
