@@ -29,19 +29,19 @@ namespace FacilityMeltdown {
 
         readonly static DialogueSegment[] shipTakeOffDialogue = new DialogueSegment[] { 
             new DialogueSegment { bodyText = "The company has deemed the current levels of radiation too high." },
-            new DialogueSegment { bodyText = "The company can not risk damaging it's equipment." }
+            new DialogueSegment { bodyText = "The company can not risk damaging its equipment." }
         };
 
         readonly static DialogueSegment[] introDialogue = new DialogueSegment[] {
                 new DialogueSegment {
                     bodyText = "... FAILED TO CONNECT TO INTERNAL FACILITY COMPUTER ... IDENTIFIYING ROOT CAUSE ..."
-                },
+                    },
                 new DialogueSegment {
                     bodyText = "UNSTABLE NUCLEAR REACTOR ... PREDICTING TIME UNTIL CATASTROPHIC EVENT ...",
                     waitTime = 6
                 },
                 new DialogueSegment {
-                    bodyText = "<color=\"red\">2 MINUTES</color> UNTIL CATASTRPOHIC NUCLEAR REACTOR EVENT"
+                    bodyText = "<color=\"red\">2 MINUTES</color> UNTIL CATASTROPHIC NUCLEAR REACTOR EVENT"
                 }
             };
 

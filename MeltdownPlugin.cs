@@ -38,6 +38,21 @@ namespace FacilityMeltdown {
             logger.LogInfo("Initalising assets...");
             Assets.Init();
 
+            RegisterNetworking();
+
+            MeltdownPlugin.logger.LogInfo("Setting up config...");
+            meltdownConfig = new MeltdownConfig(Config);
+
+            RegisterPatches();
+            RegisterEffects();
+
+            logger.LogInfo("Creating commands");
+            TerminalHandler.Init();
+
+            logger.LogInfo(modName + ":" + modVersion + " has succesfully loaded!");
+        }
+
+        void RegisterNetworking() {
             logger.LogInfo("Doing networky stuff");
             var types = Assembly.GetExecutingAssembly().GetTypes();
             try {
@@ -51,52 +66,25 @@ namespace FacilityMeltdown {
                         }
                     }
                 }
-            } catch(Exception e) {
+            } catch (Exception e) {
                 logger.LogWarning("Caught exception: " + e);
                 logger.LogWarning("why does this not work");
             }
             NetworkPrefabs.RegisterNetworkPrefab(Assets.meltdownHandlerPrefab);
-
-            meltdownConfig = new MeltdownConfig(Config);
-
-            logger.LogInfo("Checking for any mod settings managers...");
-            if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("ainavt.lc.lethalconfig")) {
-                meltdownConfig.InitLethalConfig();
-            }
-            if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.willis.lc.lethalsettings")) {
-                meltdownConfig.InitLethalSettings();
-            }
-
-
+        }
+        void RegisterPatches() {
             logger.LogInfo("Applying patches.");
             harmony.PatchAll(typeof(ApparaticePatch));
             harmony.PatchAll(typeof(EntranceTeleportPatch));
             harmony.PatchAll(typeof(StartOfRoundPatches));
             harmony.PatchAll(typeof(MeltdownConfig));
-
+        }
+        void RegisterEffects() {
             logger.LogInfo("Using own API to register sequence effects.");
             new EmergencyLightsEffect();
             new InsideFacilityParticleEffects();
             new ShockwaveSpawner();
             new WarningAnnouncerEffect();
-
-            logger.LogInfo(modName + ":" + modVersion + " has succesfully loaded!");
-        }
-
-        private static void AppratusIncrease() {
-            logger.LogInfo("Making the reward worth the risk...");
-            UnityEngine.Object[] scriptableObjects = Resources.FindObjectsOfTypeAll(typeof(ScriptableObject));
-            foreach (ScriptableObject scriptableObject in scriptableObjects) {
-                logger.LogInfo("Checking: " + scriptableObject.name);
-                if (scriptableObject.name == "LungApparatus") {
-                    logger.LogInfo("LUNGAGAPRATQTEAF!");
-                    ((Item)scriptableObject).minValue = 120;
-                    ((Item)scriptableObject).maxValue = 240;
-                    ((Item)scriptableObject).creditsWorth = 240;
-
-                    break;
-                }
-            }
         }
     }
 }

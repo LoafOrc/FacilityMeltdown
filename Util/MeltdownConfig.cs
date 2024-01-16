@@ -41,8 +41,7 @@ namespace FacilityMeltdown.Util {
         [DataMember]
         internal bool OVERRIDE_APPARATUS_VALUE, EMERGENCY_LIGHTS;
 
-        internal MeltdownConfig(ConfigFile file) {
-            MeltdownPlugin.logger.LogInfo("Setting up config...");
+        internal MeltdownConfig(ConfigFile file) { 
             InitInstance(this);         
 
             CFG_OVERRIDE_APPARATUS_VALUE = file.Bind("GameBalance", "OverrideAppartusValue", true, "Whether or not FacilityMeltdown should override appartus value. Only use for compatibility reasons");
@@ -58,6 +57,14 @@ namespace FacilityMeltdown.Util {
             CFG_MUSIC_PLAYS_OUTSIDE = file.Bind("Audio", "MusicPlaysOutside", true, "Does the music play outside the facility?");
             CFG_SCREEN_SHAKE = file.Bind("Visuals", "ScreenShake", true, "Whether or not to shake the screen during the meltdown sequence.");
             CFG_PARTICLE_EFFECTS = file.Bind("Visuals", "ParticleEffects", true, "Should meltdown sequence contain particle effects? Doesn't include particle effects on the fireball.");
+
+            MeltdownPlugin.logger.LogInfo("Checking for any mod settings managers...");
+            if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("ainavt.lc.lethalconfig")) {
+                InitLethalConfig();
+            }
+            if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.willis.lc.lethalsettings")) {
+                InitLethalSettings();
+            }
         }
         public static void RequestSync() {
             if (!IsClient) return;
