@@ -10,12 +10,14 @@ using UnityEngine.Rendering.HighDefinition;
 
 namespace FacilityMeltdown.Behaviours {
     internal class FacilityExplosionHandler : MonoBehaviour {
-        PlayerControllerB player => GameNetworkManager.Instance.localPlayerController;
+        PlayerControllerB player;
         float size, time;
 
         LocalVolumetricFog internalFog;
 
         void Awake() {
+            player = GameNetworkManager.Instance.localPlayerController;
+
             internalFog = GetComponent<LocalVolumetricFog>();
             if(internalFog == null) {
                 MeltdownPlugin.logger.LogError("Failed to get volumetric fog!");
@@ -28,7 +30,7 @@ namespace FacilityMeltdown.Behaviours {
                 HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
             }
 
-            if (!ShouldIgnorePlayer() && player.isInsideFactory) KillPlayer();
+            if (!player.isPlayerDead && player.isInsideFactory) KillPlayer();
         }
 
         void Update() {

@@ -21,3 +21,6 @@
  - Host-sided/Synced:
   - Emergency Lights: Disabling emergency lights mimics vanilla in that lights will not turn back on for more visibility.
 - Improved the intro dialogue to highlight the time remaining.
+
+### v1.2.3
+- Fixed players not dying when they were inside the facility as it explodes.

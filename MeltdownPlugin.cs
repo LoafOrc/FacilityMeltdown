@@ -23,7 +23,7 @@ namespace FacilityMeltdown {
     public class MeltdownPlugin : BaseUnityPlugin {
         internal const string modGUID = "me.loaforc.facilitymeltdown";
         internal const string modName = "FacilityMeltdown";
-        internal const string modVersion = "1.2.2";
+        internal const string modVersion = "1.2.3";
 
         private readonly Harmony harmony = new Harmony(modGUID);
         internal static MeltdownPlugin instance;
