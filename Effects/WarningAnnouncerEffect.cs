@@ -30,7 +30,17 @@ namespace FacilityMeltdown.Effects {
 
             yield return new WaitForSeconds(warningAudioSource.clip.length);
 
-            yield return new WaitForSeconds(Random.Range(5f, 10f));
+            float progress = GetMeltdownProgress(timeLeftUntilMeltdown);
+            if (progress > .75) {
+                yield return new WaitForSeconds(Random.Range(5f, 10f));
+            } else if (progress > .5) {
+                yield return new WaitForSeconds(Random.Range(4f, 8f));
+            } else if (progress > .25) {
+                yield return new WaitForSeconds(Random.Range(3f, 6f));
+            } else {
+                yield return new WaitForSeconds(Random.Range(2f, 4f));
+            }
+            yield break;
         }
 
         public override IEnumerator Stop() {

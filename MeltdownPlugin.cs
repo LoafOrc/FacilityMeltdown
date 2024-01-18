@@ -23,7 +23,7 @@ namespace FacilityMeltdown {
     public class MeltdownPlugin : BaseUnityPlugin {
         internal const string modGUID = "me.loaforc.facilitymeltdown";
         internal const string modName = "FacilityMeltdown";
-        internal const string modVersion = "1.2.3";
+        internal const string modVersion = "2.0.0";
 
         private readonly Harmony harmony = new Harmony(modGUID);
         internal static MeltdownPlugin instance;
@@ -49,7 +49,15 @@ namespace FacilityMeltdown {
             logger.LogInfo("Creating commands");
             TerminalHandler.Init();
 
+            RegisterItems();
+
             logger.LogInfo(modName + ":" + modVersion + " has succesfully loaded!");
+        }
+
+        void RegisterItems() {
+            logger.LogInfo("Registering Items");
+
+            Items.RegisterShopItem(Assets.geigerCounterItemDef, null, null, Assets.geigerCounterNode, 90);
         }
 
         void RegisterNetworking() {
@@ -70,7 +78,10 @@ namespace FacilityMeltdown {
                 logger.LogWarning("Caught exception: " + e);
                 logger.LogWarning("why does this not work");
             }
+
+            logger.LogInfo("= Registering Network Prefabs");
             NetworkPrefabs.RegisterNetworkPrefab(Assets.meltdownHandlerPrefab);
+            NetworkPrefabs.RegisterNetworkPrefab(Assets.geigerCounterItem);
         }
         void RegisterPatches() {
             logger.LogInfo("Applying patches.");
@@ -78,6 +89,8 @@ namespace FacilityMeltdown {
             harmony.PatchAll(typeof(EntranceTeleportPatch));
             harmony.PatchAll(typeof(StartOfRoundPatches));
             harmony.PatchAll(typeof(MeltdownConfig));
+            harmony.PatchAll(typeof(BlobAIPatch));
+            harmony.PatchAll(typeof(TerminalHandler));
         }
         void RegisterEffects() {
             logger.LogInfo("Using own API to register sequence effects.");
@@ -85,6 +98,7 @@ namespace FacilityMeltdown {
             new InsideFacilityParticleEffects();
             new ShockwaveSpawner();
             new WarningAnnouncerEffect();
+            new RadiationIncreasingEffect();
         }
     }
 }

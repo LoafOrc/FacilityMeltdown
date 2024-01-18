@@ -38,7 +38,16 @@ namespace FacilityMeltdown.Effects {
                 }
             }
 
-            yield return new WaitForSeconds(Random.Range(8f, 14f));
+            float progress = GetMeltdownProgress(timeLeftUntilMeltdown);
+            if (progress > .75) {
+                yield return new WaitForSeconds(Random.Range(10f, 14f));
+            } else if (progress > .5) {
+                yield return new WaitForSeconds(Random.Range(6f, 10f));
+            } else if (progress > .25) {
+                yield return new WaitForSeconds(Random.Range(5f, 6.5f));
+            } else {
+                yield return new WaitForSeconds(Random.Range(3f, 4f));
+            }
             yield break;
         }
 

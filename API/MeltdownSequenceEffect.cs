@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FacilityMeltdown.Util;
 using GameNetcodeStuff;
 using UnityEngine;
 
@@ -44,6 +45,9 @@ namespace FacilityMeltdown.API {
             return true; 
         }
 
+        protected float GetMeltdownProgress(float time) {
+            return 1-(time / MeltdownConfig.Instance.MELTDOWN_TIME);
+        }
         protected Vector3 PlacePositionInsideFacility(Vector3 position, float radius = 10f) {
             return RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(position, 10f, layerMask: -1, randomSeed: new System.Random());
         }

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FacilityMeltdown.Util;
+using HarmonyLib;
+using JetBrains.Annotations;
 using TerminalApi;
 using TerminalApi.Classes;
 using UnityEngine;
@@ -11,8 +14,9 @@ using static TerminalApi.TerminalApi;
 
 namespace FacilityMeltdown {
     internal class TerminalHandler {
-        internal struct ReactorHealthReport {
+        internal class ReactorHealthReport {
             public float reactorInstability, timeRemaining;
+            public float generatedAt = Time.time;
 
             public string GetFlavourText() {
                 if (timeRemaining > 90) {
@@ -28,29 +32,29 @@ namespace FacilityMeltdown {
             }
 
             public string GetTeminalOutput() {
-                return $"Reactor instability at {reactorInstability}%.\nApproximately {timeRemaining} seconds left until catastrophic nuclear event.\n\n{GetFlavourText()}\n\n";
+                return $"Reactor instability at {reactorInstability}%\nApproximately {timeRemaining} seconds left until catastrophic nuclear event.\n\n{GetFlavourText()}\n\n";
             }
         }
 
-        internal const float reactorHealthCooldown = 15;
-        internal const float reactorAccuracy = 10;
-
         internal static float lastHealthCheck = 0;
-        internal static ReactorHealthReport lastReport;
+        internal static ReactorHealthReport lastReport = null;
+
+        internal static AudioSource source;
 
         internal static bool ReactorHealthCheckReady() {
-            return Time.time >= lastHealthCheck + reactorHealthCooldown;
+            return Time.time >= lastHealthCheck + MeltdownConfig.Instance.SHIP_SCANNER_COOLDOWN;
         }
 
         internal static ReactorHealthReport GetNewReactorHealthReport() {
-            float reactorInstability = (((2 * 60) - MeltdownHandler.Instance.meltdownTimer) / (2 * 60)) * 100; // this is at perfect accuracy
-            reactorInstability = Mathf.Round(reactorInstability / reactorAccuracy) * reactorAccuracy; // now the ship is not 100% perfect but still consistent (unlike a random value)
+            float reactorInstability = ((MeltdownConfig.Instance.MELTDOWN_TIME - MeltdownHandler.Instance.meltdownTimer) / MeltdownConfig.Instance.MELTDOWN_TIME) * 100; // this is at perfect accuracy
+            reactorInstability = Mathf.Round(reactorInstability / MeltdownConfig.Instance.SHIP_SCANNER_ACCURACY) * MeltdownConfig.Instance.SHIP_SCANNER_ACCURACY; // now the ship is not 100% perfect but still consistent (unlike a random value)
 
-            float timeRemaining = (1 - (reactorInstability / 100)) * (2 * 60); // not perfectly accurate either
+            float timeRemaining = (1 - (reactorInstability / 100)) * MeltdownConfig.Instance.MELTDOWN_TIME; // not perfectly accurate either
 
-            ReactorHealthReport report = new ReactorHealthReport();
-            report.reactorInstability = reactorInstability;
-            report.timeRemaining = timeRemaining;
+            ReactorHealthReport report = new ReactorHealthReport {
+                reactorInstability = reactorInstability,
+                timeRemaining = timeRemaining
+            };
 
             return report;
         }
@@ -74,15 +78,15 @@ namespace FacilityMeltdown {
                     if(MeltdownHandler.Instance) {
                         string prefix = "USING LAST CACHED REPORT!\nThe ship's scanner needs to cooldown before you can scan the reactors health again!\n\n";
                         if(ReactorHealthCheckReady()) {
-                            prefix = $"Generated a new reactor report, saving to cache. {reactorHealthCooldown} seconds until scanners are ready to generate another one.\n\n";
                             lastHealthCheck = Time.time;
                             lastReport = GetNewReactorHealthReport();
+                            prefix = $"Generated a new reactor report, saving to cache. {MeltdownConfig.Instance.SHIP_SCANNER_COOLDOWN} seconds until scanners are ready to generate another one.\n\n";
                         }
 
                         return prefix + lastReport.GetTeminalOutput();
 
                     } else {
-                        return "Reactor instability at 0%.\nThe reactor is in good health. No caution is necessary.\n\n";
+                        return "Reactor instability at 0%\nThe reactor is in good health. No caution is necessary.\n\n";
                     }
                 },
                 Category = "Other",

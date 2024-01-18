@@ -23,10 +23,16 @@ namespace FacilityMeltdown.Util {
     [Serializable]
     internal class MeltdownConfig : SyncedInstance<MeltdownConfig> {
         [NonSerialized]
-        private ConfigEntry<int> CFG_MONSTER_SPAWN_AMOUNT, CFG_APPARATUS_VALUE;
+        private ConfigEntry<int> CFG_MONSTER_SPAWN_AMOUNT, CFG_APPARATUS_VALUE, CFG_MELTDOWN_TIME;
 
         [NonSerialized]
         private ConfigEntry<bool> CFG_OVERRIDE_APPARATUS_VALUE, CFG_EMERGENCY_LIGHTS;
+
+        [NonSerialized]
+        internal ConfigEntry<float> CFG_SCAN_COOLDOWN, CFG_SCAN_ACCURACY;
+
+        [NonSerialized]
+        internal ConfigEntry<string> CFG_DISALLOWED_ENEMIES;
 
         [NonSerialized]
         internal ConfigEntry<float> CFG_MUSIC_VOLUME;
@@ -37,9 +43,17 @@ namespace FacilityMeltdown.Util {
         private string MOD_VERSION = MeltdownPlugin.modVersion;
 
         [DataMember]
-        internal int MONSTER_SPAWN_AMOUNT, APPARATUS_VALUE;
+        internal int MONSTER_SPAWN_AMOUNT, APPARATUS_VALUE, MELTDOWN_TIME;
         [DataMember]
         internal bool OVERRIDE_APPARATUS_VALUE, EMERGENCY_LIGHTS;
+        [DataMember]
+        internal float SHIP_SCANNER_COOLDOWN, SHIP_SCANNER_ACCURACY;
+        [DataMember]
+        internal string DISALLOWED_ENEMIES;
+
+        internal List<string> GetDisallowedEnemies() {
+            return DISALLOWED_ENEMIES.Split(',').ToList();
+        }
 
         internal MeltdownConfig(ConfigFile file) { 
             InitInstance(this);         
@@ -52,6 +66,17 @@ namespace FacilityMeltdown.Util {
             MONSTER_SPAWN_AMOUNT = CFG_MONSTER_SPAWN_AMOUNT.Value;
             CFG_EMERGENCY_LIGHTS = file.Bind("GameBalance", "EmergencyLights", true, "Should the lights turn on periodically? Disabling this option makes them permanently off. (Matches Vanilla Behaviour)");
             EMERGENCY_LIGHTS = CFG_EMERGENCY_LIGHTS.Value;
+
+            CFG_DISALLOWED_ENEMIES = file.Bind("GameBalance", "DisallowedEnemies", "Centipede,Hoarding bug", "What enemies to exclude from spawning in the meltdown sequence. Comma seperated list. \"Should\" support modded entities");
+            DISALLOWED_ENEMIES = CFG_DISALLOWED_ENEMIES.Value;
+
+            CFG_MELTDOWN_TIME = file.Bind("GameBalance", "MeltdownTime", 120, "ABSOLUETLY NOT SUPPORTED OR RECOMMENDED! Change the length of the meltdown sequence. If this breaks I am not fixing it, you have been warned.");
+            MELTDOWN_TIME = CFG_MELTDOWN_TIME.Value;
+
+            CFG_SCAN_COOLDOWN = file.Bind("GameBalance", "ShipScannerCooldown", 15f, "How long until the ship's scanner can scan the reactor. (Doesn't affect the vanilla `scan` command)");
+            SHIP_SCANNER_COOLDOWN = CFG_SCAN_COOLDOWN.Value;
+            CFG_SCAN_ACCURACY = file.Bind("GameBalance", "ShipScannerAccuracy", 10f, "How accurate is the ship's scanner when scanning the reactor. Higher values mean it is more uncertain, and lower values is more accurate. (Doesn't affect the vanilla `scan` command)");
+            SHIP_SCANNER_ACCURACY = CFG_SCAN_ACCURACY.Value;
 
             CFG_MUSIC_VOLUME = file.Bind("Audio", "MusicVolume", 100f, "What volume the music plays at. Should be between 0 and 100");
             CFG_MUSIC_PLAYS_OUTSIDE = file.Bind("Audio", "MusicPlaysOutside", true, "Does the music play outside the facility?");
@@ -123,13 +148,13 @@ namespace FacilityMeltdown.Util {
 
             LethalConfigManager.SetModDescription("Maybe taking the appartus isn't such a great idea...");
 
-            LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(CFG_OVERRIDE_APPARATUS_VALUE, false));
+            LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(CFG_OVERRIDE_APPARATUS_VALUE, true));
             LethalConfigManager.AddConfigItem(new IntSliderConfigItem(
                 CFG_APPARATUS_VALUE,
                 new IntSliderOptions {
                     Min = 80,
                     Max = 500,
-                    RequiresRestart = false
+                    RequiresRestart = true
                 }
             ));
             LethalConfigManager.AddConfigItem(new IntSliderConfigItem(
@@ -137,11 +162,38 @@ namespace FacilityMeltdown.Util {
                 new IntSliderOptions {
                     Min = 0,
                     Max = 10,
-                    RequiresRestart = false
+                    RequiresRestart = true
                 }
             ));
 
-            LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(CFG_EMERGENCY_LIGHTS, false));
+            LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(CFG_EMERGENCY_LIGHTS, true));
+
+            LethalConfigManager.AddConfigItem(new FloatSliderConfigItem(
+                CFG_SCAN_COOLDOWN,
+                new FloatSliderOptions {
+                    Min = 0,
+                    Max = 30,
+                    RequiresRestart = true
+                }
+            ));
+            LethalConfigManager.AddConfigItem(new FloatStepSliderConfigItem(
+                CFG_SCAN_ACCURACY,
+                new FloatStepSliderOptions {
+                    Min = 0,
+                    Step = 1,
+                    Max = 50,
+                    RequiresRestart = true
+                }
+            ));
+
+            LethalConfigManager.AddConfigItem(new IntSliderConfigItem(
+                CFG_MELTDOWN_TIME,
+                new IntSliderOptions {
+                    Min = 0,
+                    Max = 5 * 60,
+                    RequiresRestart = true
+                }
+            ));
 
             LethalConfigManager.AddConfigItem(new FloatStepSliderConfigItem(
                 CFG_MUSIC_VOLUME,
@@ -170,41 +222,8 @@ namespace FacilityMeltdown.Util {
                 OnValueChanged = (self, value) => { CFG_APPARATUS_VALUE.Value = (int)value; Default.APPARATUS_VALUE = (int)value; }
             };
 
-            ModMenu.RegisterMod(new ModMenu.ModSettingsConfig {
-                Name = MeltdownPlugin.modName,
-                Id = MeltdownPlugin.modGUID,
-                Version = MeltdownPlugin.modVersion,
-                Description = "Maybe taking the appartus isn't such a great idea...",
-                MenuComponents = new MenuComponent[] {
-                    new LabelComponent {
-                        Text = "Game Balance Settings [Synced]"
-                    },
-                    new ToggleComponent {
-                        Text = "Override Appartus Value?",
-                        Value = CFG_OVERRIDE_APPARATUS_VALUE.Value,
-                        OnValueChanged = (self, value) => {
-                            CFG_OVERRIDE_APPARATUS_VALUE.Value = value;
-                            OVERRIDE_APPARATUS_VALUE = value;
-                            appratusValueSlider.Enabled = value;
-                        }
-                    },
-                    appratusValueSlider,
-                    new SliderComponent {
-                        Value = CFG_MONSTER_SPAWN_AMOUNT.Value,
-                        MinValue = 0,
-                        MaxValue = 10,
-                        WholeNumbers = true,
-                        Text = "Monster Spawn Amount",
-                        OnValueChanged = (self, value) => { CFG_MONSTER_SPAWN_AMOUNT.Value = (int)value; Default.MONSTER_SPAWN_AMOUNT = (int)value; }
-                    },
-                    new ToggleComponent {
-                        Text = "Facility has Emergency Lights?",
-                        Value = CFG_EMERGENCY_LIGHTS.Value,
-                        OnValueChanged = (self, value) => {
-                            CFG_EMERGENCY_LIGHTS.Value = value;
-                            EMERGENCY_LIGHTS = value;
-                        }
-                    },
+            VerticalComponent editableInGame = new VerticalComponent {
+                Children = new MenuComponent[] {
                     new LabelComponent {
                         Text = "Audio Settings [Client Side]"
                     },
@@ -235,7 +254,67 @@ namespace FacilityMeltdown.Util {
                         OnValueChanged = (self, value) => CFG_PARTICLE_EFFECTS.Value = value
                     },
                 }
+            };
+
+            ModMenu.RegisterMod(new ModMenu.ModSettingsConfig {
+                Name = MeltdownPlugin.modName,
+                Id = MeltdownPlugin.modGUID,
+                Version = MeltdownPlugin.modVersion,
+                Description = "Maybe taking the appartus isn't such a great idea...",
+                
+                MenuComponents = new MenuComponent[] {
+                    new LabelComponent {
+                        Text = "Game Balance Settings [Synced]"
+                    },
+                    new ToggleComponent {
+                        Text = "Override Appartus Value?",
+                        Value = CFG_OVERRIDE_APPARATUS_VALUE.Value,
+                        OnValueChanged = (self, value) => {
+                            CFG_OVERRIDE_APPARATUS_VALUE.Value = value;
+                            OVERRIDE_APPARATUS_VALUE = value;
+                            appratusValueSlider.Enabled = value;
+                        }
+                    },
+                    appratusValueSlider,
+                    new SliderComponent {
+                        Value = CFG_MONSTER_SPAWN_AMOUNT.Value,
+                        MinValue = 0,
+                        MaxValue = 10,
+                        WholeNumbers = true,
+                        Text = "Monster Spawn Amount",
+                        OnValueChanged = (self, value) => { CFG_MONSTER_SPAWN_AMOUNT.Value = (int)value; Default.MONSTER_SPAWN_AMOUNT = (int)value; }
+                    },
+                    new ToggleComponent {
+                        Text = "Facility has Emergency Lights?",
+                        Value = CFG_EMERGENCY_LIGHTS.Value,
+                        OnValueChanged = (self, value) => {
+                            CFG_EMERGENCY_LIGHTS.Value = value;
+                            EMERGENCY_LIGHTS = value;
+                        }
+                    },
+                    new SliderComponent {
+                        Value = CFG_APPARATUS_VALUE.Value,
+                        MinValue = 0,
+                        MaxValue = 10 * 60,
+                        WholeNumbers = true,
+                        Text = "Meltdown Sequence Time [NOT SUPPORTED, EDIT AT YOUR OWN RISK, NOT RECOMMENDED]",
+                        Enabled = CFG_OVERRIDE_APPARATUS_VALUE.Value,
+                        OnValueChanged = (self, value) => { CFG_MELTDOWN_TIME.Value = (int)value; Default.MELTDOWN_TIME = (int)value; }
+                    },
+                    new LabelComponent { Text = "Edit what enemies can spawn in the config file."},
+                    editableInGame
+                }
             });
+
+            ModMenu.RegisterMod(new ModMenu.ModSettingsConfig {
+                Name = MeltdownPlugin.modName,
+                Id = MeltdownPlugin.modGUID,
+                Version = MeltdownPlugin.modVersion,
+                Description = "Maybe taking the appartus isn't such a great idea... (GameSettings are hidden in game)",
+                MenuComponents = new MenuComponent[] {
+                    editableInGame
+                }
+            }, false, true);
         }
 
         [HarmonyPostfix]

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using FacilityMeltdown.API;
 using FacilityMeltdown.Behaviours;
@@ -15,13 +16,11 @@ using UnityEngine.Rendering.HighDefinition;
 namespace FacilityMeltdown {
     public class MeltdownHandler : NetworkBehaviour {
         static PlayerControllerB Player => GameNetworkManager.Instance.localPlayerController;
-
         private AudioSource musicSource;
         internal static MeltdownHandler Instance;
 
-        internal float meltdownTimer = 2 * 60;
+        internal float meltdownTimer;
 
-        private bool radiationIncrease = false;
         GameObject explosion;
         List<MeltdownSequenceEffect> activeEffects = new List<MeltdownSequenceEffect>();
 
@@ -51,6 +50,7 @@ namespace FacilityMeltdown {
                 return;
             }
             Instance = this;
+            meltdownTimer = MeltdownConfig.Instance.MELTDOWN_TIME;
             MeltdownPlugin.logger.LogInfo("Beginning Meltdown Sequence! I'd run if I was you!");
 
             musicSource = gameObject.AddComponent<AudioSource>();
@@ -65,6 +65,17 @@ namespace FacilityMeltdown {
             }
 
             if (GameNetworkManager.Instance.localPlayerController.IsServer) {
+                List<string> disallowed = MeltdownConfig.Instance.GetDisallowedEnemies();
+                List<SpawnableEnemyWithRarity> allowedEnemies = new List<SpawnableEnemyWithRarity>();
+                foreach(SpawnableEnemyWithRarity enemy in RoundManager.Instance.currentLevel.Enemies) {
+                    if (disallowed.Contains(enemy.enemyType.enemyName)) continue;
+                    allowedEnemies.Add(enemy);
+                }
+                List<int> spawnProbibilities = new List<int>();
+                foreach(SpawnableEnemyWithRarity enemy in allowedEnemies) {
+                    spawnProbibilities.Add(enemy.rarity);
+                }
+
                 List<EnemyVent> avaliableVents = new List<EnemyVent>();
                 for (int i = 0; i < RoundManager.Instance.allEnemyVents.Length; i++) {
                     if (!RoundManager.Instance.allEnemyVents[i].occupied) {
@@ -73,7 +84,12 @@ namespace FacilityMeltdown {
                 }
                 avaliableVents.Shuffle();
                 for (int i = 0; i < Mathf.Min(MeltdownConfig.Instance.MONSTER_SPAWN_AMOUNT, avaliableVents.Count); i++) {
-                    RoundManager.Instance.SpawnEnemyFromVent(avaliableVents[i]);
+                    EnemyVent vent = avaliableVents[i];
+                    int randomWeightedIndex = RoundManager.Instance.GetRandomWeightedIndex(spawnProbibilities.ToArray(), RoundManager.Instance.EnemySpawnRandom);
+                    RoundManager.Instance.currentEnemyPower += allowedEnemies[randomWeightedIndex].enemyType.PowerLevel;
+
+                    MeltdownPlugin.logger.LogInfo("Spawning a " + allowedEnemies[randomWeightedIndex].enemyType.enemyName + " during the meltdown sequence");
+                    vent.SpawnEnemy(allowedEnemies[randomWeightedIndex]);
                 }
             }
 
@@ -150,11 +166,6 @@ namespace FacilityMeltdown {
             }
 
             meltdownTimer -= Time.deltaTime;
-
-            if (meltdownTimer <= 60 && !radiationIncrease) {
-                radiationIncrease = true;
-                HUDManager.Instance.RadiationWarningHUD();
-            }
 
             if (meltdownTimer <= 3 && !shipManager.shipIsLeaving) { 
                 StartCoroutine(ShipTakeOff());

@@ -30,7 +30,13 @@ namespace FacilityMeltdown.Behaviours {
                 HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
             }
 
-            if (!player.isPlayerDead && player.isInsideFactory) KillPlayer();
+            if (!player.isPlayerDead && player.isInsideFactory) {
+                if(player.isInElevator) {
+                    MeltdownPlugin.logger.LogWarning("Player is inside ship and facility at the same time!! Did you teleport out? Aborting kill");
+                    return;
+                }
+                KillPlayer();
+            }
         }
 
         void Update() {

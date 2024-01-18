@@ -13,12 +13,15 @@ namespace FacilityMeltdown.Behaviours {
         float size = 0;
 
         AudioSource sound;
+        new Renderer renderer;
 
         void Awake() {
             sound = gameObject.AddComponent<AudioSource>();
             sound.clip = Assets.shockwave;
             sound.spatialBlend = 0;
             sound.loop = false;
+
+            renderer = GetComponent<Renderer>();
         }
 
         void Update() {
@@ -29,9 +32,10 @@ namespace FacilityMeltdown.Behaviours {
             transform.localScale = Vector3.one * size;
 
             if(player.isInsideFactory) {
-                // hide the shockwave
+                renderer.enabled = false;
             } else {
-                if(PlayerIsInsideShockwave() && !localPlayerCameraShake && MeltdownConfig.Default.CFG_SCREEN_SHAKE.Value) {
+                renderer.enabled = true;
+                if (PlayerIsInsideShockwave() && !localPlayerCameraShake && MeltdownConfig.Default.CFG_SCREEN_SHAKE.Value) {
                     if(MeltdownConfig.Default.CFG_SCREEN_SHAKE.Value) {
                         ScreenShake();
                     }

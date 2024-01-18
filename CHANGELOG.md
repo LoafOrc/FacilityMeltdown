@@ -1,3 +1,15 @@
+## v2.0
+- Added a terminal command, "reactor health". This commands utilises the ship's onboard scanners to survey the reactor and how it's currently going. With that survery that you'll be given information about how long until the ractor goes catastrophic and what the company currently recommends you do. However the ship's onboard scanners need to use so much energy to perform the reactor health check that they need some time to cooldown before you can scan again.
+- Made certain effects during the meltdown sequence speed up as it gets towards the reactor's explosion.
+- Added a new equipment item, the Geiger Counter! The Geiger Counter points you to certain areas of radioactive actvity (mainly the appartus).
+- Added credits for voicelines/music.
+- Fixed several spelling mistakes.
+- Added config options for the "reactor" command.
+- Allowed music and other visual settings to be modified in game with LethalSettings
+- Changed game balance options to signal a restart in LethalConfig
+- Made the shockwave hide while inside of the facility
+- Changed spawning mechanics to now disallow Snare fleas and Hoarding bugs from spawning becuase of the Appartus being pulled. (Changeable in config, this should also support modded enemies)
+
 ## v1.2
 - Added particle effects to explosion fireball
 - Added particle effects to the inside of the facility

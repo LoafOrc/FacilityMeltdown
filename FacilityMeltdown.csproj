@@ -243,12 +243,17 @@
     <Compile Include="API\MeltdownSequenceEffect.cs" />
     <Compile Include="Behaviours\FacilityExplosionHandler.cs" />
     <Compile Include="Behaviours\GeigerCounterItem.cs" />
+    <Compile Include="Behaviours\RadiationSource.cs" />
+    <Compile Include="Behaviours\SaveableObject.cs" />
     <Compile Include="Behaviours\Shockwave.cs" />
     <Compile Include="Effects\InsideFacilityParticleEffects.cs" />
     <Compile Include="Effects\EmergencyLightsEffect.cs" />
+    <Compile Include="Effects\RadiationIncreasingEffect.cs" />
     <Compile Include="Effects\ShockwaveSpawner.cs" />
     <Compile Include="Effects\WarningAnnouncerEffect.cs" />
+    <Compile Include="Networking\SaveableNetworkBehaviour.cs" />
     <Compile Include="Networking\SyncedInstance.cs" />
+    <Compile Include="Patches\BlobAIPatch.cs" />
     <Compile Include="TerminalHandler.cs" />
     <Compile Include="Util\Assets.cs" />
     <Compile Include="Util\MeltdownConfig.cs" />
@@ -297,10 +302,11 @@
     <Message Importance="high" Text="Building Thunderstore Package" />
     <Exec Command="tcli build" />
   </Target>
+	<!--
   <Target Name="CopyToUnity" AfterTargets="GetLatestAssetBundleHackFix">
     <Message Importance="high" Text="Copying to unity project." />
     <Copy SourceFiles="$(TargetDir)FacilityMeltdown.dll" DestinationFolder="D:\LethalCompanyMods\LethalCompanyUnity\Assets\FacilityMeltdown\" />
-  </Target>
+  </Target>-->
   <Target Name="CopyToDebugProfile" AfterTargets="GetLatestAssetBundleHackFix" Condition="'$(Configuration)' == 'Debug'">
     <Message Importance="high" Text="Copying to debug r2modman profile." />
     <Copy SourceFiles="$(TargetDir)FacilityMeltdown.dll;$(TargetDir)facilitymeltdown" DestinationFolder="C:\Program Files (x86)\Steam\steamapps\common\Lethal Company\BepInEx\plugins\" />
