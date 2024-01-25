@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using FacilityMeltdown.API;
 using FacilityMeltdown.Behaviours;
 using FacilityMeltdown.Util;
@@ -54,7 +53,7 @@ namespace FacilityMeltdown {
             MeltdownPlugin.logger.LogInfo("Beginning Meltdown Sequence! I'd run if I was you!");
 
             musicSource = gameObject.AddComponent<AudioSource>();
-            musicSource.clip = Assets.music;
+            musicSource.clip = MeltdownMusicManager.GetMusic(StartOfRound.Instance.currentLevel);
             musicSource.spatialBlend = 0;
             musicSource.loop = false;
             musicSource.Play();

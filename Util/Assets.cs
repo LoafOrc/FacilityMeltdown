@@ -14,7 +14,7 @@ namespace FacilityMeltdown {
         internal static AssetBundle assetBundle;
 
         internal static AudioClip[] warnings;
-        internal static AudioClip music, shockwave, scannerStart;
+        internal static AudioClip defaultMusic, shockwave, scannerStart;
         internal static GameObject facilityExplosionPrefab, meltdownHandlerPrefab, shockwavePrefab, geigerCounterItem;
         internal static GameObject[] facilityEffects;
         internal static Item geigerCounterItemDef;
@@ -29,7 +29,7 @@ namespace FacilityMeltdown {
                 assetBundle.LoadAsset<AudioClip>("warning4.mp3")
             };
 
-            music = assetBundle.LoadAsset<AudioClip>("music.mp3");
+            defaultMusic = assetBundle.LoadAsset<AudioClip>("music.mp3");
             shockwave = assetBundle.LoadAsset<AudioClip>("shockwave.mp3");
             scannerStart = assetBundle.LoadAsset<AudioClip>("scannerStart.mp3");
 
