@@ -14,3 +14,7 @@ C:\Users\rixon\Documents\LethalCompanyModding\FacilityMeltdown\obj\Release\Facil
 C:\Users\rixon\Documents\LethalCompanyModding\FacilityMeltdown\obj\Release\FacilityMeltdown.pdb
 C:\Users\rixon\Documents\LethalCompanyModding\FacilityMeltdown\bin\Release\FacilityMeltdown.dll.config
 D:\LethalCompanyMods\FacilityMeltdown\bin\Release\FacilityMeltdown.dll.config
+D:\LethalCompanyModding\FacilityMeltdown\obj\Release\FacilityMeltdown.csproj.AssemblyReference.cache
+D:\LethalCompanyModding\FacilityMeltdown\obj\Release\FacilityMeltdown.csproj.CoreCompileInputs.cache
+D:\LethalCompanyModding\FacilityMeltdown\obj\Release\FacilityMeltdown.dll
+D:\LethalCompanyModding\FacilityMeltdown\obj\Release\FacilityMeltdown.pdb

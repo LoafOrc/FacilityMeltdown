@@ -1,3 +1,6 @@
+## v2.1
+- Added a way for mods to add a custom way to
+
 ## v2.0
 - Added a terminal command, "reactor health". This commands utilises the ship's onboard scanners to survey the reactor and how it's currently going. With that survery that you'll be given information about how long until the ractor goes catastrophic and what the company currently recommends you do. However the ship's onboard scanners need to use so much energy to perform the reactor health check that they need some time to cooldown before you can scan again.
 - Made certain effects during the meltdown sequence speed up as it gets towards the reactor's explosion.
@@ -10,6 +13,15 @@
 - Made the shockwave hide while inside of the facility
 - Changed spawning mechanics to now disallow Snare fleas and Hoarding bugs from spawning becuase of the Appartus being pulled. (Changeable in config, this should also support modded enemies)
 
+### v2.0.1
+- Fix spelling mistakes
+- Rewrite some terminal dialogue to better match the theme.
+- Added tutorial on how to add custom music.
+- Update Dependency versions
+
+### v2.0.2
+- Slight readme change
+ 
 ## v1.2
 - Added particle effects to explosion fireball
 - Added particle effects to the inside of the facility
