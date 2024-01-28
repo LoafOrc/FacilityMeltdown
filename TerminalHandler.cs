@@ -76,11 +76,11 @@ namespace FacilityMeltdown {
                 DisplayTextSupplier = () => {
                     
                     if(MeltdownHandler.Instance) {
-                        string prefix = "USING LAST CACHED REPORT!\nThe ship's scanner needs to cooldown before you can scan the reactors health again!\n\n";
+                        string prefix = "SHIP SCANNER OVERHEAT ERROR!\nUSING LAST CACHED REPORT!\n\n";
                         if(ReactorHealthCheckReady()) {
                             lastHealthCheck = Time.time;
                             lastReport = GetNewReactorHealthReport();
-                            prefix = $"Generated a new reactor report, saving to cache. {MeltdownConfig.Instance.SHIP_SCANNER_COOLDOWN} seconds until scanners are ready to generate another one.\n\n";
+                            prefix = $"REPORT GENERATED... CACHED\nSCANNERS NEED {MeltdownConfig.Instance.SHIP_SCANNER_COOLDOWN} TO COOLDOWN\n\n";
                         }
 
                         return prefix + lastReport.GetTeminalOutput();

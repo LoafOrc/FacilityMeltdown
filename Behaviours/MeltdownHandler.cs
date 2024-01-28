@@ -59,9 +59,16 @@ namespace FacilityMeltdown {
             musicSource.Play();
 
             // Effect Handlers
-            foreach(MeltdownSequenceEffect effect in MeltdownSequenceEffect.effects) {
-                StartCoroutine(PlayMeltdownSequenceEffect(effect));
+            IEnumerator PlayEffects() {
+                foreach (MeltdownSequenceEffect effect in MeltdownSequenceEffect.effects) {
+                    StartCoroutine(PlayMeltdownSequenceEffect(effect));
+                    yield return new WaitForSeconds(.1f);
+                }
+
+                yield break;
             }
+            StartCoroutine(PlayEffects());
+            
 
             if (GameNetworkManager.Instance.localPlayerController.IsServer) {
                 List<string> disallowed = MeltdownConfig.Instance.GetDisallowedEnemies();

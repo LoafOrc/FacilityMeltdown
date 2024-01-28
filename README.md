@@ -13,6 +13,10 @@ If you are strugling with playing the mod have a look at the bottom of this read
 - A new piece of Equipment - the Geiger Counter! For just 90 credits you can be surverying the area for radiation in no time! Use it to find the appartus or other places of radioactive significance.
 - A new terminal command - "reactor health"! When the facility's reactor is melting down you need information! The reactor health command is here to provide you with vital information on how much time left you have until the facility goes catastrophic. It also includes what the company thinks you should do at this moment.
 
+## Custom Music
+FacilityMeltdown itself doesn't support custom music. However, this tutorial made by "platinumbin" on Discord shows you how to use the [PizzaTowerEscapeMusic](https://thunderstore.io/c/lethal-company/p/BGN/PizzaTowerEscapeMusic/) mod to add custom music.
+Link to tutorial: https://www.youtube.com/watch?v=D5hKkSLlEhk
+
 ## Config
 All game balance options are synced (only the host needs to edit them, but it wont hurt to have everyone using the same config). Visual and Audio settings are independent of what is synced.
 

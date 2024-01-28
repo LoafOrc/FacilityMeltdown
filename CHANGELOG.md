@@ -1,5 +1,8 @@
 ## v2.1
-- Added a way for mods to add a custom way to
+- Changed terminal dialogue again
+- Staggered creation of effects to mitigate lagspike on meltdown start
+- Hopefully fixed incompatibility with LCSoundTool by changing audio name
+- Added link to github
 
 ## v2.0
 - Added a terminal command, "reactor health". This commands utilises the ship's onboard scanners to survey the reactor and how it's currently going. With that survery that you'll be given information about how long until the ractor goes catastrophic and what the company currently recommends you do. However the ship's onboard scanners need to use so much energy to perform the reactor health check that they need some time to cooldown before you can scan again.
@@ -21,7 +24,7 @@
 
 ### v2.0.2
 - Slight readme change
- 
+
 ## v1.2
 - Added particle effects to explosion fireball
 - Added particle effects to the inside of the facility
