@@ -29,7 +29,7 @@ namespace FacilityMeltdown {
                 assetBundle.LoadAsset<AudioClip>("warning4.mp3")
             };
 
-            defaultMusic = assetBundle.LoadAsset<AudioClip>("meltdownMusic.mp3");
+            defaultMusic = assetBundle.LoadAsset<AudioClip>("music.mp3");
             shockwave = assetBundle.LoadAsset<AudioClip>("shockwave.mp3");
             scannerStart = assetBundle.LoadAsset<AudioClip>("scannerStart.mp3");
 

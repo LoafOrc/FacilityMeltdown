@@ -53,7 +53,7 @@ namespace FacilityMeltdown {
             MeltdownPlugin.logger.LogInfo("Beginning Meltdown Sequence! I'd run if I was you!");
 
             musicSource = gameObject.AddComponent<AudioSource>();
-            musicSource.clip = MeltdownMusicManager.GetMusic(StartOfRound.Instance.currentLevel);
+            musicSource.clip = Assets.defaultMusic;
             musicSource.spatialBlend = 0;
             musicSource.loop = false;
             musicSource.Play();
