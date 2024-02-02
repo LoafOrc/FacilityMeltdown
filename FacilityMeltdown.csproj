@@ -15,10 +15,12 @@
 	<ItemGroup>
 	  <None Remove="Lang\defs.json" />
 	  <None Remove="Lang\en.json" />
+	  <None Remove="Lang\es.json" />
 	</ItemGroup>
 	<ItemGroup>
 	  <EmbeddedResource Include="Lang\defs.json" />
 	  <EmbeddedResource Include="Lang\en.json" />
+	  <EmbeddedResource Include="Lang\es.json" />
 	</ItemGroup>
 
 	<!-- Primary Package References - BepInEx and GameLibs -->
