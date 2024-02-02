@@ -46,7 +46,7 @@ namespace FacilityMeltdown.API {
         }
 
         protected float GetMeltdownProgress(float time) {
-            return 1-(time / MeltdownConfig.Instance.MELTDOWN_TIME);
+            return 1-(time / MeltdownConfig.Instance.MELTDOWN_TIME.Value);
         }
         protected Vector3 PlacePositionInsideFacility(Vector3 position, float radius = 10f) {
             return RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(position, 10f, layerMask: -1, randomSeed: new System.Random());
