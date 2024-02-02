@@ -19,11 +19,12 @@ namespace FacilityMeltdown {
     [BepInPlugin(modGUID, modName, modVersion)]
     [BepInDependency("ainavt.lc.lethalconfig", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.willis.lc.lethalsettings", BepInDependency.DependencyFlags.SoftDependency)]
-    [BepInDependency(LethalLib.Plugin.ModGUID)]
+    [BepInDependency("evaisa.lethallib")]
+    [BepInDependency("io.github.CSync")]
     public class MeltdownPlugin : BaseUnityPlugin {
         internal const string modGUID = "me.loaforc.facilitymeltdown";
         internal const string modName = "FacilityMeltdown";
-        internal const string modVersion = "2.1.1";
+        internal const string modVersion = "2.2.0";
 
         private readonly Harmony harmony = new Harmony(modGUID);
         internal static MeltdownPlugin instance;

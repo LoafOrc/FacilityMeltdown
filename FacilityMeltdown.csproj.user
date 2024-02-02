@@ -1,0 +1,12 @@
+<Project>
+    <!-- Custom Variables -->
+    <PropertyGroup>
+        <PluginDirectory>C:\Program Files (x86)\Steam\steamapps\common\Lethal Company\BepInEx\plugins\</PluginDirectory>
+    </PropertyGroup>
+
+    <!-- Copy to Plugin Directory for Quicker Testing -->
+    <Target Name="CopyFiles" DependsOnTargets="NetcodePatcher" AfterTargets="PostBuildEvent">
+	<Message Importance="high" Text="Copying to local lethal company install" />
+        <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(PluginDirectory)"/>
+    </Target>
+</Project>
