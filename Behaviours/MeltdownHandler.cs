@@ -9,7 +9,6 @@ using FacilityMeltdown.Util;
 using GameNetcodeStuff;
 using JetBrains.Annotations;
 using Newtonsoft.Json.Linq;
-using RuntimeNetcodeRPCValidator;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
@@ -91,7 +90,7 @@ namespace FacilityMeltdown
                 HUDManager.Instance.DisplayGlobalNotification("Failed to find effect origin... Things will look broken.");
             }
 
-            if (MeltdownConfig.Default.CFG_SCREEN_SHAKE.Value) {
+            if (MeltdownConfig.Default.SCREEN_SHAKE.Value) {
                 HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
                 HUDManager.Instance.ShakeCamera(ScreenShakeType.Long);
             }
@@ -162,9 +161,9 @@ namespace FacilityMeltdown
             if (HasExplosionOccured()) return;
             StartOfRound shipManager = StartOfRound.Instance;
 
-            musicSource.volume = (float)MeltdownConfig.Default.CFG_MUSIC_VOLUME.Value / 100f;
+            musicSource.volume = (float)MeltdownConfig.Default.MUSIC_VOLUME.Value / 100f;
 
-            if (!Player.isInsideFactory && !MeltdownConfig.Default.CFG_MUSIC_PLAYS_OUTSIDE.Value) {
+            if (!Player.isInsideFactory && !MeltdownConfig.Default.MUSIC_PLAYS_OUTSIDE.Value) {
                 musicSource.volume = 0;
             }
 
