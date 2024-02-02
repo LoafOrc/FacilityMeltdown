@@ -1,3 +1,6 @@
+## v2.2
+- Added multi-language support
+
 ## v2.1
 - Changed terminal dialogue again
 - Staggered creation of effects to mitigate lagspike on meltdown start
