@@ -9,7 +9,6 @@ using FacilityMeltdown.Util;
 using GameNetcodeStuff;
 using JetBrains.Annotations;
 using Newtonsoft.Json.Linq;
-using RuntimeNetcodeRPCValidator;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
@@ -35,7 +34,7 @@ namespace FacilityMeltdown
                 return;
             }
             Instance = this;
-            meltdownTimer = MeltdownConfig.Instance.MELTDOWN_TIME;
+            meltdownTimer = MeltdownConfig.Instance.MELTDOWN_TIME.Value;
             MeltdownPlugin.logger.LogInfo("Beginning Meltdown Sequence! I'd run if I was you!");
 
             musicSource = gameObject.AddComponent<AudioSource>();
@@ -75,7 +74,7 @@ namespace FacilityMeltdown
                     }
                 }
                 avaliableVents.Shuffle();
-                for (int i = 0; i < Mathf.Min(MeltdownConfig.Instance.MONSTER_SPAWN_AMOUNT, avaliableVents.Count); i++) {
+                for (int i = 0; i < Mathf.Min(MeltdownConfig.Instance.MONSTER_SPAWN_AMOUNT.Value, avaliableVents.Count); i++) {
                     EnemyVent vent = avaliableVents[i];
                     int randomWeightedIndex = RoundManager.Instance.GetRandomWeightedIndex(spawnProbibilities.ToArray(), RoundManager.Instance.EnemySpawnRandom);
                     RoundManager.Instance.currentEnemyPower += allowedEnemies[randomWeightedIndex].enemyType.PowerLevel;
@@ -91,7 +90,7 @@ namespace FacilityMeltdown
                 HUDManager.Instance.DisplayGlobalNotification("Failed to find effect origin... Things will look broken.");
             }
 
-            if (MeltdownConfig.Default.CFG_SCREEN_SHAKE.Value) {
+            if (MeltdownConfig.Default.SCREEN_SHAKE.Value) {
                 HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
                 HUDManager.Instance.ShakeCamera(ScreenShakeType.Long);
             }
@@ -102,7 +101,7 @@ namespace FacilityMeltdown
             DialogueSegment[] dialogue = new DialogueSegment[translatedDialogue.Count];
             for (int i = 0; i < translatedDialogue.Count; i++) {
                 dialogue[i] = new DialogueSegment {
-                    bodyText = ((string)translatedDialogue[i]).Replace("<meltdown_time>", Math.Round((float)MeltdownConfig.Instance.MELTDOWN_TIME / 60).ToString()),
+                    bodyText = ((string)translatedDialogue[i]).Replace("<meltdown_time>", Math.Round((float)MeltdownConfig.Instance.MELTDOWN_TIME.Value / 60).ToString()),
                     speakerText = "meltdown.dialogue.speaker".Translate()
                 };
             }
@@ -162,9 +161,9 @@ namespace FacilityMeltdown
             if (HasExplosionOccured()) return;
             StartOfRound shipManager = StartOfRound.Instance;
 
-            musicSource.volume = (float)MeltdownConfig.Default.CFG_MUSIC_VOLUME.Value / 100f;
+            musicSource.volume = (float)MeltdownConfig.Default.MUSIC_VOLUME.Value / 100f;
 
-            if (!Player.isInsideFactory && !MeltdownConfig.Default.CFG_MUSIC_PLAYS_OUTSIDE.Value) {
+            if (!Player.isInsideFactory && !MeltdownConfig.Default.MUSIC_PLAYS_OUTSIDE.Value) {
                 musicSource.volume = 0;
             }
 

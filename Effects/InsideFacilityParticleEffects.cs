@@ -14,7 +14,7 @@ namespace FacilityMeltdown.Effects {
 
             
         public override IEnumerator Play(float timeLeftUntilMeltdown) {
-            if (MeltdownConfig.Default.CFG_SCREEN_SHAKE.Value) {
+            if (MeltdownConfig.Default.SCREEN_SHAKE.Value) {
                 for (int i = 0; i < Random.Range(5, 15); i++) { // todo: make this scale based on map size
                     Vector3 position = GetRandomPositionInsideFacility() + Vector3.up;
                     RaycastHit hit;
@@ -30,7 +30,7 @@ namespace FacilityMeltdown.Effects {
 
             if (player.isInsideFactory)
                 GameObject.Instantiate(StartOfRound.Instance.explosionPrefab, GetRandomPositionNearPlayer(), Quaternion.Euler(-90f, 0f, 0f), RoundManager.Instance.mapPropsContainer.transform);
-            if (MeltdownConfig.Default.CFG_SCREEN_SHAKE.Value) {
+            if (MeltdownConfig.Default.SCREEN_SHAKE.Value) {
                 if (timeLeftUntilMeltdown > 60) {
                     HUDManager.Instance.ShakeCamera(ScreenShakeType.Big);
                 } else {

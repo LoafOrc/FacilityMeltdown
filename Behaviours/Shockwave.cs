@@ -35,8 +35,8 @@ namespace FacilityMeltdown.Behaviours {
                 renderer.enabled = false;
             } else {
                 renderer.enabled = true;
-                if (PlayerIsInsideShockwave() && !localPlayerCameraShake && MeltdownConfig.Default.CFG_SCREEN_SHAKE.Value) {
-                    if(MeltdownConfig.Default.CFG_SCREEN_SHAKE.Value) {
+                if (PlayerIsInsideShockwave() && !localPlayerCameraShake && MeltdownConfig.Default.SCREEN_SHAKE.Value) {
+                    if(MeltdownConfig.Default.SCREEN_SHAKE.Value) {
                         ScreenShake();
                     }
                     localPlayerCameraShake = true;

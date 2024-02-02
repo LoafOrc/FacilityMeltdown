@@ -22,7 +22,7 @@ namespace FacilityMeltdown.Effects {
 
         public override IEnumerator Play(float timeLeftUntilMeltdown) {
             yield return new WaitForSeconds(Random.Range(2f, 4f));
-            warningAudioSource.volume = MeltdownConfig.Default.CFG_MUSIC_VOLUME.Value;
+            warningAudioSource.volume = MeltdownConfig.Default.MUSIC_VOLUME.Value;
 
             AudioClip sound = Assets.warnings[Random.Range(0, Assets.warnings.Length)];
             warningAudioSource.clip = sound;
