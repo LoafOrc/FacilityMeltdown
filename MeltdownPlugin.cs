@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using BepInEx;
 using BepInEx.Logging;
 using FacilityMeltdown.Effects;
+using FacilityMeltdown.Lang;
 using FacilityMeltdown.Patches;
 using FacilityMeltdown.Util;
 using HarmonyLib;
@@ -42,6 +43,8 @@ namespace FacilityMeltdown {
 
             MeltdownPlugin.logger.LogInfo("Setting up config...");
             meltdownConfig = new MeltdownConfig(Config);
+
+            LangParser.Init();
 
             RegisterPatches();
             RegisterEffects();

@@ -9,6 +9,7 @@ using JetBrains.Annotations;
 using TerminalApi;
 using TerminalApi.Classes;
 using UnityEngine;
+using UnityEngine.Rendering.HighDefinition;
 using static TerminalApi.Events.Events;
 using static TerminalApi.TerminalApi;
 
@@ -19,20 +20,23 @@ namespace FacilityMeltdown {
             public float generatedAt = Time.time;
 
             public string GetFlavourText() {
-                if (timeRemaining > 90) {
-                    return "The reactor is beginning to fail. It is recommened to finish up and get ready to leave.";
-                } else if (timeRemaining > 60) {
-                    return "The reactor is becoming more unstable, it is about to fail. Do not leave the ship or you risk company property. Any crew memebers still outside the ship are advised to return before the reactor completly fails.";
-                } else if (timeRemaining > 40) {
-                    return "The reactor is failing. You have very little time remaining before a catastrophic nuclear event happens.";
-                } else if (timeRemaining > 20) {
-                    return "The reactor is about to cause a catastrophic nuclear event. This is your last chance. Any remaining crew members have very little time before a massive reactor fail. If there are still in the facility they most likely are not making it out, on their own.";
+                if (timeRemaining/MeltdownConfig.Instance.MELTDOWN_TIME > .75f) {
+                    return "reactorscan.result.flavour.start";
+                } else if (timeRemaining / MeltdownConfig.Instance.MELTDOWN_TIME > .5f) {
+                    return "reactorscan.result.flavour.low";
+                } else if (timeRemaining / MeltdownConfig.Instance.MELTDOWN_TIME > .33f) {
+                    return "reactorscan.result.flavour.medium";
+                } else if (timeRemaining / MeltdownConfig.Instance.MELTDOWN_TIME > .15f) {
+                    return "reactorscan.result.flavour.high";
                 }
                 return "";
             }
 
             public string GetTeminalOutput() {
-                return $"Reactor instability at {reactorInstability}%\nApproximately {timeRemaining} seconds left until catastrophic nuclear event.\n\n{GetFlavourText()}\n\n";
+                String output = "reactorscan.result.unstable".Translate();
+                output = SubstituteVariables(output);
+                output += "\n\n" + SubstituteVariables(GetFlavourText().Translate()) + "\n\n";
+                return output;
             }
         }
 
@@ -40,6 +44,16 @@ namespace FacilityMeltdown {
         internal static ReactorHealthReport lastReport = null;
 
         internal static AudioSource source;
+
+        internal static string SubstituteVariables(string text) {
+            StringBuilder builder = new StringBuilder(text);
+
+            builder.Replace("<cooldown>", MeltdownConfig.Instance.SHIP_SCANNER_COOLDOWN.ToString());
+            builder.Replace("<instability>", lastReport.reactorInstability.ToString());
+            builder.Replace("<time_left>", lastReport.timeRemaining.ToString());
+            
+            return builder.ToString();
+        }
 
         internal static bool ReactorHealthCheckReady() {
             return Time.time >= lastHealthCheck + MeltdownConfig.Instance.SHIP_SCANNER_COOLDOWN;
@@ -76,17 +90,17 @@ namespace FacilityMeltdown {
                 DisplayTextSupplier = () => {
                     
                     if(MeltdownHandler.Instance) {
-                        string prefix = "SHIP SCANNER OVERHEAT ERROR!\nUSING LAST CACHED REPORT!\n\n";
+                        string prefix = "reactorscan.error.overheat";
                         if(ReactorHealthCheckReady()) {
                             lastHealthCheck = Time.time;
                             lastReport = GetNewReactorHealthReport();
-                            prefix = $"REPORT GENERATED... CACHED\nSCANNERS NEED {MeltdownConfig.Instance.SHIP_SCANNER_COOLDOWN} TO COOLDOWN\n\n";
+                            prefix = "reactorscan.success";
                         }
 
-                        return prefix + lastReport.GetTeminalOutput();
+                        return SubstituteVariables(prefix.Translate()) + lastReport.GetTeminalOutput();
 
                     } else {
-                        return "Reactor instability at 0%\nThe reactor is in good health. No caution is necessary.\n\n";
+                        return "reactorscan.result.stable".Translate();
                     }
                 },
                 Category = "Other",

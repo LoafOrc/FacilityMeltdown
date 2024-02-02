@@ -4,15 +4,18 @@ using System.Collections.Generic;
 using System.Linq;
 using FacilityMeltdown.API;
 using FacilityMeltdown.Behaviours;
+using FacilityMeltdown.Lang;
 using FacilityMeltdown.Util;
 using GameNetcodeStuff;
+using JetBrains.Annotations;
 using RuntimeNetcodeRPCValidator;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Rendering.HighDefinition;
 
-namespace FacilityMeltdown {
+namespace FacilityMeltdown
+{
     public class MeltdownHandler : NetworkBehaviour {
         static PlayerControllerB Player => GameNetworkManager.Instance.localPlayerController;
         private AudioSource musicSource;
@@ -103,6 +106,15 @@ namespace FacilityMeltdown {
             if(effectOrigin == Vector3.zero) {
                 MeltdownPlugin.logger.LogError("Effect Origin is Vector3.Zero! We couldn't find the effect origin");
                 HUDManager.Instance.DisplayGlobalNotification("Failed to find effect origin... Things will look broken.");
+            }
+
+            string[] translatedDialogue = LangParser.GetTranslationSet("meltdown.dialogue.start");
+            DialogueSegment[] introDialogue = new DialogueSegment[translatedDialogue.Length];
+            for (int i = 0; i < translatedDialogue.Length; i++) {
+                introDialogue[i] = new DialogueSegment {
+                    bodyText = translatedDialogue[i],
+                    speakerText = "meltdown.dialogue.speaker".Translate()
+                };
             }
 
             HUDManager.Instance.ReadDialogue(introDialogue);
