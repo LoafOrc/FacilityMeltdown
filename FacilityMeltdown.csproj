@@ -41,6 +41,7 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 	</ItemGroup>
 
   <ItemGroup>
@@ -200,6 +201,9 @@
     <Reference Include="Unity.RenderPipelines.HighDefinition.Runtime">
       <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Lethal Company\Lethal Company_Data\Managed\Unity.RenderPipelines.HighDefinition.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.TextMeshPro">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Lethal Company\Lethal Company_Data\Managed\Unity.TextMeshPro.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine">
       <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Lethal Company\Lethal Company_Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
@@ -267,6 +271,6 @@
   </Target>-->
   <Target Name="CopyToDebugProfile" AfterTargets="NetCodePatcher" Condition="'$(Configuration)' == 'Debug'">
     <Message Importance="high" Text="Copying to debug r2modman profile." />
-    <Copy SourceFiles="$(TargetDir)FacilityMeltdown.dll;$(TargetDir)facilitymeltdown" DestinationFolder="C:\Program Files (x86)\Steam\steamapps\common\Lethal Company\BepInEx\plugins\" />
+    <Copy SourceFiles="$(TargetDir)FacilityMeltdown.dll;$(TargetDir)FacilityMeltdown.pdb;$(TargetDir)facilitymeltdown" DestinationFolder="C:\Program Files (x86)\Steam\steamapps\common\Lethal Company\BepInEx\plugins\" />
   </Target>
 </Project>

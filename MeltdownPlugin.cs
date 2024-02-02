@@ -49,6 +49,8 @@ namespace FacilityMeltdown {
             logger.LogInfo("Setting up language part 2..");
             LangParser.SetLanguage(MeltdownConfig.Default.CFG_LANGUAGE.Value);
 
+            logger.LogInfo(LangParser.GetTranslationSet("meltdown.dialogue.start"));
+
             RegisterPatches();
             RegisterEffects();
 
@@ -105,6 +107,7 @@ namespace FacilityMeltdown {
             new ShockwaveSpawner();
             new WarningAnnouncerEffect();
             new RadiationIncreasingEffect();
+            new IntroDialogueSequencer();
         }
     }
 }

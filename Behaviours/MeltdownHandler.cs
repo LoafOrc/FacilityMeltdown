@@ -8,6 +8,7 @@ using FacilityMeltdown.Lang;
 using FacilityMeltdown.Util;
 using GameNetcodeStuff;
 using JetBrains.Annotations;
+using Newtonsoft.Json.Linq;
 using RuntimeNetcodeRPCValidator;
 using Unity.Netcode;
 using UnityEngine;
@@ -27,24 +28,6 @@ namespace FacilityMeltdown
         List<MeltdownSequenceEffect> activeEffects = new List<MeltdownSequenceEffect>();
 
         Vector3 effectOrigin;
-
-        readonly static DialogueSegment[] shipTakeOffDialogue = new DialogueSegment[] { 
-            new DialogueSegment { bodyText = "The company has deemed the current levels of radiation too high." },
-            new DialogueSegment { bodyText = "The company can not risk damaging its equipment." }
-        };
-
-        readonly static DialogueSegment[] introDialogue = new DialogueSegment[] {
-                new DialogueSegment {
-                    bodyText = "... FAILED TO CONNECT TO INTERNAL FACILITY COMPUTER ... IDENTIFIYING ROOT CAUSE ..."
-                    },
-                new DialogueSegment {
-                    bodyText = "UNSTABLE NUCLEAR REACTOR ... PREDICTING TIME UNTIL CATASTROPHIC EVENT ...",
-                    waitTime = 6
-                },
-                new DialogueSegment {
-                    bodyText = "<color=\"red\">2 MINUTES</color> UNTIL CATASTROPHIC NUCLEAR REACTOR EVENT"
-                }
-            };
 
         void Start() {
             if(Instance != null) {
@@ -108,20 +91,22 @@ namespace FacilityMeltdown
                 HUDManager.Instance.DisplayGlobalNotification("Failed to find effect origin... Things will look broken.");
             }
 
-            string[] translatedDialogue = LangParser.GetTranslationSet("meltdown.dialogue.start");
-            DialogueSegment[] introDialogue = new DialogueSegment[translatedDialogue.Length];
-            for (int i = 0; i < translatedDialogue.Length; i++) {
-                introDialogue[i] = new DialogueSegment {
-                    bodyText = translatedDialogue[i],
-                    speakerText = "meltdown.dialogue.speaker".Translate()
-                };
-            }
-
-            HUDManager.Instance.ReadDialogue(introDialogue);
             if (MeltdownConfig.Default.CFG_SCREEN_SHAKE.Value) {
                 HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
                 HUDManager.Instance.ShakeCamera(ScreenShakeType.Long);
             }
+        }
+
+        internal static DialogueSegment[] GetDialogue(string translation) {
+            JArray translatedDialogue = LangParser.GetTranslationSet(translation);
+            DialogueSegment[] dialogue = new DialogueSegment[translatedDialogue.Count];
+            for (int i = 0; i < translatedDialogue.Count; i++) {
+                dialogue[i] = new DialogueSegment {
+                    bodyText = ((string)translatedDialogue[i]).Replace("<meltdown_time>", Math.Round((float)MeltdownConfig.Instance.MELTDOWN_TIME / 60).ToString()),
+                    speakerText = "meltdown.dialogue.speaker".Translate()
+                };
+            }
+            return dialogue;
         }
         
         void OnDisable() { 
@@ -203,7 +188,7 @@ namespace FacilityMeltdown
             shipManager.shipLeftAutomatically = true;
             shipManager.shipIsLeaving = true;
 
-            HUDManager.Instance.ReadDialogue(shipTakeOffDialogue);
+            HUDManager.Instance.ReadDialogue(GetDialogue("meltdown.dialogue.shiptakeoff"));
 
             yield return new WaitForSeconds(3f); // Wait for explosion
             yield return new WaitForSeconds(3f);

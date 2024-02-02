@@ -1,5 +1,6 @@
 ﻿using FacilityMeltdown.Util;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -50,13 +51,15 @@ namespace FacilityMeltdown.Lang
             return GetTranslation("lang.missing").Replace("<translation_id>", translation);
         }
 
-        internal static string[] GetTranslationSet(string translation)
+        internal static JArray GetTranslationSet(string translation)
         {
+            
             if (loadedLanguage.TryGetValue(translation, out var result)) {
-                return (string[]) result;
+                MeltdownPlugin.logger.LogInfo(result.GetType());
+                return result as JArray;
             }
 
-            return new string[] { GetTranslation("lang.missing").Replace("<translation_id>", translation) };
+            return new JArray { GetTranslation("lang.missing").Replace("<translation_id>", translation) };
         }
     }
 }

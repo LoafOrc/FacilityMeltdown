@@ -89,9 +89,10 @@ namespace FacilityMeltdown.Util {
 
             CFG_LANGUAGE = file.Bind(
                 "Language", 
-                "Active Language", 
-                "en", 
-                "What language should FacilityMeltdown use? NOTE: This only affects facility meltdown and won't change the rest of the games langauge"
+                "ActiveLanguage", 
+                "en",
+                "What language should FacilityMeltdown use? NOTE: This only affects facility meltdown and won't change the rest of the games langauge\nLanguages Available: " +
+                string.Join(", ", LangParser.languages.Values)
                 );
 
             MeltdownPlugin.logger.LogInfo("Checking for any mod settings managers...");
@@ -219,6 +220,8 @@ namespace FacilityMeltdown.Util {
 
             LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(CFG_SCREEN_SHAKE, false));
             LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(CFG_PARTICLE_EFFECTS, false));
+
+            LethalConfigManager.AddConfigItem(new TextInputFieldConfigItem(CFG_LANGUAGE, true));
         }
 
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
@@ -232,11 +235,6 @@ namespace FacilityMeltdown.Util {
                 Enabled = CFG_OVERRIDE_APPARATUS_VALUE.Value,
                 OnValueChanged = (self, value) => { CFG_APPARATUS_VALUE.Value = (int)value; Default.APPARATUS_VALUE = (int)value; }
             };
-
-            List<TMP_Dropdown.OptionData> languageOptions = new List<TMP_Dropdown.OptionData>();
-            foreach(string language in LangParser.languages.Values) {
-                languageOptions.Add(new TMP_Dropdown.OptionData(language));
-            }
 
             VerticalComponent editableInGame = new VerticalComponent {
                 Children = new MenuComponent[] {
@@ -275,18 +273,21 @@ namespace FacilityMeltdown.Util {
                     new DropdownComponent {
                         Text = "Language",
                         Value = new TMP_Dropdown.OptionData(LangParser.languages[CFG_LANGUAGE.Value]),
-                        Options = languageOptions,
+                        Options = LangParser.languages.Values
+                            .Select(language => new TMP_Dropdown.OptionData(language))
+                            .ToList(),
                         OnValueChanged = (self, value) => {
-                            foreach(KeyValuePair<string, string> entry in LangParser.languages) {
-                                if(entry.Value.Equals(value)) {
-                                    CFG_LANGUAGE.Value = entry.Key;
-                                    LangParser.SetLanguage(entry.Key);
-
-                                    return;
-                                }
+                            // code absouletely shloinged from @willis
+                            var language = LangParser.languages
+                                .Where(x => x.Value == value.text)
+                                .Select(x => x.Key)
+                                .FirstOrDefault();
+                            if(language == null) {
+                                MeltdownPlugin.logger.LogError("Failed to get language! defaulting to english");
+                                language = "en";
                             }
-
-                            throw new NullReferenceException();
+                            CFG_LANGUAGE.Value = language;
+                            LangParser.SetLanguage(language);
                         }
                     }
                 }
@@ -329,12 +330,11 @@ namespace FacilityMeltdown.Util {
                         }
                     },
                     new SliderComponent {
-                        Value = CFG_APPARATUS_VALUE.Value,
+                        Value = CFG_MELTDOWN_TIME.Value,
                         MinValue = 0,
                         MaxValue = 10 * 60,
                         WholeNumbers = true,
                         Text = "Meltdown Sequence Time [NOT SUPPORTED, EDIT AT YOUR OWN RISK, NOT RECOMMENDED]",
-                        Enabled = CFG_OVERRIDE_APPARATUS_VALUE.Value,
                         OnValueChanged = (self, value) => { CFG_MELTDOWN_TIME.Value = (int)value; Default.MELTDOWN_TIME = (int)value; }
                     },
                     new LabelComponent { Text = "Edit what enemies can spawn in the config file."},
