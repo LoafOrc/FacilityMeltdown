@@ -34,7 +34,7 @@ namespace FacilityMeltdown
                 return;
             }
             Instance = this;
-            meltdownTimer = MeltdownConfig.Instance.MELTDOWN_TIME;
+            meltdownTimer = MeltdownConfig.Instance.MELTDOWN_TIME.Value;
             MeltdownPlugin.logger.LogInfo("Beginning Meltdown Sequence! I'd run if I was you!");
 
             musicSource = gameObject.AddComponent<AudioSource>();
@@ -74,7 +74,7 @@ namespace FacilityMeltdown
                     }
                 }
                 avaliableVents.Shuffle();
-                for (int i = 0; i < Mathf.Min(MeltdownConfig.Instance.MONSTER_SPAWN_AMOUNT, avaliableVents.Count); i++) {
+                for (int i = 0; i < Mathf.Min(MeltdownConfig.Instance.MONSTER_SPAWN_AMOUNT.Value, avaliableVents.Count); i++) {
                     EnemyVent vent = avaliableVents[i];
                     int randomWeightedIndex = RoundManager.Instance.GetRandomWeightedIndex(spawnProbibilities.ToArray(), RoundManager.Instance.EnemySpawnRandom);
                     RoundManager.Instance.currentEnemyPower += allowedEnemies[randomWeightedIndex].enemyType.PowerLevel;
@@ -101,7 +101,7 @@ namespace FacilityMeltdown
             DialogueSegment[] dialogue = new DialogueSegment[translatedDialogue.Count];
             for (int i = 0; i < translatedDialogue.Count; i++) {
                 dialogue[i] = new DialogueSegment {
-                    bodyText = ((string)translatedDialogue[i]).Replace("<meltdown_time>", Math.Round((float)MeltdownConfig.Instance.MELTDOWN_TIME / 60).ToString()),
+                    bodyText = ((string)translatedDialogue[i]).Replace("<meltdown_time>", Math.Round((float)MeltdownConfig.Instance.MELTDOWN_TIME.Value / 60).ToString()),
                     speakerText = "meltdown.dialogue.speaker".Translate()
                 };
             }

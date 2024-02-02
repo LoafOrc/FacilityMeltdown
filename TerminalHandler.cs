@@ -20,13 +20,13 @@ namespace FacilityMeltdown {
             public float generatedAt = Time.time;
 
             public string GetFlavourText() {
-                if (timeRemaining/MeltdownConfig.Instance.MELTDOWN_TIME > .75f) {
+                if (timeRemaining/MeltdownConfig.Instance.MELTDOWN_TIME.Value > .75f) {
                     return "reactorscan.result.flavour.start";
-                } else if (timeRemaining / MeltdownConfig.Instance.MELTDOWN_TIME > .5f) {
+                } else if (timeRemaining / MeltdownConfig.Instance.MELTDOWN_TIME.Value > .5f) {
                     return "reactorscan.result.flavour.low";
-                } else if (timeRemaining / MeltdownConfig.Instance.MELTDOWN_TIME > .33f) {
+                } else if (timeRemaining / MeltdownConfig.Instance.MELTDOWN_TIME.Value > .33f) {
                     return "reactorscan.result.flavour.medium";
-                } else if (timeRemaining / MeltdownConfig.Instance.MELTDOWN_TIME > .15f) {
+                } else if (timeRemaining / MeltdownConfig.Instance.MELTDOWN_TIME.Value > .15f) {
                     return "reactorscan.result.flavour.high";
                 }
                 return "";
@@ -48,7 +48,7 @@ namespace FacilityMeltdown {
         internal static string SubstituteVariables(string text) {
             StringBuilder builder = new StringBuilder(text);
 
-            builder.Replace("<cooldown>", MeltdownConfig.Instance.SHIP_SCANNER_COOLDOWN.ToString());
+            builder.Replace("<cooldown>", MeltdownConfig.Instance.SCAN_COOLDOWN.ToString());
             builder.Replace("<instability>", lastReport.reactorInstability.ToString());
             builder.Replace("<time_left>", lastReport.timeRemaining.ToString());
             
@@ -56,14 +56,14 @@ namespace FacilityMeltdown {
         }
 
         internal static bool ReactorHealthCheckReady() {
-            return Time.time >= lastHealthCheck + MeltdownConfig.Instance.SHIP_SCANNER_COOLDOWN;
+            return Time.time >= lastHealthCheck + MeltdownConfig.Instance.SCAN_COOLDOWN.Value;
         }
 
         internal static ReactorHealthReport GetNewReactorHealthReport() {
-            float reactorInstability = ((MeltdownConfig.Instance.MELTDOWN_TIME - MeltdownHandler.Instance.meltdownTimer) / MeltdownConfig.Instance.MELTDOWN_TIME) * 100; // this is at perfect accuracy
-            reactorInstability = Mathf.Round(reactorInstability / MeltdownConfig.Instance.SHIP_SCANNER_ACCURACY) * MeltdownConfig.Instance.SHIP_SCANNER_ACCURACY; // now the ship is not 100% perfect but still consistent (unlike a random value)
+            float reactorInstability = ((MeltdownConfig.Instance.MELTDOWN_TIME.Value - MeltdownHandler.Instance.meltdownTimer) / MeltdownConfig.Instance.MELTDOWN_TIME.Value) * 100; // this is at perfect accuracy
+            reactorInstability = Mathf.Round(reactorInstability / MeltdownConfig.Instance.SCAN_ACCURACY.Value) * MeltdownConfig.Instance.SCAN_ACCURACY.Value; // now the ship is not 100% perfect but still consistent (unlike a random value)
 
-            float timeRemaining = (1 - (reactorInstability / 100)) * MeltdownConfig.Instance.MELTDOWN_TIME; // not perfectly accurate either
+            float timeRemaining = (1 - (reactorInstability / 100)) * MeltdownConfig.Instance.MELTDOWN_TIME.Value; // not perfectly accurate either
 
             ReactorHealthReport report = new ReactorHealthReport {
                 reactorInstability = reactorInstability,

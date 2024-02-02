@@ -19,6 +19,8 @@ using HarmonyLib;
 using System.Runtime.Serialization;
 using CSync.Lib;
 using CSync.Util;
+using FacilityMeltdown.Lang;
+using TMPro;
 
 namespace FacilityMeltdown.Util {
     [DataContract]
@@ -35,6 +37,7 @@ namespace FacilityMeltdown.Util {
 
         internal ConfigEntry<float> MUSIC_VOLUME;
         internal ConfigEntry<bool> SCREEN_SHAKE, MUSIC_PLAYS_OUTSIDE, PARTICLE_EFFECTS;
+        internal ConfigEntry<string> LANGUAGE;
 
         [DataMember]
         internal string DISALLOWED_ENEMIES_HACKFIX; // CSync doesn't let you SyncedEntry<string>????
@@ -63,6 +66,14 @@ namespace FacilityMeltdown.Util {
             MUSIC_PLAYS_OUTSIDE = file.Bind("Audio", "MusicPlaysOutside", true, "Does the music play outside the facility?");
             SCREEN_SHAKE = file.Bind("Visuals", "ScreenShake", true, "Whether or not to shake the screen during the meltdown sequence.");
             PARTICLE_EFFECTS = file.Bind("Visuals", "ParticleEffects", true, "Should meltdown sequence contain particle effects? Doesn't include particle effects on the fireball.");
+
+            LANGUAGE = file.Bind(
+                "Language",
+                "ActiveLanguage",
+                "en",
+                "What language should FacilityMeltdown use? NOTE: This only affects facility meltdown and won't change the rest of the games langauge\nLanguages Available: " +
+                string.Join(", ", LangParser.languages.Values)
+                );
 
             MeltdownPlugin.logger.LogInfo("Checking for any mod settings managers...");
             if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("ainavt.lc.lethalconfig")) {
@@ -115,12 +126,6 @@ namespace FacilityMeltdown.Util {
             reader.ReadBytesSafe(ref data, val);
 
             SyncInstance(data);
-
-            if (MeltdownPlugin.modVersion != Instance.MOD_VERSION) {
-                HUDManager.Instance.AddTextToChatOnServer("FacilityMeltdown versions do not match! Please make sure all clients are running the latest version. The ability to play together on mismatched versions will be removed in later versions of FacilityMeltdown!");
-            } else {
-                MeltdownPlugin.logger.LogInfo("Successfully synced config with host.");
-            }
         }
 
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
@@ -129,9 +134,9 @@ namespace FacilityMeltdown.Util {
 
             LethalConfigManager.SetModDescription("Maybe taking the appartus isn't such a great idea...");
 
-            LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(OVERRIDE_APPARATUS_VALUE, true));
+            LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(OVERRIDE_APPARATUS_VALUE.GetFieldValue<ConfigEntry<bool>>("Entry"), true));
             LethalConfigManager.AddConfigItem(new IntSliderConfigItem(
-                APPARATUS_VALUE,
+                APPARATUS_VALUE.GetFieldValue<ConfigEntry<int>>("Entry"),
                 new IntSliderOptions {
                     Min = 80,
                     Max = 500,
@@ -139,7 +144,7 @@ namespace FacilityMeltdown.Util {
                 }
             ));
             LethalConfigManager.AddConfigItem(new IntSliderConfigItem(
-                MONSTER_SPAWN_AMOUNT,
+                MONSTER_SPAWN_AMOUNT.GetFieldValue<ConfigEntry<int>>("Entry"),
                 new IntSliderOptions {
                     Min = 0,
                     Max = 10,
@@ -147,10 +152,10 @@ namespace FacilityMeltdown.Util {
                 }
             ));
 
-            LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(EMERGENCY_LIGHTS, true));
+            LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(EMERGENCY_LIGHTS.GetFieldValue<ConfigEntry<bool>>("Entry"), true));
 
             LethalConfigManager.AddConfigItem(new FloatSliderConfigItem(
-                SCAN_COOLDOWN,
+                SCAN_COOLDOWN.GetFieldValue<ConfigEntry<float>>("Entry"),
                 new FloatSliderOptions {
                     Min = 0,
                     Max = 30,
@@ -158,7 +163,7 @@ namespace FacilityMeltdown.Util {
                 }
             ));
             LethalConfigManager.AddConfigItem(new FloatStepSliderConfigItem(
-                SCAN_ACCURACY,
+                SCAN_ACCURACY.GetFieldValue<ConfigEntry<float>>("Entry"),
                 new FloatStepSliderOptions {
                     Min = 0,
                     Step = 1,
@@ -168,7 +173,7 @@ namespace FacilityMeltdown.Util {
             ));
 
             LethalConfigManager.AddConfigItem(new IntSliderConfigItem(
-                MELTDOWN_TIME,
+                MELTDOWN_TIME.GetFieldValue<ConfigEntry<int>>("Entry"),
                 new IntSliderOptions {
                     Min = 0,
                     Max = 5 * 60,
@@ -189,18 +194,20 @@ namespace FacilityMeltdown.Util {
 
             LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(SCREEN_SHAKE, false));
             LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(PARTICLE_EFFECTS, false));
+
+            LethalConfigManager.AddConfigItem(new TextInputFieldConfigItem(LANGUAGE, true));
         }
 
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         internal void InitLethalSettings() {
             SliderComponent appratusValueSlider = new SliderComponent {
-                Value = APPARATUS_VALUE.Value,
+                Value = Default.APPARATUS_VALUE.Value,
                 MinValue = 80,
                 MaxValue = 500,
                 WholeNumbers = true,
                 Text = "Appartus Value",
                 Enabled = OVERRIDE_APPARATUS_VALUE.Value,
-                OnValueChanged = (self, value) => { APPARATUS_VALUE.Value = (int)value; Default.APPARATUS_VALUE = (int)value; }
+                OnValueChanged = (self, value) => { Default.APPARATUS_VALUE.Value = (int)value; }
             };
 
             VerticalComponent editableInGame = new VerticalComponent {
@@ -209,31 +216,54 @@ namespace FacilityMeltdown.Util {
                         Text = "Audio Settings [Client Side]"
                     },
                     new SliderComponent {
-                        Value = MUSIC_VOLUME.Value,
+                        Value = Default.MUSIC_VOLUME.Value,
                         MinValue = 0,
                         MaxValue = 100,
                         WholeNumbers = true,
                         Text = "Music Volume",
-                        OnValueChanged = (self, value) => MUSIC_VOLUME.Value = (int) value
+                        OnValueChanged = (self, value) => Default.MUSIC_VOLUME.Value = (int) value
                     },
                     new ToggleComponent {
                         Text = "Play Music Outside?",
-                        Value = MUSIC_PLAYS_OUTSIDE.Value,
-                        OnValueChanged = (self, value) => MUSIC_PLAYS_OUTSIDE.Value = value
+                        Value = Default.MUSIC_PLAYS_OUTSIDE.Value,
+                        OnValueChanged = (self, value) => Default.MUSIC_PLAYS_OUTSIDE.Value = value
                     },
                     new LabelComponent {
                         Text = "Visual Settings [Client Side]"
                     },
                     new ToggleComponent {
                         Text = "Screen Shake",
-                        Value = SCREEN_SHAKE.Value,
-                        OnValueChanged = (self, value) => SCREEN_SHAKE.Value = value
+                        Value = Default.SCREEN_SHAKE.Value,
+                        OnValueChanged = (self, value) => Default.SCREEN_SHAKE.Value = value
                     },
                     new ToggleComponent {
                         Text = "Particle Effects",
-                        Value = PARTICLE_EFFECTS.Value,
-                        OnValueChanged = (self, value) => PARTICLE_EFFECTS.Value = value
+                        Value = Default.PARTICLE_EFFECTS.Value,
+                        OnValueChanged = (self, value) => Default.PARTICLE_EFFECTS.Value = value
                     },
+                    new LabelComponent {
+                        Text = "Language Settings [Client Side]",
+                    },
+                    new DropdownComponent {
+                        Text = "Language",
+                        Value = new TMP_Dropdown.OptionData(LangParser.languages[LANGUAGE.Value]),
+                        Options = LangParser.languages.Values
+                            .Select(language => new TMP_Dropdown.OptionData(language))
+                            .ToList(),
+                        OnValueChanged = (self, value) => {
+                            // code absouletely shloinged from @willis
+                            var language = LangParser.languages
+                                .Where(x => x.Value == value.text)
+                                .Select(x => x.Key)
+                                .FirstOrDefault();
+                            if(language == null) {
+                                MeltdownPlugin.logger.LogError("Failed to get language! defaulting to english");
+                                language = "en";
+                            }
+                            LANGUAGE.Value = language;
+                            LangParser.SetLanguage(language);
+                        }
+                    }
                 }
             };
 
@@ -249,38 +279,36 @@ namespace FacilityMeltdown.Util {
                     },
                     new ToggleComponent {
                         Text = "Override Appartus Value?",
-                        Value = OVERRIDE_APPARATUS_VALUE.Value,
+                        Value = Default.OVERRIDE_APPARATUS_VALUE.Value,
                         OnValueChanged = (self, value) => {
-                            OVERRIDE_APPARATUS_VALUE.Value = value;
-                            OVERRIDE_APPARATUS_VALUE = value;
+                            Default.OVERRIDE_APPARATUS_VALUE.Value = value;
                             appratusValueSlider.Enabled = value;
                         }
                     },
                     appratusValueSlider,
                     new SliderComponent {
-                        Value = MONSTER_SPAWN_AMOUNT.Value,
+                        Value = Default.MONSTER_SPAWN_AMOUNT.Value,
                         MinValue = 0,
                         MaxValue = 10,
                         WholeNumbers = true,
                         Text = "Monster Spawn Amount",
-                        OnValueChanged = (self, value) => { MONSTER_SPAWN_AMOUNT.Value = (int)value; Default.MONSTER_SPAWN_AMOUNT = (int)value; }
+                        OnValueChanged = (self, value) => { Default.MONSTER_SPAWN_AMOUNT.Value = (int)value; }
                     },
                     new ToggleComponent {
                         Text = "Facility has Emergency Lights?",
-                        Value = EMERGENCY_LIGHTS.Value,
+                        Value = Default.EMERGENCY_LIGHTS.Value,
                         OnValueChanged = (self, value) => {
-                            EMERGENCY_LIGHTS.Value = value;
-                            EMERGENCY_LIGHTS = value;
+                            Default.EMERGENCY_LIGHTS.Value = value;
                         }
                     },
                     new SliderComponent {
-                        Value = APPARATUS_VALUE.Value,
+                        Value = Default.APPARATUS_VALUE.Value,
                         MinValue = 0,
                         MaxValue = 10 * 60,
                         WholeNumbers = true,
                         Text = "Meltdown Sequence Time [NOT SUPPORTED, EDIT AT YOUR OWN RISK, NOT RECOMMENDED]",
-                        Enabled = OVERRIDE_APPARATUS_VALUE.Value,
-                        OnValueChanged = (self, value) => { MELTDOWN_TIME.Value = (int)value; Default.MELTDOWN_TIME = (int)value; }
+                        Enabled = Default.OVERRIDE_APPARATUS_VALUE.Value,
+                        OnValueChanged = (self, value) => { Default.MELTDOWN_TIME.Value = (int)value; }
                     },
                     new LabelComponent { Text = "Edit what enemies can spawn in the config file."},
                     editableInGame

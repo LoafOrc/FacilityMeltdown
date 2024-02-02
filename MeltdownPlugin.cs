@@ -46,7 +46,7 @@ namespace FacilityMeltdown {
             meltdownConfig = new MeltdownConfig(Config);
 
             logger.LogInfo("Setting up language part 2..");
-            LangParser.SetLanguage(MeltdownConfig.Default.CFG_LANGUAGE.Value);
+            LangParser.SetLanguage(MeltdownConfig.Default.LANGUAGE.Value);
 
             logger.LogInfo(LangParser.GetTranslationSet("meltdown.dialogue.start"));
 

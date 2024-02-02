@@ -20,8 +20,8 @@ namespace FacilityMeltdown.Patches {
 
             // We just took it out
             try { // make sure to surround in try catch because this is a prefix
-                if (MeltdownConfig.Instance.OVERRIDE_APPARATUS_VALUE)
-                    __instance.scrapValue = MeltdownConfig.Instance.APPARATUS_VALUE;
+                if (MeltdownConfig.Instance.OVERRIDE_APPARATUS_VALUE.Value)
+                    __instance.scrapValue = MeltdownConfig.Instance.APPARATUS_VALUE.Value;
                 GameObject meltdown = GameObject.Instantiate(Assets.meltdownHandlerPrefab);
                 meltdown.GetComponent<NetworkObject>().Spawn();
             } catch (Exception ex) { 
@@ -35,8 +35,8 @@ namespace FacilityMeltdown.Patches {
             source.radiationAmount = 40;
             source.radiationDistance = 40;
 
-            if (MeltdownConfig.Instance.OVERRIDE_APPARATUS_VALUE)
-                __instance.scrapValue = MeltdownConfig.Instance.APPARATUS_VALUE;
+            if (MeltdownConfig.Instance.OVERRIDE_APPARATUS_VALUE.Value)
+                __instance.scrapValue = MeltdownConfig.Instance.APPARATUS_VALUE.Value;
             //___isLungDocked = false; // fix joining late
         }
     }
