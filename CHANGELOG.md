@@ -1,6 +1,7 @@
 ## v2.2
 - Added multi-language support
 - Update config syncing to use [CSync](https://thunderstore.io/c/lethal-company/p/Owen3H/CSync/) to be not silly anymore
+- Spanish (Español) is avaliable as a language, thanks to @moroxide on discord!
 
 ## v2.1
 - Changed terminal dialogue again
