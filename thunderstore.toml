@@ -12,7 +12,7 @@ containsNsfwContent = false
 BepInEx-BepInExPack = "5.4.2100"
 Evaisa-LethalLib = "0.14.2"
 NotAtomicBomb-TerminalApi = "1.5.1"
-Owen3H-CSync = "1.0.4"
+Owen3H-CSync = "1.0.6"
 
 [build]
 icon = "./icon.png"
