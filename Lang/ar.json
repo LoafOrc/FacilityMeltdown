@@ -14,7 +14,7 @@
 
     "meltdown.dialogue.start": [
         " ... فشل الاتصال بكمبيوتر المنشأة الداخلي ... تحديد السبب الجذري ... المفاعل النووي غير مستقر ... التنبؤ بالوقت قبل وقوع الكارثة",
-        "<color=\"red\"><meltdown_time> MINUTES</color> حتى وقوع  انفجار المفاعل النووي الكارثي"
+        "<color=\"red\"><meltdown_time> دقيقة</color> حتى وقوع  انفجار المفاعل النووي الكارثي"
     ],
 
     "meltdown.dialogue.shiptakeoff": [
