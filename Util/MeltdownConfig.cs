@@ -32,18 +32,15 @@ namespace FacilityMeltdown.Util {
         [DataMember]
         internal SyncedEntry<float> SCAN_COOLDOWN, SCAN_ACCURACY;
         
-        // todo: set this to a synced entry when CSync fixes
-        internal ConfigEntry<string> DISALLOWED_ENEMIES;
+        [DataMember]
+        internal SyncedEntry<string> DISALLOWED_ENEMIES;
 
         internal ConfigEntry<float> MUSIC_VOLUME;
         internal ConfigEntry<bool> SCREEN_SHAKE, MUSIC_PLAYS_OUTSIDE, PARTICLE_EFFECTS;
         internal ConfigEntry<string> LANGUAGE;
 
-        [DataMember]
-        internal string DISALLOWED_ENEMIES_HACKFIX; // CSync doesn't let you SyncedEntry<string>????
-
         internal List<string> GetDisallowedEnemies() {
-            return DISALLOWED_ENEMIES_HACKFIX.Split(',').ToList();
+            return DISALLOWED_ENEMIES.Value.Split(',').ToList();
         }
 
         internal MeltdownConfig(ConfigFile file) { 
@@ -54,8 +51,7 @@ namespace FacilityMeltdown.Util {
             MONSTER_SPAWN_AMOUNT = file.BindSyncedEntry("GameBalance", "MonsterSpawnAmount", 5, "How many monsters should spawn during the meltdown sequence? Set to 0 to disable.");
             EMERGENCY_LIGHTS = file.BindSyncedEntry("GameBalance", "EmergencyLights", true, "Should the lights turn on periodically? Disabling this option makes them permanently off. (Matches Vanilla Behaviour)");
 
-            DISALLOWED_ENEMIES = file.Bind("GameBalance", "DisallowedEnemies", "Centipede,Hoarding bug", "What enemies to exclude from spawning in the meltdown sequence. Comma seperated list. \"Should\" support modded entities");
-            DISALLOWED_ENEMIES_HACKFIX = DISALLOWED_ENEMIES.Value;
+            DISALLOWED_ENEMIES = file.BindSyncedEntry("GameBalance", "DisallowedEnemies", "Centipede,Hoarding bug", "What enemies to exclude from spawning in the meltdown sequence. Comma seperated list. \"Should\" support modded entities");
 
             MELTDOWN_TIME = file.BindSyncedEntry("GameBalance", "MeltdownTime", 120, "ABSOLUETLY NOT SUPPORTED OR RECOMMENDED! Change the length of the meltdown sequence. If this breaks I am not fixing it, you have been warned.");
 
@@ -134,9 +130,9 @@ namespace FacilityMeltdown.Util {
 
             LethalConfigManager.SetModDescription("Maybe taking the appartus isn't such a great idea...");
 
-            LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(OVERRIDE_APPARATUS_VALUE.GetFieldValue<ConfigEntry<bool>>("Entry"), true));
+            LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(OVERRIDE_APPARATUS_VALUE.Entry, true));
             LethalConfigManager.AddConfigItem(new IntSliderConfigItem(
-                APPARATUS_VALUE.GetFieldValue<ConfigEntry<int>>("Entry"),
+                APPARATUS_VALUE.Entry,
                 new IntSliderOptions {
                     Min = 80,
                     Max = 500,
@@ -144,7 +140,7 @@ namespace FacilityMeltdown.Util {
                 }
             ));
             LethalConfigManager.AddConfigItem(new IntSliderConfigItem(
-                MONSTER_SPAWN_AMOUNT.GetFieldValue<ConfigEntry<int>>("Entry"),
+                MONSTER_SPAWN_AMOUNT.Entry,
                 new IntSliderOptions {
                     Min = 0,
                     Max = 10,
@@ -152,10 +148,10 @@ namespace FacilityMeltdown.Util {
                 }
             ));
 
-            LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(EMERGENCY_LIGHTS.GetFieldValue<ConfigEntry<bool>>("Entry"), true));
+            LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(EMERGENCY_LIGHTS.Entry, true));
 
             LethalConfigManager.AddConfigItem(new FloatSliderConfigItem(
-                SCAN_COOLDOWN.GetFieldValue<ConfigEntry<float>>("Entry"),
+                SCAN_COOLDOWN.Entry,
                 new FloatSliderOptions {
                     Min = 0,
                     Max = 30,
@@ -163,7 +159,7 @@ namespace FacilityMeltdown.Util {
                 }
             ));
             LethalConfigManager.AddConfigItem(new FloatStepSliderConfigItem(
-                SCAN_ACCURACY.GetFieldValue<ConfigEntry<float>>("Entry"),
+                SCAN_ACCURACY.Entry,
                 new FloatStepSliderOptions {
                     Min = 0,
                     Step = 1,
@@ -173,7 +169,7 @@ namespace FacilityMeltdown.Util {
             ));
 
             LethalConfigManager.AddConfigItem(new IntSliderConfigItem(
-                MELTDOWN_TIME.GetFieldValue<ConfigEntry<int>>("Entry"),
+                MELTDOWN_TIME.Entry ,
                 new IntSliderOptions {
                     Min = 0,
                     Max = 5 * 60,
