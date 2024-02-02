@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using FacilityMeltdown.Util;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,7 +21,7 @@ namespace FacilityMeltdown.Lang
 
             languages = JsonConvert.DeserializeObject<Dictionary<string, string>>(result);
 
-            SetLanguage("en");
+            SetLanguage(MeltdownConfig.Default.CFG_LANGUAGE.Value);
         }
 
         internal static void SetLanguage(string id)

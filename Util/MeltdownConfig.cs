@@ -38,6 +38,8 @@ namespace FacilityMeltdown.Util {
         internal ConfigEntry<float> CFG_MUSIC_VOLUME;
         [NonSerialized]
         internal ConfigEntry<bool> CFG_SCREEN_SHAKE, CFG_MUSIC_PLAYS_OUTSIDE, CFG_PARTICLE_EFFECTS;
+        [NonSerialized]
+        internal ConfigEntry<string> CFG_LANGUAGE;
 
         [DataMember]
         private string MOD_VERSION = MeltdownPlugin.modVersion;
@@ -82,6 +84,8 @@ namespace FacilityMeltdown.Util {
             CFG_MUSIC_PLAYS_OUTSIDE = file.Bind("Audio", "MusicPlaysOutside", true, "Does the music play outside the facility?");
             CFG_SCREEN_SHAKE = file.Bind("Visuals", "ScreenShake", true, "Whether or not to shake the screen during the meltdown sequence.");
             CFG_PARTICLE_EFFECTS = file.Bind("Visuals", "ParticleEffects", true, "Should meltdown sequence contain particle effects? Doesn't include particle effects on the fireball.");
+
+            CFG_LANGUAGE = file.Bind("Language", "Active Language", "en", "What language should FacilityMeltdown use? NOTE: This only affects facility meltdown and won't change the rest of the games langauge");
 
             MeltdownPlugin.logger.LogInfo("Checking for any mod settings managers...");
             if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("ainavt.lc.lethalconfig")) {
