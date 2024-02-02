@@ -18,6 +18,8 @@ using RuntimeNetcodeRPCValidator;
 using GameNetcodeStuff;
 using HarmonyLib;
 using System.Runtime.Serialization;
+using TMPro;
+using FacilityMeltdown.Lang;
 
 namespace FacilityMeltdown.Util {
     [Serializable]
@@ -85,7 +87,12 @@ namespace FacilityMeltdown.Util {
             CFG_SCREEN_SHAKE = file.Bind("Visuals", "ScreenShake", true, "Whether or not to shake the screen during the meltdown sequence.");
             CFG_PARTICLE_EFFECTS = file.Bind("Visuals", "ParticleEffects", true, "Should meltdown sequence contain particle effects? Doesn't include particle effects on the fireball.");
 
-            CFG_LANGUAGE = file.Bind("Language", "Active Language", "en", "What language should FacilityMeltdown use? NOTE: This only affects facility meltdown and won't change the rest of the games langauge");
+            CFG_LANGUAGE = file.Bind(
+                "Language", 
+                "Active Language", 
+                "en", 
+                "What language should FacilityMeltdown use? NOTE: This only affects facility meltdown and won't change the rest of the games langauge"
+                );
 
             MeltdownPlugin.logger.LogInfo("Checking for any mod settings managers...");
             if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("ainavt.lc.lethalconfig")) {
@@ -226,6 +233,11 @@ namespace FacilityMeltdown.Util {
                 OnValueChanged = (self, value) => { CFG_APPARATUS_VALUE.Value = (int)value; Default.APPARATUS_VALUE = (int)value; }
             };
 
+            List<TMP_Dropdown.OptionData> languageOptions = new List<TMP_Dropdown.OptionData>();
+            foreach(string language in LangParser.languages.Values) {
+                languageOptions.Add(new TMP_Dropdown.OptionData(language));
+            }
+
             VerticalComponent editableInGame = new VerticalComponent {
                 Children = new MenuComponent[] {
                     new LabelComponent {
@@ -257,6 +269,26 @@ namespace FacilityMeltdown.Util {
                         Value = CFG_PARTICLE_EFFECTS.Value,
                         OnValueChanged = (self, value) => CFG_PARTICLE_EFFECTS.Value = value
                     },
+                    new LabelComponent {
+                        Text = "Language Settings [Client Side]",
+                    },
+                    new DropdownComponent {
+                        Text = "Language",
+                        Value = new TMP_Dropdown.OptionData(LangParser.languages[CFG_LANGUAGE.Value]),
+                        Options = languageOptions,
+                        OnValueChanged = (self, value) => {
+                            foreach(KeyValuePair<string, string> entry in LangParser.languages) {
+                                if(entry.Value.Equals(value)) {
+                                    CFG_LANGUAGE.Value = entry.Key;
+                                    LangParser.SetLanguage(entry.Key);
+
+                                    return;
+                                }
+                            }
+
+                            throw new NullReferenceException();
+                        }
+                    }
                 }
             };
 

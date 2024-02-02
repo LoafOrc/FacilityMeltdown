@@ -40,11 +40,14 @@ namespace FacilityMeltdown {
             Assets.Init();
 
             RegisterNetworking();
+            logger.LogInfo("Setting up language");
+            LangParser.Init();
 
-            MeltdownPlugin.logger.LogInfo("Setting up config...");
+            logger.LogInfo("Setting up config...");
             meltdownConfig = new MeltdownConfig(Config);
 
-            LangParser.Init();
+            logger.LogInfo("Setting up language part 2..");
+            LangParser.SetLanguage(MeltdownConfig.Default.CFG_LANGUAGE.Value);
 
             RegisterPatches();
             RegisterEffects();

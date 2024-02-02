@@ -20,8 +20,6 @@ namespace FacilityMeltdown.Lang
             string result = reader.ReadToEnd();
 
             languages = JsonConvert.DeserializeObject<Dictionary<string, string>>(result);
-
-            SetLanguage(MeltdownConfig.Default.CFG_LANGUAGE.Value);
         }
 
         internal static void SetLanguage(string id)
