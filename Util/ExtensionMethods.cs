@@ -1,11 +1,13 @@
-﻿using System;
+﻿using FacilityMeltdown.Lang;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace FacilityMeltdown {
+namespace FacilityMeltdown
+{
     internal static class ExtensionMethods {
         private static System.Random rng = new System.Random();
 
@@ -31,6 +33,10 @@ namespace FacilityMeltdown {
             MeltdownPlugin.logger.LogInfo("Verifing... " + RoundManager.Instance.currentLevel.Enemies[RoundManager.Instance.currentLevel.Enemies.IndexOf(enemy)].enemyType.enemyName);
             vent.OpenVentClientRpc();
             vent.occupied = false;
+        }
+
+        internal static String Translate(this String text) {
+            return LangParser.GetTranslation(text);
         }
     }
 }

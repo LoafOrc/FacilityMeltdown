@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using BepInEx;
 using BepInEx.Logging;
 using FacilityMeltdown.Effects;
+using FacilityMeltdown.Lang;
 using FacilityMeltdown.Patches;
 using FacilityMeltdown.Util;
 using HarmonyLib;
@@ -39,9 +40,16 @@ namespace FacilityMeltdown {
             Assets.Init();
 
             RegisterNetworking();
+            logger.LogInfo("Setting up language");
+            LangParser.Init();
 
-            MeltdownPlugin.logger.LogInfo("Setting up config...");
+            logger.LogInfo("Setting up config...");
             meltdownConfig = new MeltdownConfig(Config);
+
+            logger.LogInfo("Setting up language part 2..");
+            LangParser.SetLanguage(MeltdownConfig.Default.CFG_LANGUAGE.Value);
+
+            logger.LogInfo(LangParser.GetTranslationSet("meltdown.dialogue.start"));
 
             RegisterPatches();
             RegisterEffects();
@@ -99,6 +107,7 @@ namespace FacilityMeltdown {
             new ShockwaveSpawner();
             new WarningAnnouncerEffect();
             new RadiationIncreasingEffect();
+            new IntroDialogueSequencer();
         }
     }
 }

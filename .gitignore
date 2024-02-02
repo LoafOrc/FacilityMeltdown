@@ -3,3 +3,5 @@ bin/**
 build/**
 obj/**
 packages/**
+.vs/**
+.vs/FacilityMeltdown/v17/.suo

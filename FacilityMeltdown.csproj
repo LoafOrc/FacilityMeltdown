@@ -28,13 +28,20 @@
     <None Remove=".gitignore" />
     <None Remove="app.config" />
     <None Remove="icon.png" />
+    <None Remove="Lang\defs.json" />
+    <None Remove="Lang\en.json" />
     <None Remove="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Lang\defs.json" />
+    <EmbeddedResource Include="Lang\en.json" />
   </ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.1">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 	</ItemGroup>
 
   <ItemGroup>
@@ -117,6 +124,9 @@
     <Reference Include="NetcodePatcher.MSBuild, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\Evaisa.NetcodePatcher.MSBuild.3.3.4\lib\net472\NetcodePatcher.MSBuild.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Lethal Company\Lethal Company_Data\Managed\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="NicholaScott.BepInEx.RuntimeNetcodeRPCValidator">
       <HintPath>Dependencies\NicholaScott.BepInEx.RuntimeNetcodeRPCValidator.dll</HintPath>
     </Reference>
@@ -191,6 +201,9 @@
     <Reference Include="Unity.RenderPipelines.HighDefinition.Runtime">
       <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Lethal Company\Lethal Company_Data\Managed\Unity.RenderPipelines.HighDefinition.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.TextMeshPro">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Lethal Company\Lethal Company_Data\Managed\Unity.TextMeshPro.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine">
       <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Lethal Company\Lethal Company_Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
@@ -258,6 +271,6 @@
   </Target>-->
   <Target Name="CopyToDebugProfile" AfterTargets="NetCodePatcher" Condition="'$(Configuration)' == 'Debug'">
     <Message Importance="high" Text="Copying to debug r2modman profile." />
-    <Copy SourceFiles="$(TargetDir)FacilityMeltdown.dll;$(TargetDir)facilitymeltdown" DestinationFolder="C:\Program Files (x86)\Steam\steamapps\common\Lethal Company\BepInEx\plugins\" />
+    <Copy SourceFiles="$(TargetDir)FacilityMeltdown.dll;$(TargetDir)FacilityMeltdown.pdb;$(TargetDir)facilitymeltdown" DestinationFolder="C:\Program Files (x86)\Steam\steamapps\common\Lethal Company\BepInEx\plugins\" />
   </Target>
 </Project>

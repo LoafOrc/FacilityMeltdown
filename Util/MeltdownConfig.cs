@@ -18,6 +18,8 @@ using RuntimeNetcodeRPCValidator;
 using GameNetcodeStuff;
 using HarmonyLib;
 using System.Runtime.Serialization;
+using TMPro;
+using FacilityMeltdown.Lang;
 
 namespace FacilityMeltdown.Util {
     [Serializable]
@@ -38,6 +40,8 @@ namespace FacilityMeltdown.Util {
         internal ConfigEntry<float> CFG_MUSIC_VOLUME;
         [NonSerialized]
         internal ConfigEntry<bool> CFG_SCREEN_SHAKE, CFG_MUSIC_PLAYS_OUTSIDE, CFG_PARTICLE_EFFECTS;
+        [NonSerialized]
+        internal ConfigEntry<string> CFG_LANGUAGE;
 
         [DataMember]
         private string MOD_VERSION = MeltdownPlugin.modVersion;
@@ -82,6 +86,14 @@ namespace FacilityMeltdown.Util {
             CFG_MUSIC_PLAYS_OUTSIDE = file.Bind("Audio", "MusicPlaysOutside", true, "Does the music play outside the facility?");
             CFG_SCREEN_SHAKE = file.Bind("Visuals", "ScreenShake", true, "Whether or not to shake the screen during the meltdown sequence.");
             CFG_PARTICLE_EFFECTS = file.Bind("Visuals", "ParticleEffects", true, "Should meltdown sequence contain particle effects? Doesn't include particle effects on the fireball.");
+
+            CFG_LANGUAGE = file.Bind(
+                "Language", 
+                "ActiveLanguage", 
+                "en",
+                "What language should FacilityMeltdown use? NOTE: This only affects facility meltdown and won't change the rest of the games langauge\nLanguages Available: " +
+                string.Join(", ", LangParser.languages.Values)
+                );
 
             MeltdownPlugin.logger.LogInfo("Checking for any mod settings managers...");
             if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("ainavt.lc.lethalconfig")) {
@@ -208,6 +220,8 @@ namespace FacilityMeltdown.Util {
 
             LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(CFG_SCREEN_SHAKE, false));
             LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(CFG_PARTICLE_EFFECTS, false));
+
+            LethalConfigManager.AddConfigItem(new TextInputFieldConfigItem(CFG_LANGUAGE, true));
         }
 
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
@@ -253,6 +267,29 @@ namespace FacilityMeltdown.Util {
                         Value = CFG_PARTICLE_EFFECTS.Value,
                         OnValueChanged = (self, value) => CFG_PARTICLE_EFFECTS.Value = value
                     },
+                    new LabelComponent {
+                        Text = "Language Settings [Client Side]",
+                    },
+                    new DropdownComponent {
+                        Text = "Language",
+                        Value = new TMP_Dropdown.OptionData(LangParser.languages[CFG_LANGUAGE.Value]),
+                        Options = LangParser.languages.Values
+                            .Select(language => new TMP_Dropdown.OptionData(language))
+                            .ToList(),
+                        OnValueChanged = (self, value) => {
+                            // code absouletely shloinged from @willis
+                            var language = LangParser.languages
+                                .Where(x => x.Value == value.text)
+                                .Select(x => x.Key)
+                                .FirstOrDefault();
+                            if(language == null) {
+                                MeltdownPlugin.logger.LogError("Failed to get language! defaulting to english");
+                                language = "en";
+                            }
+                            CFG_LANGUAGE.Value = language;
+                            LangParser.SetLanguage(language);
+                        }
+                    }
                 }
             };
 
@@ -293,12 +330,11 @@ namespace FacilityMeltdown.Util {
                         }
                     },
                     new SliderComponent {
-                        Value = CFG_APPARATUS_VALUE.Value,
+                        Value = CFG_MELTDOWN_TIME.Value,
                         MinValue = 0,
                         MaxValue = 10 * 60,
                         WholeNumbers = true,
                         Text = "Meltdown Sequence Time [NOT SUPPORTED, EDIT AT YOUR OWN RISK, NOT RECOMMENDED]",
-                        Enabled = CFG_OVERRIDE_APPARATUS_VALUE.Value,
                         OnValueChanged = (self, value) => { CFG_MELTDOWN_TIME.Value = (int)value; Default.MELTDOWN_TIME = (int)value; }
                     },
                     new LabelComponent { Text = "Edit what enemies can spawn in the config file."},

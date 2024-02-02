@@ -1,4 +1,5 @@
-# Facility Meltdown
+# Facility Meltdown (Now with multi-language SUPPORT)
+v2.2 adds support for custom language. Currently only has English but if you want to come by the thread on discord I can help you out getting your translation into the mod!
 
 The apparatus was a vital part of the upkeep of the facility's nuclear reactor - and you just took it out.
 
