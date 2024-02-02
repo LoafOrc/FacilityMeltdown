@@ -1,0 +1,25 @@
+{
+    "lang.missing": "No se encuentra el: <translation_id>.",
+
+    "reactorscan.error.overheat": "¡ERROR DE SOBRECALENTAMIENTO DEL ESCÁNER DE LA NAVE!\n¡SE USARÁ EL ÚLTIMO INFORME DEL CACHÉ!\n\n",
+    "reactorscan.success": "REPORTE GENERADO.. CACHÉ RECUPERADO\nLOS ESCÁNERES NECESITAN <cooldown> PARA ENFRIAR\n\n",
+    "reactorscan.result.stable": "Inestabilidad del reactor al 0%.\nEl reactor se encuentra estable. No es necesaria ninguna precaución.\n\n",
+    "reactorscan.result.unstable": "Inestabilidad del reactor al <instability>%\nAproximadamente quedan <time_left> segundos para el catastrófico evento nuclear.",
+    "reactorscan.result.flavour.start": "El reactor está empezando a fallar. Se recomienda terminar la exploración y prepararse para partir.",
+    "reactorscan.result.flavour.low": "El reactor se está volviendo cada vez más inestable, está a punto de fallar. No abandone la nave o arriesgará la propiedad de la compañía. Se recomienda a todos los miembros de la tripulación que aún se encuentren fuera de la nave que regresen antes de que el reactor falle por completo.",
+    "reactorscan.result.flavour.medium": "El reactor está fallando. Queda muy poco tiempo antes de que ocurra un evento nuclear catastrófico.",
+    "reactorscan.result.flavour.high": "El reactor está a punto de provocar un evento nuclear catastrófico. Esta es tu última oportunidad. Los miembros restantes de la tripulación tienen muy poco tiempo antes de que falle el reactor de la instalación. Si todavía se encuentran en las instalaciones, lo más probable es que no lo logren por sí solos.",
+
+    "meltdown.dialogue.speaker": "ORDENADOR DE LA NAVE",
+
+    "meltdown.dialogue.start": [
+        "... ERROR AL CONECTARSE A LA COMPUTADORA INTERNA DE LA INSTALACIÓN ... IDENTIFICANDO LA CAUSA ...",
+        "REACTOR NUCLEAR INESTBALE ... PREDICCIÓN DEL TIEMPO PARA INICIAR EL EVENTO CATASTRÓFICO ...",
+        "<color=\"red\"><meltdown_time> MINUTOS</color> PARA INICIAR EL EVENTO CATASTRÓFICO DEL REACTOR NUCLEAR"
+    ],
+
+    "meltdown.dialogue.shiptakeoff": [
+        "La compañía considera que los niveles actuales de radiación son demasiado altos.",
+        "La compañía no puede correr el riesgo de dañar sus equipos."
+    ]
+}
