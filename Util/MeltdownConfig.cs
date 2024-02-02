@@ -79,34 +79,34 @@ namespace FacilityMeltdown.Util {
                 InitLethalSettings();
             }
         }
-        public static void RequestSync() {
+        internal static void RequestSync() {
             if (!IsClient) return;
 
-            FastBufferWriter stream = new FastBufferWriter(IntSize, Allocator.Temp);
-            MessageManager.SendNamedMessage("FacilityMeltdown_OnRequestConfigSync", 0uL, stream);
+            using FastBufferWriter stream = new(IntSize, Allocator.Temp);
+
+            // Method `OnRequestSync` will then get called on host.
+            stream.SendMessage($"{MeltdownPlugin.modGUID}_OnRequestConfigSync");
         }
 
-        public static void OnRequestSync(ulong clientId, FastBufferReader _) {
+        internal static void OnRequestSync(ulong clientId, FastBufferReader _) {
             if (!IsHost) return;
-
-            MeltdownPlugin.logger.LogInfo($"Config sync request received from client: {clientId}");
 
             byte[] array = SerializeToBytes(Instance);
             int value = array.Length;
 
-            FastBufferWriter stream = new FastBufferWriter(value + IntSize, Allocator.Temp);
+            using FastBufferWriter stream = new(value + IntSize, Allocator.Temp);
 
             try {
                 stream.WriteValueSafe(in value, default);
                 stream.WriteBytesSafe(array);
 
-                MessageManager.SendNamedMessage("FacilityMeltdown_OnReceiveConfigSync", clientId, stream);
+                stream.SendMessage($"{MeltdownPlugin.modGUID}_OnReceiveConfigSync", clientId);
             } catch (Exception e) {
-                MeltdownPlugin.logger.LogInfo($"Error occurred syncing config with client: {clientId}\n{e}");
+                MeltdownPlugin.logger.LogError($"Error occurred syncing config with client: {clientId}\n{e}");
             }
         }
 
-        public static void OnReceiveSync(ulong _, FastBufferReader reader) {
+        internal static void OnReceiveSync(ulong _, FastBufferReader reader) {
             if (!reader.TryBeginRead(IntSize)) {
                 MeltdownPlugin.logger.LogError("Config sync error: Could not begin reading buffer.");
                 return;
@@ -121,7 +121,12 @@ namespace FacilityMeltdown.Util {
             byte[] data = new byte[val];
             reader.ReadBytesSafe(ref data, val);
 
-            SyncInstance(data);
+            try {
+                SyncInstance(data);
+                MeltdownPlugin.logger.LogInfo("test sync value: " + Instance.APPARATUS_VALUE.Value);
+            } catch (Exception e) {
+                MeltdownPlugin.logger.LogError($"Error syncing config instance!\n{e}");
+            }
         }
 
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
@@ -323,17 +328,17 @@ namespace FacilityMeltdown.Util {
         }
 
         [HarmonyPostfix]
-        [HarmonyPatch(typeof(PlayerControllerB), nameof(PlayerControllerB.ConnectClientToPlayerObject))]
+        [HarmonyPatch(typeof(PlayerControllerB), "ConnectClientToPlayerObject")]
         public static void InitializeLocalPlayer() {
             if (IsHost) {
-                MessageManager.RegisterNamedMessageHandler("FacilityMeltdown_OnRequestConfigSync", OnRequestSync);
+                MessageManager.RegisterNamedMessageHandler(MeltdownPlugin.modGUID+"_OnRequestConfigSync", OnRequestSync);
                 Synced = true;
 
                 return;
             }
 
             Synced = false;
-            MessageManager.RegisterNamedMessageHandler("FacilityMeltdown_OnReceiveConfigSync", OnReceiveSync);
+            MessageManager.RegisterNamedMessageHandler(MeltdownPlugin.modGUID + "_OnReceiveConfigSync", OnReceiveSync);
             RequestSync();
         }
 
