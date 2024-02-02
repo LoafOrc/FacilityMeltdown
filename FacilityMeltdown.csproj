@@ -12,6 +12,14 @@
 		<DebugSymbols>true</DebugSymbols>
 		<DebugType>embedded</DebugType>
 	</PropertyGroup>
+	<ItemGroup>
+	  <None Remove="Lang\defs.json" />
+	  <None Remove="Lang\en.json" />
+	</ItemGroup>
+	<ItemGroup>
+	  <EmbeddedResource Include="Lang\defs.json" />
+	  <EmbeddedResource Include="Lang\en.json" />
+	</ItemGroup>
 
 	<!-- Primary Package References - BepInEx and GameLibs -->
 	<ItemGroup>
@@ -36,4 +44,16 @@
 	    <HintPath>Dependencies\LethalSettings.dll</HintPath>
 	  </Reference>
 	</ItemGroup>
+
+	<Target Name="NetcodePatcher" AfterTargets="Build">
+		<Message Importance="high" Text="Doing Netcode Patcher stuff." />
+		<!--
+    <NetcodePatch Include="$(TargetPath)" />
+    -->
+		<Exec Command="dotnet netcode-patch &quot;$(TargetPath)&quot; @(ReferencePathWithRefAssemblies->'&quot;%(Identity)&quot;', ' ')" />
+	</Target>
+	<Target Name="PackThunderstore" AfterTargets="NetcodePatcher" Condition="'$(Configuration)' == 'Release'">
+		<Message Importance="high" Text="Building Thunderstore Package" />
+		<Exec Command="tcli build" />
+	</Target>
 </Project>
