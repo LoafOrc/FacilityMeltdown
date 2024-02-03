@@ -14,8 +14,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Rendering.HighDefinition;
 
-namespace FacilityMeltdown
-{
+namespace FacilityMeltdown {
     public class MeltdownHandler : NetworkBehaviour {
         static PlayerControllerB Player => GameNetworkManager.Instance.localPlayerController;
         private AudioSource musicSource;
@@ -29,7 +28,7 @@ namespace FacilityMeltdown
         Vector3 effectOrigin;
 
         void Start() {
-            if(Instance != null) {
+            if (Instance != null) {
                 Destroy(gameObject);
                 return;
             }
@@ -53,17 +52,18 @@ namespace FacilityMeltdown
                 yield break;
             }
             StartCoroutine(PlayEffects());
-            
+
 
             if (GameNetworkManager.Instance.localPlayerController.IsServer) {
                 List<string> disallowed = MeltdownConfig.Instance.GetDisallowedEnemies();
                 List<SpawnableEnemyWithRarity> allowedEnemies = new List<SpawnableEnemyWithRarity>();
-                foreach(SpawnableEnemyWithRarity enemy in RoundManager.Instance.currentLevel.Enemies) {
+                foreach (SpawnableEnemyWithRarity enemy in RoundManager.Instance.currentLevel.Enemies) {
                     if (disallowed.Contains(enemy.enemyType.enemyName)) continue;
                     allowedEnemies.Add(enemy);
                 }
                 List<int> spawnProbibilities = new List<int>();
-                foreach(SpawnableEnemyWithRarity enemy in allowedEnemies) {
+                foreach (SpawnableEnemyWithRarity enemy in allowedEnemies) {
+                    if(EnemyCannotBeSpawned(enemy.enemyType)) continue;
                     spawnProbibilities.Add(enemy.rarity);
                 }
 
@@ -76,7 +76,8 @@ namespace FacilityMeltdown
                 avaliableVents.Shuffle();
                 for (int i = 0; i < Mathf.Min(MeltdownConfig.Instance.MONSTER_SPAWN_AMOUNT.Value, avaliableVents.Count); i++) {
                     EnemyVent vent = avaliableVents[i];
-                    int randomWeightedIndex = RoundManager.Instance.GetRandomWeightedIndex(spawnProbibilities.ToArray(), RoundManager.Instance.EnemySpawnRandom);
+                    int randomWeightedIndex = RoundManager.Instance.GetRandomWeightedIndex([.. spawnProbibilities], RoundManager.Instance.EnemySpawnRandom);
+                    if(EnemyCannotBeSpawned(allowedEnemies[randomWeightedIndex].enemyType)) continue;
                     RoundManager.Instance.currentEnemyPower += allowedEnemies[randomWeightedIndex].enemyType.PowerLevel;
 
                     MeltdownPlugin.logger.LogInfo("Spawning a " + allowedEnemies[randomWeightedIndex].enemyType.enemyName + " during the meltdown sequence");
@@ -85,7 +86,7 @@ namespace FacilityMeltdown
             }
 
             effectOrigin = RoundManager.FindMainEntrancePosition(false, true);
-            if(effectOrigin == Vector3.zero) {
+            if (effectOrigin == Vector3.zero) {
                 MeltdownPlugin.logger.LogError("Effect Origin is Vector3.Zero! We couldn't find the effect origin");
                 HUDManager.Instance.DisplayGlobalNotification("Failed to find effect origin... Things will look broken.");
             }
@@ -94,6 +95,10 @@ namespace FacilityMeltdown
                 HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
                 HUDManager.Instance.ShakeCamera(ScreenShakeType.Long);
             }
+        }
+
+        internal bool EnemyCannotBeSpawned(EnemyType type) {
+            return type.spawningDisabled || type.numberSpawned >= type.MaxCount;
         }
 
         internal static DialogueSegment[] GetDialogue(string translation) {
@@ -107,16 +112,16 @@ namespace FacilityMeltdown
             }
             return dialogue;
         }
-        
-        void OnDisable() { 
+
+        void OnDisable() {
             Instance = null;
-            if(explosion != null)
+            if (explosion != null)
                 Destroy(explosion);
 
-            foreach(MeltdownSequenceEffect effect in activeEffects) {
+            foreach (MeltdownSequenceEffect effect in activeEffects) {
                 try {
                     effect.Cleanup();
-                } catch(Exception e) {
+                } catch (Exception e) {
                     MeltdownPlugin.logger.LogError(effect.FullName + " produced a " + e.GetType().Name + " during Cleanup(). Some objects may still be visible between moons." + "\n" + e);
                 }
             }
@@ -136,9 +141,9 @@ namespace FacilityMeltdown
             }
             if (!effect.IsOneShot && !effect.Playing) {
                 MeltdownPlugin.logger.LogWarning(
-                    effect.FullName + " is not playing and is not marked as one shot. By default it will play once. If you are not the dev please report this." + 
-                    "If you are the dev, did you intend this effect to play once? Or play continously?" + 
-                    "If you meant to have it play once. Please overwrite .IsOneShot to be true." + 
+                    effect.FullName + " is not playing and is not marked as one shot. By default it will play once. If you are not the dev please report this." +
+                    "If you are the dev, did you intend this effect to play once? Or play continously?" +
+                    "If you meant to have it play once. Please overwrite .IsOneShot to be true." +
                     "If you meant to have it play continously. Please call base.Setup() in your Setup function."
                     );
             }
@@ -151,7 +156,7 @@ namespace FacilityMeltdown
                     yield return StartCoroutine(effect.Play(meltdownTimer));
                 }
             }
-            
+
             yield return StartCoroutine(effect.Stop());
 
             yield break;
@@ -169,7 +174,7 @@ namespace FacilityMeltdown
 
             meltdownTimer -= Time.deltaTime;
 
-            if (meltdownTimer <= 3 && !shipManager.shipIsLeaving) { 
+            if (meltdownTimer <= 3 && !shipManager.shipIsLeaving) {
                 StartCoroutine(ShipTakeOff());
             }
 
@@ -207,7 +212,7 @@ namespace FacilityMeltdown
 
             Debug.Log(string.Format("Is in elevator D?: {0}", GameNetworkManager.Instance.localPlayerController.isInElevator));
             yield return new WaitForSeconds(9.5f);
-            
+
             yield break;
         }
 
