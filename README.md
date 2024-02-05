@@ -19,7 +19,8 @@ FacilityMeltdown itself doesn't support custom music. However, this tutorial mad
 Link to tutorial: https://www.youtube.com/watch?v=D5hKkSLlEhk
 
 ## Config
-All game balance options are synced (only the host needs to edit them, but it wont hurt to have everyone using the same config). Visual and Audio settings are independent of what is synced.
+~~All game balance options are synced (only the host needs to edit them, but it wont hurt to have everyone using the same config)~~. Visual and Audio settings are independent of what is synced.
+While an underlying issue with CSync and FacilityMeltdown's implementation of it is being worked out syncing has been temporarily disabled. Make sure everybody has the exact same config.
 
 ### OPTIONAL ingame config editors
 [lethalconfig](https://thunderstore.io/c/lethal-company/p/AinaVT/LethalConfig/) or [lethalsettings](https://thunderstore.io/c/lethal-company/p/willis81808/LethalSettings/) will let you edit the settings in-game.
