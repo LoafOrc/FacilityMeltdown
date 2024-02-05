@@ -4,6 +4,16 @@
 - Spanish (Español) is avaliable as a language, thanks to @moroxide on discord!
 - Fixed an issue where meltdown sequence would ignore max count variable. Woops!
 
+### v2.2.2
+- im going to become the joker
+- no i really am
+- if lethallib breaks NetworkPrefabs one more time im actually going explode
+- anyway:
+- Fixed an issue where only the host had the meltdown happen
+
+### v2.2.3
+- While we try and pinpoint the issue this is a temporary patch to disable config syncing.
+
 ## v2.1
 - Changed terminal dialogue again
 - Staggered creation of effects to mitigate lagspike on meltdown start
