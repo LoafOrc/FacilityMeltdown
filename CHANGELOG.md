@@ -1,7 +1,7 @@
 ## v2.2
 - Added multi-language support
 - Update config syncing to use [CSync](https://thunderstore.io/c/lethal-company/p/Owen3H/CSync/) to be not silly anymore
-- Spanish (Español) is avaliable as a language, thanks to @moroxide on discord!
+- Spanish is avaliable as a language, thanks to @moroxide on discord!
 - Fixed an issue where meltdown sequence would ignore max count variable. Woops!
 
 ### v2.2.2
@@ -13,6 +13,14 @@
 
 ### v2.2.3
 - While we try and pinpoint the issue this is a temporary patch to disable config syncing.
+
+### v2.2.4
+maybe building with the correct branch could actually help
+
+### v2.2.5 and v2.2.6
+- Re-enabled syncing
+- Updated csync version to 1.0.7
+- update readme
 
 ## v2.1
 - Changed terminal dialogue again

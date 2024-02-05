@@ -24,7 +24,7 @@ namespace FacilityMeltdown {
     public class MeltdownPlugin : BaseUnityPlugin {
         internal const string modGUID = "me.loaforc.facilitymeltdown";
         internal const string modName = "FacilityMeltdown";
-        internal const string modVersion = "2.2.0";
+        internal const string modVersion = "2.2.6";
 
         private readonly Harmony harmony = new Harmony(modGUID);
         internal static MeltdownPlugin instance;
@@ -37,6 +37,7 @@ namespace FacilityMeltdown {
             else return; // Make sure nothing else gets loaded.
             logger = BepInEx.Logging.Logger.CreateLogSource(modGUID);
             logger.LogInfo("Initalising assets...");
+
             Assets.Init();
 
             RegisterNetworking();
@@ -88,8 +89,8 @@ namespace FacilityMeltdown {
             }
 
             logger.LogInfo("= Registering Network Prefabs");
-            NetworkPrefabs.RegisterNetworkPrefab(Assets.meltdownHandlerPrefab);
-            NetworkPrefabs.RegisterNetworkPrefab(Assets.geigerCounterItem);
+            //NetworkPrefabs.RegisterNetworkPrefab(Assets.meltdownHandlerPrefab);
+            //NetworkPrefabs.RegisterNetworkPrefab(Assets.geigerCounterItem);
         }
         void RegisterPatches() {
             logger.LogInfo("Applying patches.");
@@ -99,6 +100,7 @@ namespace FacilityMeltdown {
             harmony.PatchAll(typeof(MeltdownConfig));
             harmony.PatchAll(typeof(BlobAIPatch));
             harmony.PatchAll(typeof(TerminalHandler));
+            harmony.PatchAll(typeof(GameNetworkManagerPatch));
         }
         void RegisterEffects() {
             logger.LogInfo("Using own API to register sequence effects.");
