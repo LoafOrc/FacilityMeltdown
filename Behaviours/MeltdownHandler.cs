@@ -8,10 +8,12 @@ using FacilityMeltdown.Lang;
 using FacilityMeltdown.Util;
 using GameNetcodeStuff;
 using JetBrains.Annotations;
+using LethalLib.Modules;
 using Newtonsoft.Json.Linq;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Experimental.AI;
 using UnityEngine.Rendering.HighDefinition;
 
 namespace FacilityMeltdown {
@@ -21,18 +23,16 @@ namespace FacilityMeltdown {
         internal static MeltdownHandler Instance;
 
         internal float meltdownTimer;
+        bool meltdownStarted = false;
 
         GameObject explosion;
         List<MeltdownSequenceEffect> activeEffects = new List<MeltdownSequenceEffect>();
+        List<ulong> readyPlayers = new List<ulong>();
 
         Vector3 effectOrigin;
 
-        void Start() {
-            if (Instance != null) {
-                Destroy(gameObject);
-                return;
-            }
-            Instance = this;
+        //[ClientRpc]
+        void StartMeltdown() {
             meltdownTimer = MeltdownConfig.Instance.MELTDOWN_TIME.Value;
             MeltdownPlugin.logger.LogInfo("Beginning Meltdown Sequence! I'd run if I was you!");
 
@@ -63,7 +63,7 @@ namespace FacilityMeltdown {
                 }
                 List<int> spawnProbibilities = new List<int>();
                 foreach (SpawnableEnemyWithRarity enemy in allowedEnemies) {
-                    if(EnemyCannotBeSpawned(enemy.enemyType)) continue;
+                    if (EnemyCannotBeSpawned(enemy.enemyType)) continue;
                     spawnProbibilities.Add(enemy.rarity);
                 }
 
@@ -77,7 +77,7 @@ namespace FacilityMeltdown {
                 for (int i = 0; i < Mathf.Min(MeltdownConfig.Instance.MONSTER_SPAWN_AMOUNT.Value, avaliableVents.Count); i++) {
                     EnemyVent vent = avaliableVents[i];
                     int randomWeightedIndex = RoundManager.Instance.GetRandomWeightedIndex([.. spawnProbibilities], RoundManager.Instance.EnemySpawnRandom);
-                    if(EnemyCannotBeSpawned(allowedEnemies[randomWeightedIndex].enemyType)) continue;
+                    if (EnemyCannotBeSpawned(allowedEnemies[randomWeightedIndex].enemyType)) continue;
                     RoundManager.Instance.currentEnemyPower += allowedEnemies[randomWeightedIndex].enemyType.PowerLevel;
 
                     MeltdownPlugin.logger.LogInfo("Spawning a " + allowedEnemies[randomWeightedIndex].enemyType.enemyName + " during the meltdown sequence");
@@ -95,7 +95,53 @@ namespace FacilityMeltdown {
                 HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
                 HUDManager.Instance.ShakeCamera(ScreenShakeType.Long);
             }
+            meltdownStarted = true;
         }
+
+        [ServerRpc(RequireOwnership = false)]
+        void MeltdownReadyServerRpc(ulong clientId) {
+            readyPlayers.Add(clientId);
+        }
+
+        void Start() {
+            if (Instance != null) {
+                Destroy(gameObject);
+                return;
+            }
+            Instance = this;
+
+            StartMeltdown();
+        }
+
+        /*
+        IEnumerator WaitForReadyPlayers() {
+            yield return new WaitUntil(() => this.NetworkObject.IsSpawned);
+            if (!IsHost) {
+                MeltdownReadyServerRpc(NetworkManager.LocalClientId);
+
+                yield break;
+            }
+
+            while (true) {
+                yield return new WaitForSeconds(.5f);
+
+                bool allPlayersReady = true;
+                foreach(PlayerControllerB player in StartOfRound.Instance.allPlayerScripts) {
+                    if (!player.isPlayerControlled) continue;
+                    if(player == GameNetworkManager.Instance.localPlayerController) continue;
+
+                    if (readyPlayers.Contains(player.actualClientId)) continue;
+                    allPlayersReady = false;
+                }
+
+                if(allPlayersReady) {
+                    StartMeltdownClientRpc();
+                    break;
+                }
+            }
+
+            yield break;
+        }*/
 
         internal bool EnemyCannotBeSpawned(EnemyType type) {
             return type.spawningDisabled || type.numberSpawned >= type.MaxCount;
@@ -163,6 +209,7 @@ namespace FacilityMeltdown {
         }
 
         void Update() {
+            if (!meltdownStarted) return;
             if (HasExplosionOccured()) return;
             StartOfRound shipManager = StartOfRound.Instance;
 
