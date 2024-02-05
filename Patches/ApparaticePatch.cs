@@ -24,20 +24,24 @@ namespace FacilityMeltdown.Patches {
                     __instance.scrapValue = MeltdownConfig.Instance.APPARATUS_VALUE.Value;
                 GameObject meltdown = GameObject.Instantiate(Assets.meltdownHandlerPrefab);
                 meltdown.GetComponent<NetworkObject>().Spawn();
-            } catch (Exception ex) { 
+            } catch (Exception ex) {
                 MeltdownPlugin.logger.LogError(ex);
             }
         }
 
         [HarmonyPrefix, HarmonyPatch(nameof(LungProp.Start))]
         internal static void AddRadiationSource(LungProp __instance) {
-            RadiationSource source = __instance.gameObject.AddComponent<RadiationSource>();
-            source.radiationAmount = 40;
-            source.radiationDistance = 40;
+            try {
+                RadiationSource source = __instance.gameObject.AddComponent<RadiationSource>();
+                source.radiationAmount = 40;
+                source.radiationDistance = 40;
 
-            if (MeltdownConfig.Instance.OVERRIDE_APPARATUS_VALUE.Value)
-                __instance.scrapValue = MeltdownConfig.Instance.APPARATUS_VALUE.Value;
-            //___isLungDocked = false; // fix joining late
+                if (MeltdownConfig.Instance.OVERRIDE_APPARATUS_VALUE.Value)
+                    __instance.scrapValue = MeltdownConfig.Instance.APPARATUS_VALUE.Value;
+                //___isLungDocked = false; // fix joining late
+            } catch (Exception ex) {
+                MeltdownPlugin.logger.LogError  (ex);
+            }
         }
     }
 }

@@ -1,8 +1,15 @@
 ## v2.2
 - Added multi-language support
 - Update config syncing to use [CSync](https://thunderstore.io/c/lethal-company/p/Owen3H/CSync/) to be not silly anymore
-- Spanish (Español) is avaliable as a language, thanks to @moroxide on discord!
+- Spanish is avaliable as a language, thanks to @moroxide on discord!
 - Fixed an issue where meltdown sequence would ignore max count variable. Woops!
+
+### v2.2.2
+- im going to become the joker
+- no i really am
+- if lethallib breaks NetworkPrefabs one more time im actually going explode
+- anyway:
+- Fixed an issue where only the host had the meltdown happen
 
 ## v2.1
 - Changed terminal dialogue again
