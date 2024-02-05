@@ -11,6 +11,17 @@
 - anyway:
 - Fixed an issue where only the host had the meltdown happen
 
+### v2.2.3
+- While we try and pinpoint the issue this is a temporary patch to disable config syncing.
+
+### v2.2.4
+maybe building with the correct branch could actually help
+
+### v2.2.5 and v2.2.6
+- Re-enabled syncing
+- Updated csync version to 1.0.7
+- update readme
+
 ## v2.1
 - Changed terminal dialogue again
 - Staggered creation of effects to mitigate lagspike on meltdown start

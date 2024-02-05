@@ -24,7 +24,7 @@ namespace FacilityMeltdown {
     public class MeltdownPlugin : BaseUnityPlugin {
         internal const string modGUID = "me.loaforc.facilitymeltdown";
         internal const string modName = "FacilityMeltdown";
-        internal const string modVersion = "2.2.2";
+        internal const string modVersion = "2.2.6";
 
         private readonly Harmony harmony = new Harmony(modGUID);
         internal static MeltdownPlugin instance;
@@ -37,6 +37,7 @@ namespace FacilityMeltdown {
             else return; // Make sure nothing else gets loaded.
             logger = BepInEx.Logging.Logger.CreateLogSource(modGUID);
             logger.LogInfo("Initalising assets...");
+
             Assets.Init();
 
             RegisterNetworking();
