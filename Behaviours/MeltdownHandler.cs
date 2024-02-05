@@ -31,8 +31,8 @@ namespace FacilityMeltdown {
 
         Vector3 effectOrigin;
 
-        [ClientRpc]
-        void StartMeltdownClientRpc() {
+        //[ClientRpc]
+        void StartMeltdown() {
             meltdownTimer = MeltdownConfig.Instance.MELTDOWN_TIME.Value;
             MeltdownPlugin.logger.LogInfo("Beginning Meltdown Sequence! I'd run if I was you!");
 
@@ -110,9 +110,10 @@ namespace FacilityMeltdown {
             }
             Instance = this;
 
-            Start
+            StartMeltdown();
         }
 
+        /*
         IEnumerator WaitForReadyPlayers() {
             yield return new WaitUntil(() => this.NetworkObject.IsSpawned);
             if (!IsHost) {
@@ -140,7 +141,7 @@ namespace FacilityMeltdown {
             }
 
             yield break;
-        }
+        }*/
 
         internal bool EnemyCannotBeSpawned(EnemyType type) {
             return type.spawningDisabled || type.numberSpawned >= type.MaxCount;
