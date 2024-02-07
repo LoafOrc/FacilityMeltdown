@@ -48,7 +48,7 @@ namespace FacilityMeltdown {
         internal static string SubstituteVariables(string text) {
             StringBuilder builder = new StringBuilder(text);
 
-            builder.Replace("<cooldown>", MeltdownConfig.Instance.SCAN_COOLDOWN.ToString());
+            builder.Replace("<cooldown>", MeltdownConfig.Instance.SCAN_COOLDOWN.Value.ToString());
             builder.Replace("<instability>", lastReport.reactorInstability.ToString());
             builder.Replace("<time_left>", lastReport.timeRemaining.ToString());
             
