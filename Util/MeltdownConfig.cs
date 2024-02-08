@@ -67,8 +67,8 @@ namespace FacilityMeltdown.Util {
                 "Language",
                 "ActiveLanguage",
                 "en",
-                "What language should FacilityMeltdown use? NOTE: This only affects facility meltdown and won't change the rest of the games langauge\nLanguages Available: " +
-                string.Join(", ", LangParser.languages.Values)
+                "What language should FacilityMeltdown use? NOTE: This only affects facility meltdown and won't change the rest of the games langauge\nSome Languages may also need FontPatcher(https://thunderstore.io/c/lethal-company/p/LeKAKiD/FontPatcher/)\nLanguages Available: " +
+                string.Join(", ", LangParser.languages.Keys)
                 );
 
             MeltdownPlugin.logger.LogInfo("Checking for any mod settings managers...");
