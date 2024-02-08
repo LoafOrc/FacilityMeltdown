@@ -1,4 +1,5 @@
 ﻿using FacilityMeltdown.Lang;
+using GameNetcodeStuff;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +28,9 @@ namespace FacilityMeltdown
             return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
         }
 
+        public static List<PlayerControllerB> GetConnectedPlayers(this StartOfRound startOfRound) {
+            return startOfRound.allPlayerScripts.Where((player) => player.isPlayerControlled).ToList();
+        }
         public static void SpawnEnemy(this EnemyVent vent, SpawnableEnemyWithRarity enemy) {
             Vector3 position = vent.floorNode.position;
             float y = vent.floorNode.eulerAngles.y;
