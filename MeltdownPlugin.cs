@@ -24,7 +24,7 @@ namespace FacilityMeltdown {
     public class MeltdownPlugin : BaseUnityPlugin {
         internal const string modGUID = "me.loaforc.facilitymeltdown";
         internal const string modName = "FacilityMeltdown";
-        internal const string modVersion = "2.2.6";
+        internal const string modVersion = "2.3.0";
 
         private readonly Harmony harmony = new Harmony(modGUID);
         internal static MeltdownPlugin instance;
@@ -95,13 +95,7 @@ namespace FacilityMeltdown {
         }
         void RegisterPatches() {
             logger.LogInfo("Applying patches.");
-            harmony.PatchAll(typeof(ApparaticePatch));
-            harmony.PatchAll(typeof(EntranceTeleportPatch));
-            harmony.PatchAll(typeof(StartOfRoundPatches));
-            harmony.PatchAll(typeof(MeltdownConfig));
-            harmony.PatchAll(typeof(BlobAIPatch));
-            harmony.PatchAll(typeof(TerminalHandler));
-            harmony.PatchAll(typeof(GameNetworkManagerPatch));
+            Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), modGUID);
         }
         void RegisterEffects() {
             logger.LogInfo("Using own API to register sequence effects.");

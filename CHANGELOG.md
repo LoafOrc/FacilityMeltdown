@@ -1,6 +1,7 @@
 ## v2.3
 - Add Korean ([FontPatcher](https://thunderstore.io/c/lethal-company/p/LeKAKiD/FontPatcher/) is needed)
 - Meltdown will now "silent fail" where if ANY client fails to start the meltdown then it will not go ahead. This ensures a desync can never happen, instead it will just not start.
+- Clarified warning message that appears when you're missing a soft dependency.
 
 ## v2.2
 - Added multi-language support
