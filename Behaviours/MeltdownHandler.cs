@@ -119,40 +119,10 @@ namespace FacilityMeltdown {
             MeltdownReadyServerRpc(NetworkManager.LocalClientId);
         }
 
-        /*
-        IEnumerator WaitForReadyPlayers() {
-            yield return new WaitUntil(() => this.NetworkObject.IsSpawned);
-            if (!IsHost) {
-                MeltdownReadyServerRpc(NetworkManager.LocalClientId);
-
-                yield break;
-            }
-
-            while (true) {
-                yield return new WaitForSeconds(.5f);
-
-                bool allPlayersReady = true;
-                foreach(PlayerControllerB player in StartOfRound.Instance.allPlayerScripts) {
-                    if (!player.isPlayerControlled) continue;
-                    if(player == GameNetworkManager.Instance.localPlayerController) continue;
-
-                    if (readyPlayers.Contains(player.actualClientId)) continue;
-                    allPlayersReady = false;
-                }
-
-                if(allPlayersReady) {
-                    StartMeltdownClientRpc();
-                    break;
-                }
-            }
-
-            yield break;
-        }*/
-
         internal bool EnemyCannotBeSpawned(EnemyType type) {
             return type.spawningDisabled || type.numberSpawned >= type.MaxCount;
         }
-
+            
         internal static DialogueSegment[] GetDialogue(string translation) {
             JArray translatedDialogue = LangParser.GetTranslationSet(translation);
             DialogueSegment[] dialogue = new DialogueSegment[translatedDialogue.Count];
@@ -169,6 +139,10 @@ namespace FacilityMeltdown {
             Instance = null;
             if (explosion != null)
                 Destroy(explosion);
+
+            if(!meltdownStarted) {
+                MeltdownPlugin.logger.LogError("MeltdownHandler was disabled without starting a meltdown, a client most likely failed the MeltdownReadyCheck. If you are going to report this make sure to provide ALL client logs.");
+            }
 
             foreach (MeltdownSequenceEffect effect in activeEffects) {
                 try {
