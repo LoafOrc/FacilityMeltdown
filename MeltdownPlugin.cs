@@ -72,21 +72,22 @@ namespace FacilityMeltdown {
         void RegisterNetworking() {
             logger.LogInfo("Doing networky stuff");
             var types = Assembly.GetExecutingAssembly().GetTypes();
-            try {
                 foreach (var type in types) {
-                    logger.LogInfo(type.Assembly.FullName);
-                    var methods = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
-                    foreach (var method in methods) {
-                        var attributes = method.GetCustomAttributes(typeof(RuntimeInitializeOnLoadMethodAttribute), false);
-                        if (attributes.Length > 0) {
-                            method.Invoke(null, null);
+                    try {
+                        var methods = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+                        foreach (var method in methods) {
+                            var attributes = method.GetCustomAttributes(typeof(RuntimeInitializeOnLoadMethodAttribute), false);
+                            if (attributes.Length > 0) {
+                                method.Invoke(null, null);
+                            }
                         }
+                    } catch (Exception e) {
+                        logger.LogWarning("Caught exception: " + e);
+                        logger.LogWarning("================================");
+                        logger.LogWarning("  NOT AN ERROR, PROBABLY A MISSING DEPENDENCY");
+                        logger.LogWarning("================================");
                     }
                 }
-            } catch (Exception e) {
-                logger.LogWarning("Caught exception: " + e);
-                logger.LogWarning("why does this not work");
-            }
 
             logger.LogInfo("= Registering Network Prefabs");
             //NetworkPrefabs.RegisterNetworkPrefab(Assets.meltdownHandlerPrefab);
