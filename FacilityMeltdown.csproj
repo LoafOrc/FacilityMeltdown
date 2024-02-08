@@ -16,11 +16,13 @@
 	  <None Remove="Lang\defs.json" />
 	  <None Remove="Lang\en.json" />
 	  <None Remove="Lang\es.json" />
+	  <None Remove="Lang\kr.json" />
 	</ItemGroup>
 	<ItemGroup>
 	  <EmbeddedResource Include="Lang\defs.json" />
 	  <EmbeddedResource Include="Lang\en.json" />
 	  <EmbeddedResource Include="Lang\es.json" />
+	  <EmbeddedResource Include="Lang\kr.json" />
 	</ItemGroup>
 
 	<!-- Primary Package References - BepInEx and GameLibs -->
@@ -29,8 +31,9 @@
 		<PackageReference Include="BepInEx.Core" Version="5.*" PrivateAssets="all" />
 		<PackageReference Include="Evaisa.LethalLib" Version="0.14.*" />
 		<PackageReference Include="LethalCompany.GameLibs.Steam" Version="*-*" PrivateAssets="all" />
+		<PackageReference Include="LethalSettings" Version="1.4.0" />
 		<PackageReference Include="NotAtomicBomb.TerminalApi" Version="1.5.*" />
-		<PackageReference Include="Owen3H.BepInEx.CSync" Version="1.0.6" PrivateAssets="all" />
+		<PackageReference Include="Owen3H.BepInEx.CSync" Version="1.0.7" PrivateAssets="all" />
 		<PackageReference Include="UnityEngine.Modules" Version="2022.3.9" IncludeAssets="compile" PrivateAssets="all" />
 	</ItemGroup>
 
@@ -41,9 +44,6 @@
 	<ItemGroup>
 	  <Reference Include="LethalConfig">
 	    <HintPath>Dependencies\LethalConfig.dll</HintPath>
-	  </Reference>
-	  <Reference Include="LethalSettings">
-	    <HintPath>Dependencies\LethalSettings.dll</HintPath>
 	  </Reference>
 	</ItemGroup>
 
