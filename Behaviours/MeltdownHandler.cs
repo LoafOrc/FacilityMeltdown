@@ -31,8 +31,8 @@ namespace FacilityMeltdown {
 
         Vector3 effectOrigin;
 
-        //[ClientRpc]
-        void StartMeltdown() {
+        [ClientRpc]
+        void StartMeltdownClientRpc() {
             meltdownTimer = MeltdownConfig.Instance.MELTDOWN_TIME.Value;
             MeltdownPlugin.logger.LogInfo("Beginning Meltdown Sequence! I'd run if I was you!");
 
@@ -101,6 +101,10 @@ namespace FacilityMeltdown {
         [ServerRpc(RequireOwnership = false)]
         void MeltdownReadyServerRpc(ulong clientId) {
             readyPlayers.Add(clientId);
+
+            if(readyPlayers.Count == StartOfRound.Instance.GetConnectedPlayers().Count) {
+                StartMeltdownClientRpc();
+            }
         }
 
         void Start() {
@@ -109,8 +113,10 @@ namespace FacilityMeltdown {
                 return;
             }
             Instance = this;
+        }
 
-            StartMeltdown();
+        public override void OnNetworkSpawn() {
+            MeltdownReadyServerRpc(NetworkManager.LocalClientId);
         }
 
         /*
