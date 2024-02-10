@@ -1,0 +1,25 @@
+{
+    "lang.missing": "missing: <translation_id>. 缺失翻译：<translation_id>",
+
+    "reactorscan.error.overheat": "SHIP SCANNER OVERHEAT ERROR!\nUSING LAST CACHED REPORT!\n\n飞船扫描器过热错误！\n使用最后的缓存报告。\n\n",
+    "reactorscan.success": "REPORT GENERATED... CACHED\nSCANNERS NEED <cooldown> TO COOLDOWN\n\n报告生成中… 已缓存\n扫描器需要 <cooldown> 的冷却时间。\n\n",
+    "reactorscan.result.stable": "Reactor instability at 0%\nThe reactor is in good health. No caution is necessary.\n\n反应堆稳定性：100%\n反应堆状态：健康。无需警告。\n\n",
+    "reactorscan.result.unstable": "Reactor instability at <instability>%\nApproximately <time_left> seconds left until catastrophic nuclear event.反应堆稳定性：<instability>%\n反应堆状态：距离核反应堆爆炸预估剩余 <time_left> 秒。",
+    "reactorscan.result.flavour.start": "The reactor is beginning to fail. It is recommened to finish up and get ready to leave.反应堆即将失去稳定性。建议：即刻离开设施。",
+    "reactorscan.result.flavour.low": "The reactor is becoming more unstable, it is about to fail. Do not leave the ship or you risk company property. Any crew memebers still outside the ship are advised to return before the reactor completly fails.反应堆正在失去稳定性。建议：不要离开飞船，并通知飞船外的所有雇员即刻返回飞船。",
+    "reactorscan.result.flavour.medium": "The reactor is failing. You have very little time remaining before a catastrophic nuclear event happens.反应堆已不稳定。建议：在核反应堆爆炸前返回飞船。",
+    "reactorscan.result.flavour.high": "The reactor is about to cause a catastrophic nuclear event. This is your last chance. Any remaining crew members have very little time before a massive reactor fail. If there are still in the facility they most likely are not making it out, on their own.反应堆已彻底失去稳定性。建议：返回飞船的最后机会。对于仍在设施内的雇员，自求多福。",
+
+    "meltdown.dialogue.speaker": "PILOT COMPUTER 领航员计算机",
+
+    "meltdown.dialogue.start": [
+        "... FAILED TO CONNECT TO INTERNAL FACILITY COMPUTER ... IDENTIFIYING ROOT CAUSE ...\n无法连接至反应堆内部控制模块。正在排查问题…",
+        "UNSTABLE NUCLEAR REACTOR ... PREDICTING TIME UNTIL CATASTROPHIC EVENT ...\n问题：不稳定的核反应堆。预测核反应堆爆炸的剩余时间…",
+        "<color=\"red\"><meltdown_time> MINUTES</color> UNTIL CATASTROPHIC NUCLEAR REACTOR EVENT\n距离核反应堆爆炸剩余：<color=\"red\"><meltdown_time> 分钟</color>。"
+    ],
+
+    "meltdown.dialogue.shiptakeoff": [
+        "The company has deemed the current levels of radiation too high.\n总部认为目前核辐射水平过高。",
+        "The company can not risk damaging its equipment.\n总部不能冒险损坏设备。"
+    ]
+}
