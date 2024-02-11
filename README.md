@@ -5,7 +5,7 @@ The apparatus was a vital part of the upkeep of the facility's nuclear reactor -
 
 With the facility meltdown mod the appartus has a lot more risk (and reward) attached to it. When you take it out the entire facility spirals into a self destruction sequence! You'll have 2 minutes to escape and take off before you get vaporized.
 
-FacilityMeltdown should also work correctly with most\* custom moons and interiors. If you are expereincing an issue one a particluar modded moon - I CAN NOT HELP. This is down to be not being able to fix every moon in my mod, instead those moons need to fix stuff - most likely other mods will be broken by that moon as well.
+FacilityMeltdown should also work correctly with most\* custom moons and interiors. If you are expereincing an issue on a particluar modded moon - I CAN NOT HELP. This is down to be not being able to fix every moon in my mod, instead those moons need to fix stuff - most likely other mods will be broken by that moon as well.
 
 If you are strugling with playing the mod have a look at the bottom of this readme to find some useful tips and tricks. Or you can modify certain things in the config.
 
