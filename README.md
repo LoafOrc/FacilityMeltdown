@@ -14,8 +14,11 @@ If you are strugling with playing the mod have a look at the bottom of this read
 
 ## Supported Languages
 - English
-- Spanish
-- Korean
+- Spanish (@moroxide)
+
+The following languages also require [FontPatcher](https://thunderstore.io/c/lethal-company/p/LeKAKiD/FontPatcher/)
+- Korean (@riverbible)
+- Chinese (@Rominwolf)
 
 ## As seen on
 wild to me that it has been played by markiplier
