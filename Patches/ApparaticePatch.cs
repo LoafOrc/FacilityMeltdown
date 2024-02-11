@@ -40,7 +40,7 @@ namespace FacilityMeltdown.Patches {
                     __instance.scrapValue = MeltdownConfig.Instance.APPARATUS_VALUE.Value;
                 //___isLungDocked = false; // fix joining late
             } catch (Exception ex) {
-                MeltdownPlugin.logger.LogError  (ex);
+                MeltdownPlugin.logger.LogError(ex);
             }
         }
     }
