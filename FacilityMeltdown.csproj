@@ -17,12 +17,14 @@
 	  <None Remove="Lang\en.json" />
 	  <None Remove="Lang\es.json" />
 	  <None Remove="Lang\kr.json" />
+	  <None Remove="Lang\zh.json" />
 	</ItemGroup>
 	<ItemGroup>
 	  <EmbeddedResource Include="Lang\defs.json" />
 	  <EmbeddedResource Include="Lang\en.json" />
 	  <EmbeddedResource Include="Lang\es.json" />
 	  <EmbeddedResource Include="Lang\kr.json" />
+	  <EmbeddedResource Include="Lang\zh.json" />
 	</ItemGroup>
 
 	<!-- Primary Package References - BepInEx and GameLibs -->
