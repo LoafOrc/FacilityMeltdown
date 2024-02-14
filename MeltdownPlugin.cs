@@ -38,6 +38,10 @@ namespace FacilityMeltdown {
             logger = BepInEx.Logging.Logger.CreateLogSource(modGUID);
             logger.LogInfo("Initalising assets...");
 
+            logger.LogWarning("================================");
+            logger.LogWarning("  NOT AN ERROR, PROBABLY A MISSING DEPENDENCY");
+            logger.LogWarning("================================");
+
             Assets.Init();
 
             RegisterNetworking();
@@ -61,6 +65,22 @@ namespace FacilityMeltdown {
             RegisterItems();
 
             logger.LogInfo(modName + ":" + modVersion + " has succesfully loaded!");
+        }
+
+        void OnDisable() { // called after everything has been inited
+            // Check for silly meltdown chance mod.
+            if(BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("den.meltdownchance")) {
+                logger.LogWarning("================================");
+                logger.LogWarning("");
+                logger.LogWarning("YOU ARE USING THE MELTDOWN CHANCE MOD.");
+                logger.LogWarning("THIS GOES AGAINST THE DESIGN OF MELTDOWN.");
+                logger.LogWarning("YOU WILL RECIEVE NO SUPPORT FROM ME WHILE,");
+                logger.LogWarning("YOU HAVE THE MELTDOWN CHANCE MOD");
+                logger.LogWarning("for information about why it's a bad idea:");
+                logger.LogWarning("https://www.youtube.com/watch?v=pdqy3J5LF5M");
+                logger.LogWarning("");
+                logger.LogWarning("================================");
+            }
         }
 
         void RegisterItems() {
