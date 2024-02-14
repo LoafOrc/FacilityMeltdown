@@ -30,7 +30,7 @@ namespace FacilityMeltdown.Util {
         [DataMember]
         internal SyncedEntry<bool> OVERRIDE_APPARATUS_VALUE, EMERGENCY_LIGHTS;
         [DataMember]
-        internal SyncedEntry<float> SCAN_COOLDOWN, SCAN_ACCURACY;
+        internal SyncedEntry<float> SCAN_COOLDOWN, SCAN_ACCURACY, APPARATUS_VALUE_BY_QUOTA;
         
         [DataMember]
         internal SyncedEntry<string> DISALLOWED_ENEMIES;
@@ -48,6 +48,7 @@ namespace FacilityMeltdown.Util {
 
             OVERRIDE_APPARATUS_VALUE = file.BindSyncedEntry("GameBalance", "OverrideAppartusValue", true, "Whether or not FacilityMeltdown should override appartus value. Only use for compatibility reasons");
             APPARATUS_VALUE = file.BindSyncedEntry("GameBalance", "AppartusValue", 240, "What the value of the appartus should be set as IF override appartus value is `true`");
+            APPARATUS_VALUE_BY_QUOTA = file.BindSyncedEntry("GameBalance", "ApparatusValueByQuota", .125f, "Add `x` perctange (between 0 and 1) of the quota to the apparatus.");
             MONSTER_SPAWN_AMOUNT = file.BindSyncedEntry("GameBalance", "MonsterSpawnAmount", 5, "How many monsters should spawn during the meltdown sequence? Set to 0 to disable.");
             EMERGENCY_LIGHTS = file.BindSyncedEntry("GameBalance", "EmergencyLights", true, "Should the lights turn on periodically? Disabling this option makes them permanently off. (Matches Vanilla Behaviour)");
 

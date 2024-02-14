@@ -25,7 +25,11 @@ namespace FacilityMeltdown.Lang
 
         internal static void SetLanguage(string id)
         {
-            MeltdownPlugin.logger.LogInfo($"Loading language: {languages[id]} ({id})");
+            MeltdownPlugin.logger.LogInfo($"Loading language: {id}");
+            if(!languages.ContainsKey(id) ) {
+                MeltdownPlugin.logger.LogError($"Failed to find language! Defaulting to english");
+                id = "en";
+            }
 
             using Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"FacilityMeltdown.Lang.{id}.json");
             using StreamReader reader = new StreamReader(stream);

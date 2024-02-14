@@ -44,7 +44,7 @@ namespace FacilityMeltdown {
 
             // Effect Handlers
             IEnumerator PlayEffects() {
-                foreach (MeltdownSequenceEffect effect in MeltdownSequenceEffect.effects) {
+                foreach (MeltdownSequenceEffect effect in MeltdownAPI.RegisteredEffects) {
                     StartCoroutine(PlayMeltdownSequenceEffect(effect));
                     yield return new WaitForSeconds(.1f);
                 }

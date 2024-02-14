@@ -12,7 +12,6 @@ namespace FacilityMeltdown.API {
         protected PlayerControllerB player => GameNetworkManager.Instance.localPlayerController;
         protected Vector3 mainEntrancePosition { get; private set; }
 
-        public static List<MeltdownSequenceEffect> effects = new List<MeltdownSequenceEffect>();
 
         public bool Playing { get; protected set; }
         public bool IsOneShot { get; protected set; }
@@ -26,8 +25,6 @@ namespace FacilityMeltdown.API {
             Name = name;
             ModGUID = modGUID;
             FullName = modGUID + "." + name;
-
-            effects.Add(this);
         }
 
         public virtual void Setup() { 

@@ -6,7 +6,7 @@
 
     <!-- Copy to Plugin Directory for Quicker Testing -->
     <Target Name="CopyFiles" DependsOnTargets="NetcodePatcher" AfterTargets="PostBuildEvent">
-	<Message Importance="high" Text="Copying to local lethal company install" />
-        <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(PluginDirectory)"/>
+	    <Message Importance="high" Text="Copying to local lethal company install" />
+        <Copy SourceFiles="$(TargetDir)FacilityMeltdown.dll;facilitymeltdown" DestinationFolder="$(PluginDirectory)"/>
     </Target>
 </Project>

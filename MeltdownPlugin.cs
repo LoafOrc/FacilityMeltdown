@@ -80,6 +80,20 @@ namespace FacilityMeltdown {
                 logger.LogWarning("https://www.youtube.com/watch?v=pdqy3J5LF5M");
                 logger.LogWarning("");
                 logger.LogWarning("================================");
+                logger.LogWarning("");
+                logger.LogWarning("IF YOU ARE THE DEV OF MELTDOWN CHANCE");
+                logger.LogWarning("Please do the following:");
+                logger.LogWarning(" a) Add a warning in the readme that it is not ");
+                logger.LogWarning("    the intended way to play meltdown");
+                logger.LogWarning(" b) Do not attempt to suppress this warning. ");
+                logger.LogWarning(" c) Go to my discord thread in the modding ");
+                logger.LogWarning("    discord and I can show you the correct ");
+                logger.LogWarning("    way to do it. ");
+                logger.LogWarning("I get this is your first time making a");
+                logger.LogWarning("mod but this is something that I am going to");
+                logger.LogWarning("very heavily discourage.");
+                logger.LogWarning("");
+                logger.LogWarning("================================");
             }
         }
 

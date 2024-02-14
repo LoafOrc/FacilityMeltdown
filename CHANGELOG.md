@@ -3,7 +3,7 @@
 - Change readme slightly
 - FacilityMeltdown has been split into 2 mods. FacilityMeltdown is now responsible for ONLY the meltdown. A new mod [Radioactive](sdfasd) handles the Geiger Counter and other things. It's also a lot more customisable with a bunch of cool new features. This will have other uses *soonish* but for now this is the first step.
 - (Techincally a radioactive change but-) Buffed Geiger Counter item by increasing how much the 
-
+- Created `MeltdownAPI`, other mods can now manually trigger a meltdown.
 
 ## v2.3
 - Add Korean ([FontPatcher](https://thunderstore.io/c/lethal-company/p/LeKAKiD/FontPatcher/) is needed), thanks @riverbible!

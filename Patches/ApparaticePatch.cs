@@ -17,11 +17,12 @@ namespace FacilityMeltdown.Patches {
         internal static void BeginMeltdownSequence(LungProp __instance, ref bool ___isLungDocked) {
             if (!__instance.IsHost) return;
             if (!___isLungDocked) return;
+            if (MeltdownHandler.Instance != null) return;
 
             // We just took it out
             try { // make sure to surround in try catch because this is a prefix
                 if (MeltdownConfig.Instance.OVERRIDE_APPARATUS_VALUE.Value)
-                    __instance.scrapValue = MeltdownConfig.Instance.APPARATUS_VALUE.Value;
+                    __instance.scrapValue = MeltdownConfig.Instance.APPARATUS_VALUE.Value + Mathf.RoundToInt(TimeOfDay.Instance.profitQuota * MeltdownConfig.Instance.APPARATUS_VALUE_BY_QUOTA.Value);
                 GameObject meltdown = GameObject.Instantiate(Assets.meltdownHandlerPrefab);
                 meltdown.GetComponent<NetworkObject>().Spawn();
             } catch (Exception ex) {
