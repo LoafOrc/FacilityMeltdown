@@ -30,7 +30,7 @@ namespace FacilityMeltdown.Util {
         [DataMember]
         internal SyncedEntry<bool> OVERRIDE_APPARATUS_VALUE, EMERGENCY_LIGHTS;
         [DataMember]
-        internal SyncedEntry<float> SCAN_COOLDOWN, SCAN_ACCURACY, APPARATUS_VALUE_BY_QUOTA;
+        internal SyncedEntry<float> SCAN_COOLDOWN, SCAN_ACCURACY, APPARATUS_VALUE_BY_QUOTA, APPARATUS_VALUE_BY_ENEMY_POWER, APPARATUS_VALUE_BY_DISTANCE;
         
         [DataMember]
         internal SyncedEntry<string> DISALLOWED_ENEMIES;
@@ -49,6 +49,12 @@ namespace FacilityMeltdown.Util {
             OVERRIDE_APPARATUS_VALUE = file.BindSyncedEntry("GameBalance", "OverrideAppartusValue", true, "Whether or not FacilityMeltdown should override appartus value. Only use for compatibility reasons");
             APPARATUS_VALUE = file.BindSyncedEntry("GameBalance", "AppartusValue", 240, "What the value of the appartus should be set as IF override appartus value is `true`");
             APPARATUS_VALUE_BY_QUOTA = file.BindSyncedEntry("GameBalance", "ApparatusValueByQuota", .125f, "Add `x` perctange (between 0 and 1) of the quota to the apparatus.");
+            APPARATUS_VALUE_BY_DISTANCE = file.BindSyncedEntry("GameBalance", "ApparatusValueByDistance", 2f, "For every unit away from the main entrance the apparatus should gain how much?");
+            APPARATUS_VALUE_BY_ENEMY_POWER = file.BindSyncedEntry("GameBalance", "ApparatusValueByEnemyPower", 0f, 
+                "In general powerful enemies will have higher power. " +
+                "\ne.g. Hoarding bugs have a power of 1 and a Spider has a power of 3." +
+                "\nIncreasing this does make the value a bit luck based as you can't control the exact rarity of enemies that will spawn."
+            );
             MONSTER_SPAWN_AMOUNT = file.BindSyncedEntry("GameBalance", "MonsterSpawnAmount", 5, "How many monsters should spawn during the meltdown sequence? Set to 0 to disable.");
             EMERGENCY_LIGHTS = file.BindSyncedEntry("GameBalance", "EmergencyLights", true, "Should the lights turn on periodically? Disabling this option makes them permanently off. (Matches Vanilla Behaviour)");
 

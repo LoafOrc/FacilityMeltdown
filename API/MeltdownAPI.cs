@@ -8,6 +8,7 @@ using UnityEngine;
 namespace FacilityMeltdown.API {
     public static class MeltdownAPI {
         private static List<MeltdownSequenceEffect> _registedEffects = new List<MeltdownSequenceEffect>();
+        internal static Action OnMeltdownStart = delegate { };
 
         public static IReadOnlyCollection<MeltdownSequenceEffect> RegisteredEffects { get { return _registedEffects.AsReadOnly(); } }
 
@@ -20,6 +21,11 @@ namespace FacilityMeltdown.API {
             foreach (MeltdownSequenceEffect effect in effects) { 
                 RegisterEffect(effect);
             }
+        }
+
+        public static void RegisterMeltdownStartListener(string modGUID, Action listener) {
+            OnMeltdownStart += listener;
+            MeltdownPlugin.logger.LogInfo($"[API] {modGUID} registered a listener for the meltdown start!");
         }
 
         public static void TriggerMeltdown(string modGUID) {

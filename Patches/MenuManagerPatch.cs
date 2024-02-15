@@ -7,7 +7,7 @@ namespace FacilityMeltdown.Patches {
         internal static void MeltdownChanceNotification(MenuManager __instance) {
             if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("den.meltdownchance")) {
                 __instance.DisplayMenuNotification(
-                    "You are using MeltdownChance. This goes AGAINST my best wishes as the meltdown dev. For more information check the log",
+                    "MeltdownChance can cause instability with FacilityMeltdown, read the log for more info.",
                     "[Continue]"
                 );
             }

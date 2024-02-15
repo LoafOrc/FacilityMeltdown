@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using BepInEx;
 using BepInEx.Logging;
+using FacilityMeltdown.API;
 using FacilityMeltdown.Effects;
 using FacilityMeltdown.Lang;
 using FacilityMeltdown.Patches;
@@ -33,15 +34,11 @@ namespace FacilityMeltdown {
         internal static MeltdownConfig meltdownConfig;
 
         void Awake() {
-            if (instance == null) instance = this; // Signleton
+            if (instance == null) instance = this; // Singleton
             else return; // Make sure nothing else gets loaded.
             logger = BepInEx.Logging.Logger.CreateLogSource(modGUID);
+
             logger.LogInfo("Initalising assets...");
-
-            logger.LogWarning("================================");
-            logger.LogWarning("  NOT AN ERROR, PROBABLY A MISSING DEPENDENCY");
-            logger.LogWarning("================================");
-
             Assets.Init();
 
             RegisterNetworking();
@@ -76,7 +73,7 @@ namespace FacilityMeltdown {
                 logger.LogWarning("THIS GOES AGAINST THE DESIGN OF MELTDOWN.");
                 logger.LogWarning("YOU WILL RECIEVE NO SUPPORT FROM ME WHILE,");
                 logger.LogWarning("YOU HAVE THE MELTDOWN CHANCE MOD");
-                logger.LogWarning("for information about why it's a bad idea:");
+                logger.LogWarning("for information about why i disagree with it:");
                 logger.LogWarning("https://www.youtube.com/watch?v=pdqy3J5LF5M");
                 logger.LogWarning("");
                 logger.LogWarning("================================");
@@ -89,10 +86,12 @@ namespace FacilityMeltdown {
                 logger.LogWarning(" c) Go to my discord thread in the modding ");
                 logger.LogWarning("    discord and I can show you the correct ");
                 logger.LogWarning("    way to do it. ");
-                logger.LogWarning("I get this is your first time making a");
-                logger.LogWarning("mod but this is something that I am going to");
-                logger.LogWarning("very heavily discourage.");
-                logger.LogWarning("");
+                logger.LogWarning("I want to help out another mod creator,");
+                logger.LogWarning("This is something I don't agree with, and");
+                logger.LogWarning("you've made it a seperate mod. I'm okay");
+                logger.LogWarning("with that. It's just that people are going");
+                logger.LogWarning("to blame base meltdown and I've got other");
+                logger.LogWarning("stuff to do.");
                 logger.LogWarning("================================");
             }
         }
@@ -116,15 +115,12 @@ namespace FacilityMeltdown {
                             }
                         }
                     } catch (Exception e) {
-                        logger.LogWarning("Caught exception: " + e);
-                        logger.LogWarning("================================");
-                        logger.LogWarning("  NOT AN ERROR, PROBABLY A MISSING DEPENDENCY");
-                        logger.LogWarning("================================");
+                        logger.LogWarning("netcode patcher threw an exception -------- MOST LIKELY FINE");
                     }
                 }
 
             logger.LogInfo("= Registering Network Prefabs");
-            //NetworkPrefabs.RegisterNetworkPrefab(Assets.meltdownHandlerPrefab);
+            NetworkPrefabs.RegisterNetworkPrefab(Assets.meltdownHandlerPrefab);
             //NetworkPrefabs.RegisterNetworkPrefab(Assets.geigerCounterItem);
         }
         void RegisterPatches() {
@@ -133,12 +129,15 @@ namespace FacilityMeltdown {
         }
         void RegisterEffects() {
             logger.LogInfo("Using own API to register sequence effects.");
-            new EmergencyLightsEffect();
-            new InsideFacilityParticleEffects();
-            new ShockwaveSpawner();
-            new WarningAnnouncerEffect();
-            new RadiationIncreasingEffect();
-            new IntroDialogueSequencer();
+            MeltdownAPI.RegisterEffect([
+                new EmergencyLightsEffect(),
+                new InsideFacilityParticleEffects(),
+                new ShockwaveSpawner(),
+                new WarningAnnouncerEffect(),
+                new RadiationIncreasingEffect(),
+                new IntroDialogueSequencer()
+            ]);
+            
         }
     }
 }

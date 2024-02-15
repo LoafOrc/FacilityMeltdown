@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using FacilityMeltdown.API;
 using FacilityMeltdown.Behaviours;
@@ -33,6 +34,8 @@ namespace FacilityMeltdown {
 
         [ClientRpc]
         void StartMeltdownClientRpc() {
+            if(meltdownStarted) return;
+            Stopwatch entireFunction = Stopwatch.StartNew();
             meltdownTimer = MeltdownConfig.Instance.MELTDOWN_TIME.Value;
             MeltdownPlugin.logger.LogInfo("Beginning Meltdown Sequence! I'd run if I was you!");
 
@@ -53,50 +56,23 @@ namespace FacilityMeltdown {
             }
             StartCoroutine(PlayEffects());
 
-
-            if (GameNetworkManager.Instance.localPlayerController.IsServer) {
-                List<string> disallowed = MeltdownConfig.Instance.GetDisallowedEnemies();
-                List<SpawnableEnemyWithRarity> allowedEnemies = new List<SpawnableEnemyWithRarity>();
-                foreach (SpawnableEnemyWithRarity enemy in RoundManager.Instance.currentLevel.Enemies) {
-                    if (disallowed.Contains(enemy.enemyType.enemyName)) continue;
-                    allowedEnemies.Add(enemy);
-                }
-                List<int> spawnProbibilities = new List<int>();
-                foreach (SpawnableEnemyWithRarity enemy in allowedEnemies) {
-                    if (EnemyCannotBeSpawned(enemy.enemyType)) continue;
-                    spawnProbibilities.Add(enemy.rarity);
-                }
-
-                List<EnemyVent> avaliableVents = new List<EnemyVent>();
-                for (int i = 0; i < RoundManager.Instance.allEnemyVents.Length; i++) {
-                    if (!RoundManager.Instance.allEnemyVents[i].occupied) {
-                        avaliableVents.Add(RoundManager.Instance.allEnemyVents[i]);
-                    }
-                }
-                avaliableVents.Shuffle();
-                for (int i = 0; i < Mathf.Min(MeltdownConfig.Instance.MONSTER_SPAWN_AMOUNT.Value, avaliableVents.Count); i++) {
-                    EnemyVent vent = avaliableVents[i];
-                    int randomWeightedIndex = RoundManager.Instance.GetRandomWeightedIndex([.. spawnProbibilities], RoundManager.Instance.EnemySpawnRandom);
-                    if (EnemyCannotBeSpawned(allowedEnemies[randomWeightedIndex].enemyType)) continue;
-                    RoundManager.Instance.currentEnemyPower += allowedEnemies[randomWeightedIndex].enemyType.PowerLevel;
-
-                    MeltdownPlugin.logger.LogInfo("Spawning a " + allowedEnemies[randomWeightedIndex].enemyType.enemyName + " during the meltdown sequence");
-                    vent.SpawnEnemy(allowedEnemies[randomWeightedIndex]);
-                }
-            }
-
+            Stopwatch findMainEntrance = Stopwatch.StartNew();
             effectOrigin = RoundManager.FindMainEntrancePosition(false, true);
             if (effectOrigin == Vector3.zero) {
                 MeltdownPlugin.logger.LogError("Effect Origin is Vector3.Zero! We couldn't find the effect origin");
                 HUDManager.Instance.DisplayGlobalNotification("Failed to find effect origin... Things will look broken.");
             }
+            findMainEntrance.Stop();
+            MeltdownPlugin.logger.LogInfo($"[Measurements] Finding Main Entrance took: {findMainEntrance.ElapsedMilliseconds} ms.");
 
             if (MeltdownConfig.Default.SCREEN_SHAKE.Value) {
                 HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
                 HUDManager.Instance.ShakeCamera(ScreenShakeType.Long);
             }
             meltdownStarted = true;
-        }
+            entireFunction.Stop();
+            MeltdownPlugin.logger.LogInfo($"[Measurements] Entire meltdown setup took: {entireFunction.ElapsedMilliseconds} ms.");
+        } 
 
         [ServerRpc(RequireOwnership = false)]
         void MeltdownReadyServerRpc(ulong clientId) {
@@ -117,10 +93,6 @@ namespace FacilityMeltdown {
 
         public override void OnNetworkSpawn() {
             MeltdownReadyServerRpc(NetworkManager.LocalClientId);
-        }
-
-        internal bool EnemyCannotBeSpawned(EnemyType type) {
-            return type.spawningDisabled || type.numberSpawned >= type.MaxCount;
         }
             
         internal static DialogueSegment[] GetDialogue(string translation) {
@@ -237,7 +209,6 @@ namespace FacilityMeltdown {
             }
             yield return new WaitForSeconds(1f);
 
-            Debug.Log(string.Format("Is in elevator D?: {0}", GameNetworkManager.Instance.localPlayerController.isInElevator));
             yield return new WaitForSeconds(9.5f);
 
             yield break;
