@@ -7,14 +7,17 @@ using UnityEngine;
 
 namespace FacilityMeltdown.API {
     public static class MeltdownAPI {
-        private static List<MeltdownSequenceEffect> _registedEffects = new List<MeltdownSequenceEffect>();
         internal static Action OnMeltdownStart = delegate { };
 
+        private static List<MeltdownSequenceEffect> _registedEffects = new List<MeltdownSequenceEffect>();
+        private static List<ApparatusEvaluator> _evaluators = new List<ApparatusEvaluator>();
+
         public static IReadOnlyCollection<MeltdownSequenceEffect> RegisteredEffects { get { return _registedEffects.AsReadOnly(); } }
+        public static IReadOnlyCollection<ApparatusEvaluator> RegisteredEvaluators { get { return _evaluators.AsReadOnly(); } }
 
         public static void RegisterEffect(MeltdownSequenceEffect effect) {
             _registedEffects.Add(effect);
-            MeltdownPlugin.logger.LogInfo($"[API] Succesfully registered {effect.Name}!");
+            MeltdownPlugin.logger.LogInfo($"[API] Succesfully registered {effect.GetType().Name}!");
         }
 
         public static void RegisterEffect(MeltdownSequenceEffect[] effects) {
@@ -23,14 +26,25 @@ namespace FacilityMeltdown.API {
             }
         }
 
-        public static void RegisterMeltdownStartListener(string modGUID, Action listener) {
-            OnMeltdownStart += listener;
-            MeltdownPlugin.logger.LogInfo($"[API] {modGUID} registered a listener for the meltdown start!");
+        public static void RegisterEvaluator(ApparatusEvaluator effect) {
+            _evaluators.Add(effect);
+            MeltdownPlugin.logger.LogInfo($"[API] Succesfully registered {effect.GetType().Name}!");
         }
 
-        public static void TriggerMeltdown(string modGUID) {
+        public static void RegisterEvaluator(ApparatusEvaluator[] effects) {
+            foreach (ApparatusEvaluator effect in effects) {
+                RegisterEvaluator(effect);
+            }
+        }
+
+        public static void RegisterMeltdownStartListener(Action listener) {
+            OnMeltdownStart += listener;
+            MeltdownPlugin.logger.LogInfo($"[API] {(new System.Diagnostics.StackTrace()).GetFrame(1).GetMethod().Name} registered a listener for the meltdown start!");
+        }
+
+        public static void TriggerMeltdown() {
             if (MeltdownHandler.Instance != null) return;
-            MeltdownPlugin.logger.LogInfo($"[API] Another mod ({modGUID}), manually triggered a meltdown!");
+            MeltdownPlugin.logger.LogInfo($"[API] Another mod ({(new System.Diagnostics.StackTrace()).GetFrame(1).GetMethod().Name}), manually triggered a meltdown!");
 
             // We just took it out
             try { // make sure to surround in try catch because this is a prefix

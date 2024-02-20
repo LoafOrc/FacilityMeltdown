@@ -13,6 +13,17 @@
 		<DebugType>embedded</DebugType>
 	</PropertyGroup>
 	<ItemGroup>
+	  <Compile Remove="audio\**" />
+	  <Compile Remove="build\**" />
+	  <Compile Remove="raw\**" />
+	  <EmbeddedResource Remove="audio\**" />
+	  <EmbeddedResource Remove="build\**" />
+	  <EmbeddedResource Remove="raw\**" />
+	  <None Remove="audio\**" />
+	  <None Remove="build\**" />
+	  <None Remove="raw\**" />
+	</ItemGroup>
+	<ItemGroup>
 	  <None Remove="Lang\defs.json" />
 	  <None Remove="Lang\en.json" />
 	  <None Remove="Lang\es.json" />

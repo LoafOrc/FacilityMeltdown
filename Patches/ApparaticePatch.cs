@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FacilityMeltdown.API;
 using FacilityMeltdown.Behaviours;
 using FacilityMeltdown.Util;
 using HarmonyLib;
@@ -51,6 +52,11 @@ namespace FacilityMeltdown.Patches {
                     int enemyPowerValue = Mathf.RoundToInt(meltdownEnemyPower * MeltdownConfig.Instance.APPARATUS_VALUE_BY_ENEMY_POWER.Value);
 
                     MeltdownPlugin.logger.LogDebug($"Evaluating Apparatus Value...");
+                    int value = baseValue;
+                    foreach(ApparatusEvaluator evaluator in MeltdownAPI.RegisteredEvaluators) {
+                        value += evaluator.Evaluate(__instance);
+                    }
+
                     MeltdownPlugin.logger.LogDebug($"Base Value = {baseValue}");
                     MeltdownPlugin.logger.LogDebug($"Quota Value = {TimeOfDay.Instance.profitQuota} x {MeltdownConfig.Instance.APPARATUS_VALUE_BY_QUOTA.Value} = {quotaValue}");
                     MeltdownPlugin.logger.LogDebug($"Distance Value = {Vector3.Distance(RoundManager.FindMainEntrancePosition(false, false), __instance.transform.position)} x {MeltdownConfig.Instance.APPARATUS_VALUE_BY_DISTANCE.Value} = {distanceValue}");
@@ -58,7 +64,7 @@ namespace FacilityMeltdown.Patches {
                     
                     __instance.scrapValue = baseValue + quotaValue + distanceValue + enemyPowerValue;
 
-                    MeltdownPlugin.logger.LogDebug($"Therefore the total value is: {__instance.scrapValue}");
+                    MeltdownPlugin.logger.LogDebug($"Total apparatus value: {__instance.scrapValue}");
                     calculateApparatusValue.Stop();
                     MeltdownPlugin.logger.LogInfo($"[Measurements] Calculating apparatus value took: {calculateApparatusValue.ElapsedMilliseconds}ms.");
                 }

@@ -15,21 +15,11 @@ namespace FacilityMeltdown.API {
 
         public bool Playing { get; protected set; }
         public bool IsOneShot { get; protected set; }
-        public string Name { get; private set; }
-        public string ModGUID { get; private set; }
-        public string FullName { get; private set; }
 
-        public GameObject gameObject { get; private set; }
-
-        public MeltdownSequenceEffect(string modGUID, string name) {
-            Name = name;
-            ModGUID = modGUID;
-            FullName = modGUID + "." + name;
-        }
+        public GameObject gameObject => MeltdownHandler.Instance.gameObject;
 
         public virtual void Setup() { 
             Playing = true;
-            gameObject = new GameObject(Name + "Handler");
             mainEntrancePosition = RoundManager.FindMainEntrancePosition(false, true);
         }
         public virtual IEnumerator Play(float timeLeftUntilMeltdown) { yield return null; yield break; }
