@@ -1,6 +1,4 @@
-# Facility Meltdown (Now with multi-language SUPPORT)
-v2.2 adds support for custom language. Currently has English and Spanish but if you want to come by the thread on discord I can help you out getting your translation into the mod!
-
+# Facility Meltdown 
 The apparatus was a vital part of the upkeep of the facility's nuclear reactor - and you just took it out.
 
 With the facility meltdown mod the appartus has a lot more risk (and reward) attached to it. When you take it out the entire facility spirals into a self destruction sequence! You'll have 2 minutes to escape and take off before you get vaporized.
@@ -9,27 +7,32 @@ FacilityMeltdown should also work correctly with most\* custom moons and interio
 
 If you are strugling with playing the mod have a look at the bottom of this readme to find some useful tips and tricks. Or you can modify certain things in the config.
 
+## Credits
+Music and voice lines come from portal 2. I love portal 2.
+
 ## What this mod adds
 - A 2 minute meltdown sequence where everything begins to go wrong inside the facility. After the 2 minutes is up the nuclear reactor blows up into a fireball that will engulf you if you aren't fast enough.
 - A new piece of Equipment - the Geiger Counter! For just 90 credits you can be surverying the area for radiation in no time! Use it to find the appartus or other places of radioactive significance.
 - A new terminal command - "reactor health"! When the facility's reactor is melting down you need information! The reactor health command is here to provide you with vital information on how much time left you have until the facility goes catastrophic. It also includes what the company thinks you should do at this moment.
 
 ## Custom Music
+### with PizzaTowerEscapeMusic
 FacilityMeltdown itself doesn't support custom music. However, this tutorial made by "platinumbin" on Discord shows you how to use the [PizzaTowerEscapeMusic](https://thunderstore.io/c/lethal-company/p/BGN/PizzaTowerEscapeMusic/) mod to add custom music.
 Link to tutorial: https://www.youtube.com/watch?v=D5hKkSLlEhk
 
+### with loaforcsSoundAPI
+[loaforcsSoundAPI](https://thunderstore.io/c/lethal-company/p/loaforc/loaforcsSoundAPI/) is a mod I built specfically for the LR team. There is a template avaliable [here](https://github.com/LoafOrc/loaforcsSoundAPI-examples), otherwise read the [getting started wiki](https://github.com/LoafOrc/loaforcsSoundAPI/wiki/Making-a-simple-Sound%E2%80%90Pack).
+**This tool is still in development and I recommened using PizzaTowerEscapeMusic for now**
+However this comes with the added bonus of being able to use Meltdown's dynamic system of speeding up the warning voice sounds as the meltdown occurs.
+
 ## Config
-~~All game balance options are synced (only the host needs to edit them, but it wont hurt to have everyone using the same config)~~. Visual and Audio settings are independent of what is synced.
-While an underlying issue with CSync and FacilityMeltdown's implementation of it is being worked out syncing has been temporarily disabled. Make sure everybody has the exact same config.
+All game balance options are synced (only the host needs to edit them, but it wont hurt to have everyone using the same config). Visual and Audio settings are independent of what is synced.
 
 ### OPTIONAL ingame config editors
 [lethalconfig](https://thunderstore.io/c/lethal-company/p/AinaVT/LethalConfig/) or [lethalsettings](https://thunderstore.io/c/lethal-company/p/willis81808/LethalSettings/) will let you edit the settings in-game.
 
 ## Known Issues
 There are currently no known issues. If you find one go to the [lethal company modding discord](https://discord.gg/lcmod) and I can try and take a look.
-
-## Credits
-Music and voice lines come from portal 2. I love portal 2.
 
 ## For Modders
 If you are a modder and you want to add custom effects in general or for your specific moon you can add a refernce to the dll and extend the MeltdownSequenceEffect class. Example:

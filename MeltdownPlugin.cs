@@ -4,7 +4,9 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using BepInEx;
 using BepInEx.Logging;
+using FacilityMeltdown.Behaviours;
 using FacilityMeltdown.Effects;
+using FacilityMeltdown.Integrations;
 using FacilityMeltdown.Lang;
 using FacilityMeltdown.Patches;
 using FacilityMeltdown.Util;
@@ -19,12 +21,13 @@ namespace FacilityMeltdown {
     [BepInPlugin(modGUID, modName, modVersion)]
     [BepInDependency("ainavt.lc.lethalconfig", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.willis.lc.lethalsettings", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("me.loaforc.soundapi", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("evaisa.lethallib")]
-    [BepInDependency("io.github.CSync")]
+    [BepInDependency("com.sigurd.csync")]
     public class MeltdownPlugin : BaseUnityPlugin {
         internal const string modGUID = "me.loaforc.facilitymeltdown";
         internal const string modName = "FacilityMeltdown";
-        internal const string modVersion = "2.3.0";
+        internal const string modVersion = "2.4.5";
 
         private readonly Harmony harmony = new Harmony(modGUID);
         internal static MeltdownPlugin instance;
@@ -60,7 +63,22 @@ namespace FacilityMeltdown {
 
             RegisterItems();
 
-            logger.LogInfo(modName + ":" + modVersion + " has succesfully loaded!");
+            /*
+            if(BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("me.loaforc.soundapi")) {
+                try {
+                    MeltdownSoundAPI.Integrate();
+                } catch(Exception e) {
+                    Logger.LogError("An error occured while trying to integrate into soundapi!");
+                    Logger.LogWarning("Keep in mind I may not have actually updated soundapi to include the new api :3");
+                    Logger.LogError(e);
+                    Logger.LogWarning("Keep in mind I may not have actually updated soundapi to include the new api :3");
+                }
+            }
+            */
+
+            
+
+                logger.LogInfo(modName + ":" + modVersion + " has succesfully loaded!");
         }
 
         void RegisterItems() {
@@ -69,23 +87,32 @@ namespace FacilityMeltdown {
             Items.RegisterShopItem(Assets.geigerCounterItemDef, null, null, Assets.geigerCounterNode, 90);
         }
 
+        void OnDisable() {
+            if (
+                BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("den.meltdownchance") ||
+                BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("PizzaProbability")
+            ) {
+                logger.LogInfo("You are using a mod that makes meltdown have a random chance of occuring.");
+                logger.LogInfo("Keep in mind this goes against meltdown, but your choice.");
+                logger.LogWarning("However; BY DESIGN these mods need to mess with the internals of meltdown");
+                logger.LogWarning("so I personally will be offering low to no support with these mods installed.");
+            }
+        }
+
         void RegisterNetworking() {
             logger.LogInfo("Doing networky stuff");
-            var types = Assembly.GetExecutingAssembly().GetTypes();
+                var types = new Type[]{ typeof(MeltdownHandler), typeof(GeigerCounterItem) };
                 foreach (var type in types) {
                     try {
-                        var methods = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
-                        foreach (var method in methods) {
-                            var attributes = method.GetCustomAttributes(typeof(RuntimeInitializeOnLoadMethodAttribute), false);
-                            if (attributes.Length > 0) {
-                                method.Invoke(null, null);
-                            }
+                    var methods = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+                    foreach (var method in methods) {
+                        var attributes = method.GetCustomAttributes(typeof(RuntimeInitializeOnLoadMethodAttribute), false);
+                        if (attributes.Length > 0) {
+                            method.Invoke(null, null);
                         }
+                    }
                     } catch (Exception e) {
-                        logger.LogWarning("Caught exception: " + e);
-                        logger.LogWarning("================================");
-                        logger.LogWarning("  NOT AN ERROR, PROBABLY A MISSING DEPENDENCY");
-                        logger.LogWarning("================================");
+                        logger.LogWarning("supressed an error from netcode patcher, probably fine but should still log that something happened.");
                     }
                 }
 

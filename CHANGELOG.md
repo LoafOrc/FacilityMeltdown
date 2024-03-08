@@ -1,3 +1,26 @@
+## v2.4
+This release lets you use CSync v2.0.0! Make sure to update both!
+
+- Updated to CSync v2.0.0
+- Add Chinese translations (FontPatcher also needed), thanks @rominwolf! (sorry it took so long lol :sob:)
+- Added integration with [loaforcsSoundAPI](https://thunderstore.io/c/lethal-company/p/loaforc/loaforcsSoundAPI/) (keep in mind this uses an api i havent actually pushed to thunderstore yet so itll throw an error for a bit :3)
+- Fixed an issue where using a preloader to disable a soft depenedncy would cause FaciltyMeltdown to fail to load.
+
+### v2.4.1
+- Fixed an issue where if loaforcsSoundAPI wasn't installed meltdown would fail to load
+- This also fixed any warnings/errors that were attributed to "Netcode Patcher" *(hopefully)*.
+
+### v2.4.2
+- Swapped to Sigurd CSync v3.1.0 (why does this keep happening :pensive:)
+
+### v2.4.3
+Woops, forgot to change the internal dependency.
+
+### v2.4.4
+- Temporarily removed loaforcsSoundAPI while I go on a bit of a break.
+- Cleaned up old code.
+- Added `MeltdownAPI.StartMeltdown` for other mods to implement their own triggers for meltdown.
+
 ## v2.3
 - Add Korean ([FontPatcher](https://thunderstore.io/c/lethal-company/p/LeKAKiD/FontPatcher/) is needed)
 - Meltdown will now "silent fail" where if ANY client fails to start the meltdown then it will not go ahead. This ensures a desync can never happen, instead it will just not start.
