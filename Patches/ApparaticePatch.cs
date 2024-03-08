@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FacilityMeltdown.API;
 using FacilityMeltdown.Behaviours;
 using FacilityMeltdown.Util;
 using HarmonyLib;
@@ -17,6 +18,7 @@ namespace FacilityMeltdown.Patches {
         internal static void BeginMeltdownSequence(LungProp __instance, ref bool ___isLungDocked) {
             if (!__instance.IsHost) return;
             if (!___isLungDocked) return;
+            if (MeltdownAPI.MeltdownStarted) return;
 
             // We just took it out
             try { // make sure to surround in try catch because this is a prefix
