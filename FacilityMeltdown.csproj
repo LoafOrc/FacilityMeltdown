@@ -35,7 +35,7 @@
 		<PackageReference Include="LethalCompany.GameLibs.Steam" Version="*-*" PrivateAssets="all" />
 		<PackageReference Include="LethalSettings" Version="1.4.0" />
 		<PackageReference Include="NotAtomicBomb.TerminalApi" Version="1.5.*" />
-		<PackageReference Include="Owen3H.BepInEx.CSync" Version="1.0.7" PrivateAssets="all" />
+		<PackageReference Include="Sigurd.BepInEx.CSync" Version="3.1.0" />
 		<PackageReference Include="UnityEngine.Modules" Version="2022.3.9" IncludeAssets="compile" PrivateAssets="all" />
 	</ItemGroup>
 
@@ -47,6 +47,9 @@
 	  <Reference Include="LethalConfig">
 	    <HintPath>Dependencies\LethalConfig.dll</HintPath>
 	  </Reference>
+	  <Reference Include="me.loaforc.soundapi">
+	    <HintPath>Dependencies\me.loaforc.soundapi.dll</HintPath>
+	  </Reference>
 	</ItemGroup>
 
 	<Target Name="NetcodePatcher" AfterTargets="Build">
@@ -54,7 +57,7 @@
 		<!--
     <NetcodePatch Include="$(TargetPath)" />
     -->
-		<Exec Command="dotnet netcode-patch &quot;$(TargetPath)&quot; @(ReferencePathWithRefAssemblies->'&quot;%(Identity)&quot;', ' ')" />
+		<Exec Command="netcode-patch &quot;$(TargetPath)&quot; @(ReferencePathWithRefAssemblies->'&quot;%(Identity)&quot;', ' ')" />
 	</Target>
 	<Target Name="PackThunderstore" AfterTargets="NetcodePatcher" Condition="'$(Configuration)' == 'Release'">
 		<Message Importance="high" Text="Building Thunderstore Package" />

@@ -24,7 +24,7 @@ using TMPro;
 
 namespace FacilityMeltdown.Util {
     [DataContract]
-    internal class MeltdownConfig : SyncedInstance<MeltdownConfig> {
+    internal class MeltdownConfig : SyncedConfig<MeltdownConfig> {
         [DataMember]
         internal SyncedEntry<int> MONSTER_SPAWN_AMOUNT, APPARATUS_VALUE, MELTDOWN_TIME;
         [DataMember]
@@ -43,8 +43,8 @@ namespace FacilityMeltdown.Util {
             return DISALLOWED_ENEMIES.Value.Split(',').ToList();
         }
 
-        internal MeltdownConfig(ConfigFile file) { 
-            InitInstance(this);         
+        internal MeltdownConfig(ConfigFile file) : base(MeltdownPlugin.modGUID) {
+            ConfigManager.Register(this);
 
             OVERRIDE_APPARATUS_VALUE = file.BindSyncedEntry("GameBalance", "OverrideAppartusValue", true, "Whether or not FacilityMeltdown should override appartus value. Only use for compatibility reasons");
             APPARATUS_VALUE = file.BindSyncedEntry("GameBalance", "AppartusValue", 240, "What the value of the appartus should be set as IF override appartus value is `true`");
@@ -73,59 +73,20 @@ namespace FacilityMeltdown.Util {
 
             MeltdownPlugin.logger.LogInfo("Checking for any mod settings managers...");
             if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("ainavt.lc.lethalconfig")) {
-                InitLethalConfig();
+                try {
+                    InitLethalConfig();
+                } catch(Exception e) {
+                    MeltdownPlugin.logger.LogError("An exception occured while setting up LethalConfig. Have you used a preloader to disable it?");
+                    MeltdownPlugin.logger.LogError(e);
+                }
             }
             if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.willis.lc.lethalsettings")) {
-                InitLethalSettings();
-            }
-        }
-        internal static void RequestSync() {
-            if (!IsClient) return;
-
-            using FastBufferWriter stream = new(IntSize, Allocator.Temp);
-
-            // Method `OnRequestSync` will then get called on host.
-            stream.SendMessage($"{MeltdownPlugin.modGUID}_OnRequestConfigSync");
-        }
-
-        internal static void OnRequestSync(ulong clientId, FastBufferReader _) {
-            if (!IsHost) return;
-
-            byte[] array = SerializeToBytes(Instance);
-            int value = array.Length;
-
-            using FastBufferWriter stream = new(value + IntSize, Allocator.Temp);
-
-            try {
-                stream.WriteValueSafe(in value, default);
-                stream.WriteBytesSafe(array);
-
-                stream.SendMessage($"{MeltdownPlugin.modGUID}_OnReceiveConfigSync", clientId);
-            } catch (Exception e) {
-                MeltdownPlugin.logger.LogError($"Error occurred syncing config with client: {clientId}\n{e}");
-            }
-        }
-
-        internal static void OnReceiveSync(ulong _, FastBufferReader reader) {
-            if (!reader.TryBeginRead(IntSize)) {
-                MeltdownPlugin.logger.LogError("Config sync error: Could not begin reading buffer.");
-                return;
-            }
-
-            reader.ReadValueSafe(out int val, default);
-            if (!reader.TryBeginRead(val)) {
-                MeltdownPlugin.logger.LogError("Config sync error: Host could not sync.");
-                return;
-            }
-
-            byte[] data = new byte[val];
-            reader.ReadBytesSafe(ref data, val);
-
-            try {
-                SyncInstance(data);
-                MeltdownPlugin.logger.LogInfo("test sync value: " + Instance.APPARATUS_VALUE.Value);
-            } catch (Exception e) {
-                MeltdownPlugin.logger.LogError($"Error syncing config instance!\n{e}");
+                try {
+                    InitLethalSettings();
+                } catch (Exception e) {
+                    MeltdownPlugin.logger.LogError("An exception occured while setting up LethalSettings. Have you used a preloader to disable it?");
+                    MeltdownPlugin.logger.LogError(e);
+                }
             }
         }
 
@@ -325,27 +286,6 @@ namespace FacilityMeltdown.Util {
                     editableInGame
                 }
             }, false, true);
-        }
-
-        [HarmonyPostfix]
-        [HarmonyPatch(typeof(PlayerControllerB), "ConnectClientToPlayerObject")]
-        public static void InitializeLocalPlayer() {
-            if (IsHost) {
-                MessageManager.RegisterNamedMessageHandler(MeltdownPlugin.modGUID+"_OnRequestConfigSync", OnRequestSync);
-                Synced = true;
-
-                return;
-            }
-
-            Synced = false;
-            MessageManager.RegisterNamedMessageHandler(MeltdownPlugin.modGUID + "_OnReceiveConfigSync", OnReceiveSync);
-            RequestSync();
-        }
-
-        [HarmonyPostfix]
-        [HarmonyPatch(typeof(GameNetworkManager), "StartDisconnect")]
-        public static void PlayerLeave() {
-            RevertSync();
         }
     }
 }
