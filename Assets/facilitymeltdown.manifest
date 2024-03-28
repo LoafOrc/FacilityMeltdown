@@ -1,0 +1,86 @@
+ManifestFileVersion: 0
+CRC: 2362719641
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: c45e75edec2f77c78ce59364dd528de8
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: f874808cecfad4bc2842d7561b4c1acc
+  IncrementalBuildHash:
+    serializedVersion: 2
+    Hash: c45e75edec2f77c78ce59364dd528de8
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 65
+  Script: {instanceID: 0}
+- Class: 82
+  Script: {instanceID: 0}
+- Class: 83
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: e1fbb15bf92b84f40a1eb030765b5afe, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: b66f27a143e837248923f427c112edce, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 607bca0cdad5b0d45b730757e385ab40, type: 3}
+- Class: 114
+  Script: {fileID: -1822274102, guid: e877b233b959fab4c8926379b0a06d53, type: 3}
+- Class: 114
+  Script: {fileID: 1744438480, guid: e877b233b959fab4c8926379b0a06d53, type: 3}
+- Class: 114
+  Script: {fileID: 1746052568, guid: e877b233b959fab4c8926379b0a06d53, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 198
+  Script: {instanceID: 0}
+- Class: 199
+  Script: {instanceID: 0}
+- Class: 241
+  Script: {instanceID: 0}
+- Class: 243
+  Script: {instanceID: 0}
+- Class: 245
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers:
+- AssemblyName: Unity.RenderPipelines.HighDefinition.Runtime
+  ClassName: UnityEngine.Rendering.HighDefinition.LocalVolumetricFogArtistParameters
+Assets:
+- Assets/LethalCompany/Mods/FacilityMeltdown/Shockwave.prefab
+- Assets/LethalCompany/Mods/FacilityMeltdown/final explosion.mp3
+- Assets/LethalCompany/Mods/FacilityMeltdown/GeigerCounterItem.prefab
+- Assets/LethalCompany/Mods/FacilityMeltdown/Fireball.shadergraph
+- Assets/LethalCompany/Mods/FacilityMeltdown/GeigerCounterNode.asset
+- Assets/LethalCompany/Mods/FacilityMeltdown/meltdownMusic.mp3
+- Assets/LethalCompany/Mods/FacilityMeltdown/warning2.mp3
+- Assets/LethalCompany/Mods/FacilityMeltdown/Waterstream.prefab
+- Assets/LethalCompany/Mods/FacilityMeltdown/Shockwave.mat
+- Assets/LethalCompany/Mods/FacilityMeltdown/Dust.prefab
+- Assets/LethalCompany/Mods/FacilityMeltdown/MeltdownHandler.prefab
+- Assets/LethalCompany/Mods/FacilityMeltdown/FacilityExplosion.prefab
+- Assets/LethalCompany/Mods/FacilityMeltdown/warning4.mp3
+- Assets/LethalCompany/Mods/FacilityMeltdown/GeigerCounterItemDef.asset
+- Assets/LethalCompany/Mods/FacilityMeltdown/Shockwave.shadergraph
+- Assets/LethalCompany/Mods/FacilityMeltdown/FireballShellMaterial.mat
+- Assets/LethalCompany/Mods/FacilityMeltdown/warning3.mp3
+- Assets/LethalCompany/Mods/FacilityMeltdown/shockwave.mp3
+- Assets/LethalCompany/Mods/FacilityMeltdown/warning1.mp3
+Dependencies: []
