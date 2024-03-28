@@ -1,0 +1,70 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<!-- Project Properties -->
+	<PropertyGroup>
+		<TargetFramework>netstandard2.1</TargetFramework>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<LangVersion>latest</LangVersion>
+	</PropertyGroup>
+
+	<!-- Embed Debug Symbols for Easier Debugging -->
+	<!-- Embedded Debug -->
+	<PropertyGroup>
+		<DebugSymbols>true</DebugSymbols>
+		<DebugType>embedded</DebugType>
+		<PathMap>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)'))=./</PathMap>
+	</PropertyGroup>
+	<ItemGroup>
+	  <Content Remove="C:\Users\rixon\.nuget\packages\lethalsettings\1.4.0\contentFiles\any\netstandard2.1\CHANGELOG.md" />
+	  <Content Remove="C:\Users\rixon\.nuget\packages\lethalsettings\1.4.0\contentFiles\any\netstandard2.1\icon.png" />
+	  <Content Remove="C:\Users\rixon\.nuget\packages\lethalsettings\1.4.0\contentFiles\any\netstandard2.1\README.md" />
+	</ItemGroup>
+	<ItemGroup>
+	  <None Remove="Lang\defs.json" />
+	  <None Remove="Lang\en.json" />
+	  <None Remove="Lang\es.json" />
+	  <None Remove="Lang\kr.json" />
+	  <None Remove="Lang\zh.json" />
+	</ItemGroup>
+	<ItemGroup>
+	  <EmbeddedResource Include="Lang\defs.json" />
+	  <EmbeddedResource Include="Lang\en.json" />
+	  <EmbeddedResource Include="Lang\es.json" />
+	  <EmbeddedResource Include="Lang\kr.json" />
+	  <EmbeddedResource Include="Lang\zh.json" />
+	</ItemGroup>
+
+	<!-- Primary Package References - BepInEx and GameLibs -->
+	<ItemGroup>
+		<PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
+		<PackageReference Include="BepInEx.Core" Version="5.*" PrivateAssets="all" />
+		<PackageReference Include="Evaisa.LethalLib" Version="0.14.*" />
+		<PackageReference Include="LethalCompany.GameLibs.Steam" Version="*-*" PrivateAssets="all" />
+		<PackageReference Include="LethalSettings" Version="1.4.0" />
+		<PackageReference Include="NotAtomicBomb.TerminalApi" Version="1.5.*" />
+		<PackageReference Include="Sigurd.BepInEx.CSync" Version="3.1.0" />
+		<PackageReference Include="UnityEngine.Modules" Version="2022.3.9" IncludeAssets="compile" PrivateAssets="all" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
+		<PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Reference Include="LethalConfig">
+	    <HintPath>..\Dependencies\LethalConfig.dll</HintPath>
+	  </Reference>
+	</ItemGroup>
+
+	<Target Name="NetcodePatcher" AfterTargets="Build">
+		<Message Importance="high" Text="Doing Netcode Patcher stuff." />
+		<!--
+    <NetcodePatch Include="$(TargetPath)" />
+    -->
+		<Exec Command="netcode-patch &quot;$(TargetPath)&quot; @(ReferencePathWithRefAssemblies->'&quot;%(Identity)&quot;', ' ')" />
+	</Target>
+	<Target Name="PackThunderstore" AfterTargets="NetcodePatcher" Condition="'$(Configuration)' == 'Release'">
+		<Message Importance="high" Text="Building Thunderstore Package" />
+		<Exec Command="tcli build" />
+	</Target>
+</Project>
