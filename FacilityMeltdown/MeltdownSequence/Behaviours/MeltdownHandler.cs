@@ -25,7 +25,7 @@ public class MeltdownHandler : NetworkBehaviour {
 
     static PlayerControllerB Player => GameNetworkManager.Instance.localPlayerController;
     private AudioSource musicSource, warningSource;
-    internal static MeltdownHandler Instance;
+    internal static MeltdownHandler Instance { get; private set; }
 
     internal float meltdownTimer;
     bool meltdownStarted = false;
@@ -43,7 +43,7 @@ public class MeltdownHandler : NetworkBehaviour {
         MeltdownPlugin.logger.LogInfo("Beginning Meltdown Sequence! I'd run if I was you! MeltdownTimer: " + meltdownTimer);
 
         musicSource = gameObject.AddComponent<AudioSource>();
-        musicSource.clip = Assets.defaultMusic;
+        musicSource.clip = MeltdownPlugin.assets.defaultMusic;
         musicSource.spatialBlend = 0;
         musicSource.loop = false;
         musicSource.Play();
@@ -90,7 +90,7 @@ public class MeltdownHandler : NetworkBehaviour {
                     () => {
                         if(shockwave != null) GameObject.Destroy(shockwave);
 
-                        shockwave = GameObject.Instantiate(Assets.shockwavePrefab);
+                        shockwave = GameObject.Instantiate(MeltdownPlugin.assets.shockwavePrefab);
                         shockwave.transform.position = effectOrigin;
                     }
                 , 25, 35)
@@ -156,16 +156,15 @@ public class MeltdownHandler : NetworkBehaviour {
         readyPlayers.Add(clientId);
 
         if (readyPlayers.Count == StartOfRound.Instance.GetConnectedPlayers().Count) {
+            MeltdownPlugin.logger.LogDebug($"Instance == null? {Instance == null}");
+            if(Instance != null) {
+                Destroy(gameObject);
+                return;
+            }
+            Instance = this;
+
             StartMeltdownClientRpc();
         }
-    }
-
-    void Start() {
-        if (Instance != null) {
-            Destroy(gameObject);
-            return;
-        }
-        Instance = this;
     }
 
     public override void OnNetworkSpawn() {
@@ -193,6 +192,8 @@ public class MeltdownHandler : NetworkBehaviour {
     }
 
     void OnDisable() {
+        MeltdownPlugin.logger.LogInfo("Cleaning up MeltdownHandler.");
+
         Instance = null;
         if (explosion != null)
             Destroy(explosion);
@@ -226,7 +227,7 @@ public class MeltdownHandler : NetworkBehaviour {
 
             GameObject explosionPrefab = MeltdownMoonMapper.Instance.explosionPrefab;
             if (explosionPrefab == null)
-                explosionPrefab = Assets.facilityExplosionPrefab;
+                explosionPrefab = MeltdownPlugin.assets.facilityExplosionPrefab;
 
             explosion = Instantiate(explosionPrefab);
             explosion.transform.position = effectOrigin;

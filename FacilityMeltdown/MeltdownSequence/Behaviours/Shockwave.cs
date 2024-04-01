@@ -20,7 +20,7 @@ namespace FacilityMeltdown.MeltdownSequence.Behaviours
         void Awake()
         {
             sound = gameObject.AddComponent<AudioSource>();
-            sound.clip = Assets.shockwave;
+            sound.clip = MeltdownPlugin.assets.shockwave;
             sound.spatialBlend = 0;
             sound.loop = false;
 

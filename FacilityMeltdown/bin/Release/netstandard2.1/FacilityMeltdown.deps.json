@@ -11,11 +11,11 @@
         "dependencies": {
           "BepInEx.Analyzers": "1.0.8",
           "BepInEx.Core": "5.4.21",
-          "Evaisa.LethalLib": "0.14.2",
-          "LethalCompany.GameLibs.Steam": "49.0.0-alpha.1",
+          "Evaisa.LethalLib": "0.14.4",
+          "LethalCompany.GameLibs.Steam": "50.0.0-beta.0-ngd.1",
           "LethalSettings": "1.4.0",
           "NotAtomicBomb.TerminalApi": "1.5.2",
-          "Sigurd.BepInEx.CSync": "3.1.0",
+          "Sigurd.BepInEx.CSync": "3.1.1",
           "UnityEngine.Modules": "2022.3.9",
           "LethalConfig": "0.0.0.0"
         },
@@ -38,14 +38,14 @@
           "HarmonyX": "2.7.0"
         }
       },
-      "Evaisa.LethalLib/0.14.2": {
+      "Evaisa.LethalLib/0.14.4": {
         "dependencies": {
           "BepInEx.Core": "5.4.21"
         },
         "runtime": {
           "lib/netstandard2.1/LethalLib.dll": {
             "assemblyVersion": "0.0.0.0",
-            "fileVersion": "0.14.2.0"
+            "fileVersion": "0.14.4.0"
           }
         }
       },
@@ -61,7 +61,7 @@
           }
         }
       },
-      "LethalCompany.GameLibs.Steam/49.0.0-alpha.1": {
+      "LethalCompany.GameLibs.Steam/50.0.0-beta.0-ngd.1": {
         "dependencies": {
           "Newtonsoft.Json": "13.0.3",
           "UnityEngine.Modules": "2022.3.9"
@@ -148,16 +148,16 @@
           }
         }
       },
-      "Sigurd.BepInEx.CSync/3.1.0": {
+      "Sigurd.BepInEx.CSync/3.1.1": {
         "dependencies": {
           "BepInEx.Core": "5.4.21",
-          "LethalCompany.GameLibs.Steam": "49.0.0-alpha.1",
+          "LethalCompany.GameLibs.Steam": "50.0.0-beta.0-ngd.1",
           "UnityEngine.Modules": "2022.3.9"
         },
         "runtime": {
           "lib/netstandard2.1/com.sigurd.csync.dll": {
             "assemblyVersion": "3.0.0.0",
-            "fileVersion": "3.1.0.0"
+            "fileVersion": "3.1.1.0"
           }
         }
       },
@@ -447,12 +447,12 @@
       "path": "bepinex.core/5.4.21",
       "hashPath": "bepinex.core.5.4.21.nupkg.sha512"
     },
-    "Evaisa.LethalLib/0.14.2": {
+    "Evaisa.LethalLib/0.14.4": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-pgTdOijDmvlKcYxegXlqiOOj/Wm1CTAkbFJMVonp97NQX2m6Ry7FnTUDKcMnYyEAqIjJC1ydOvGzEUMa5fLNyw==",
-      "path": "evaisa.lethallib/0.14.2",
-      "hashPath": "evaisa.lethallib.0.14.2.nupkg.sha512"
+      "sha512": "sha512-6enfKpOAbwFWeGmCiehLKrSOT51UqNOnq19oTkusSSShQGEkmdwaX+KqfDfhHYH68x0crhkqlc0CtsoIU9VkDg==",
+      "path": "evaisa.lethallib/0.14.4",
+      "hashPath": "evaisa.lethallib.0.14.4.nupkg.sha512"
     },
     "HarmonyX/2.7.0": {
       "type": "package",
@@ -461,12 +461,12 @@
       "path": "harmonyx/2.7.0",
       "hashPath": "harmonyx.2.7.0.nupkg.sha512"
     },
-    "LethalCompany.GameLibs.Steam/49.0.0-alpha.1": {
+    "LethalCompany.GameLibs.Steam/50.0.0-beta.0-ngd.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-U1EdpTVBNOVXoVnBZozI869vNcCvwYvom/26pUbJSkHl+2V9X/AmSkkx0zDc78DAhtlhRGVac1oPgvvnmi+Wpg==",
-      "path": "lethalcompany.gamelibs.steam/49.0.0-alpha.1",
-      "hashPath": "lethalcompany.gamelibs.steam.49.0.0-alpha.1.nupkg.sha512"
+      "sha512": "sha512-Nb8L3PlRGpPyfm7nhroukVpDw1dQmpCUSEwFGoeOtCwERFEA2EDXXHdEUvudeLMLr4cSA94a4IjoyE/BJrdjAw==",
+      "path": "lethalcompany.gamelibs.steam/50.0.0-beta.0-ngd.1",
+      "hashPath": "lethalcompany.gamelibs.steam.50.0.0-beta.0-ngd.1.nupkg.sha512"
     },
     "LethalSettings/1.4.0": {
       "type": "package",
@@ -524,12 +524,12 @@
       "path": "notatomicbomb.terminalapi/1.5.2",
       "hashPath": "notatomicbomb.terminalapi.1.5.2.nupkg.sha512"
     },
-    "Sigurd.BepInEx.CSync/3.1.0": {
+    "Sigurd.BepInEx.CSync/3.1.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-Yb2Y4+6q/tJ9O+/v5Xpd1tNS7Q/zMtDEZn3B6ZiuOngFGzoLxBKYV9KTcaBoc5TxQGwKAKLZ9P4N4JpIv7rFug==",
-      "path": "sigurd.bepinex.csync/3.1.0",
-      "hashPath": "sigurd.bepinex.csync.3.1.0.nupkg.sha512"
+      "sha512": "sha512-M9k4OKTLOxjnNi6k+TE6AQEOvkDgcqREmkA85gDHbCFSClL5RynF3IS3wXdHZ+bjBIxhxdqdkzIgHH1X/7Vv2A==",
+      "path": "sigurd.bepinex.csync/3.1.1",
+      "hashPath": "sigurd.bepinex.csync.3.1.1.nupkg.sha512"
     },
     "System.Collections/4.3.0": {
       "type": "package",

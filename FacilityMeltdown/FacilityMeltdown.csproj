@@ -21,17 +21,9 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <None Remove="Lang\defs.json" />
-	  <None Remove="Lang\en.json" />
-	  <None Remove="Lang\es.json" />
-	  <None Remove="Lang\kr.json" />
-	  <None Remove="Lang\zh.json" />
 	</ItemGroup>
 	<ItemGroup>
 	  <EmbeddedResource Include="Lang\defs.json" />
-	  <EmbeddedResource Include="Lang\en.json" />
-	  <EmbeddedResource Include="Lang\es.json" />
-	  <EmbeddedResource Include="Lang\kr.json" />
-	  <EmbeddedResource Include="Lang\zh.json" />
 	</ItemGroup>
 
 	<!-- Primary Package References - BepInEx and GameLibs -->
@@ -42,7 +34,7 @@
 		<PackageReference Include="LethalCompany.GameLibs.Steam" Version="*-*" PrivateAssets="all" />
 		<PackageReference Include="LethalSettings" Version="1.4.0" />
 		<PackageReference Include="NotAtomicBomb.TerminalApi" Version="1.5.*" />
-		<PackageReference Include="Sigurd.BepInEx.CSync" Version="3.1.0" />
+		<PackageReference Include="Sigurd.BepInEx.CSync" Version="3.1.1" />
 		<PackageReference Include="UnityEngine.Modules" Version="2022.3.9" IncludeAssets="compile" PrivateAssets="all" />
 	</ItemGroup>
 
@@ -62,9 +54,5 @@
     <NetcodePatch Include="$(TargetPath)" />
     -->
 		<Exec Command="netcode-patch &quot;$(TargetPath)&quot; @(ReferencePathWithRefAssemblies->'&quot;%(Identity)&quot;', ' ')" />
-	</Target>
-	<Target Name="PackThunderstore" AfterTargets="NetcodePatcher" Condition="'$(Configuration)' == 'Release'">
-		<Message Importance="high" Text="Building Thunderstore Package" />
-		<Exec Command="tcli build" />
 	</Target>
 </Project>

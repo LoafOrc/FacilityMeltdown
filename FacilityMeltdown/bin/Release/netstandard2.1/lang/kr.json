@@ -1,0 +1,25 @@
+{
+    "lang.missing": "<translation_id> 을(를) 찾을 수 없음.",
+
+    "reactorscan.error.overheat": "함선 스캐너 과열 오류!\n마지막으로 저장된 스캔 결과를 사용합니다!\n\n",
+    "reactorscan.success": "결과 생성 중... 저장 완료\n<cooldown>초 후에 스캔 결과를 다시 생성할 수 있습니다.\n\n",
+    "reactorscan.result.stable": "원자로 불안전성 0%\n원자로의 상태는 양호합니다. 주의할 필요가 없습니다.\n\n",
+    "reactorscan.result.unstable": "원자로 불안정성 <instability>%\n원자로 폭발에 의한 시설 붕괴까지 약 <time_left>초 남았습니다.",
+    "reactorscan.result.flavour.start": "원자로 붕괴가 시작되었습니다. 모든 인원들은 떠날 준비를 마치시길 바랍니다.",
+    "reactorscan.result.flavour.low": "원자로가 점점 더 불안정해지고 있으며 곧 붕괴될 것입니다. 함선을 출발시키지 않으면 회사 독점 네트워크에 대한 손상 위험이 있습니다. 함선 밖에 있는 모든 인원은 원자로가 완전히 붕괴되기 전에 복귀하십시오.",
+    "reactorscan.result.flavour.medium": "원자로가 붕괴되고 있습니다. 원자로 폭발에 의한 시설 붕괴까지 얼마 남지 않았습니다.",
+    "reactorscan.result.flavour.high": "원자로가 시설을 붕괴시키려 합니다. 이번이 마지막 기회입니다. 모든 인원은 원자로가 완전히 붕괴되기 전에 함선으로 돌아오십시오. 아직 시설에 남아있는 인원이 있다면 혼자서 빠져나오지 못할 가능성이 높습니다.",
+
+    "meltdown.dialogue.speaker": "파일럿 컴퓨터",
+
+    "meltdown.dialogue.start": [
+        "... 시설 내부 컴퓨터 연결에 실패했습니다 ... 실패 원인 분석중 ...",
+        "핵 원자로가 불안정합니다 ... 시설 붕괴까지 남은 시간 계산 중 ...",
+        "시설 붕괴까지 <color=\"red\"><meltdown_time>분</color> 남았습니다."
+    ],
+
+    "meltdown.dialogue.shiptakeoff": [
+        "회사가 현재 방사능 수치가 너무 높다고 판단했습니다.",
+        "회사는 장비를 손상시킬 위험을 감수하지 않습니다."
+    ]
+}

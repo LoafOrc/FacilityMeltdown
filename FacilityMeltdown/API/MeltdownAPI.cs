@@ -18,7 +18,7 @@ public static class MeltdownAPI {
             MeltdownPlugin.logger.LogWarning("Local Player isn't host! Aborting!!");
             return;
         }
-        GameObject meltdown = GameObject.Instantiate(Assets.meltdownHandlerPrefab);
+        GameObject meltdown = GameObject.Instantiate(MeltdownPlugin.assets.meltdownHandlerPrefab);
         meltdown.GetComponent<NetworkObject>().Spawn();
     }
 

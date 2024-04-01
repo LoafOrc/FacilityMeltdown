@@ -20,17 +20,16 @@ namespace FacilityMeltdown {
     [BepInPlugin(modGUID, modName, modVersion)]
     [CompatibleDependency("ainavt.lc.lethalconfig", typeof(LethalConfigIntergration))]
     [CompatibleDependency("com.willis.lc.lethalsettings", typeof(LethalSettingsIntegration))]
-    [BepInDependency("evaisa.lethallib")]
     [BepInDependency("com.sigurd.csync")]
     [BepInDependency("atomic.terminalapi")]
     public class MeltdownPlugin : BaseUnityPlugin {
         internal const string modGUID = "me.loaforc.facilitymeltdown";
         internal const string modName = "FacilityMeltdown";
-        internal const string modVersion = "2.5.0";
+        internal const string modVersion = "2.5.4";
 
         internal static MeltdownPlugin instance;
         internal static ManualLogSource logger;
-
+        internal static MeltdownAssets assets { get; private set; }
         public static bool loadedFully { get; private set; } = false;
 
         void Awake() {
@@ -38,7 +37,9 @@ namespace FacilityMeltdown {
             else return; // Make sure nothing else gets loaded.
             logger = BepInEx.Logging.Logger.CreateLogSource(modGUID);
 
-            if (!RunLoadStep("Assets.Init", "Getting assets", Assets.Init)) return;
+            if (!RunLoadStep("Assets.Init", "Getting assets", () => {
+                assets = new MeltdownAssets();
+            })) return;
             if (!RunLoadStep("LangParser.Init", "Getting possible languages", LangParser.Init)) return;
             if (!RunLoadStep("new MeltdownConfig()", "Setting up config", () => { new MeltdownConfig(Config); })) return;
             if (!RunLoadStep("LangParser.SetLanguage", "Setting language", () => { LangParser.SetLanguage(MeltdownConfig.Instance.LANGUAGE.Value); })) return;
@@ -47,7 +48,7 @@ namespace FacilityMeltdown {
             if (!RunLoadStep("TerminalHandler.Init", "Adding commands to the terminal", TerminalHandler.Init)) {
                 logger.LogWarning("Failed to initalise terminal commands,");
             }
-            if (RunLoadStep("RegisterItems", "Adding the Geiger Counter", RegisterItems)) {
+            if (!RunLoadStep("RegisterItems", "Adding the Geiger Counter", RegisterItems)) {
                 logger.LogWarning("Failed to register the geiger counter.");
             }
             if(!RunLoadStep("CompatibleDependency.Init", "Checking for any soft dependencies", () => { CompatibleDependencyAttribute.Init(this); })) {
@@ -102,7 +103,7 @@ namespace FacilityMeltdown {
         void RegisterItems() {
             logger.LogInfo("Registering Items");
 
-            Items.RegisterShopItem(Assets.geigerCounterItemDef, null, null, Assets.geigerCounterNode, 90);
+            //Items.RegisterShopItem(MeltdownPlugin.assets.geigerCounterItemDef, null, null, MeltdownPlugin.assets.geigerCounterNode, 90);
         }
 
         void OnDisable() {
