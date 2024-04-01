@@ -17,7 +17,7 @@ namespace FacilityMeltdown.Lang
         internal static void Init()
         {
             using Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("FacilityMeltdown.Lang.defs.json");
-            using StreamReader reader = new StreamReader(stream);
+            using StreamReader reader = new(stream);
             string result = reader.ReadToEnd();
 
             languages = JsonConvert.DeserializeObject<Dictionary<string, string>>(result);
@@ -27,7 +27,7 @@ namespace FacilityMeltdown.Lang
         {
             MeltdownPlugin.logger.LogInfo($"Loading language: {languages[id]} ({id})");
 
-            using Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"FacilityMeltdown.Lang.{id}.json");
+            using Stream stream = File.Open(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "lang", id + ".json"), FileMode.Open);
             using StreamReader reader = new StreamReader(stream);
             string result = reader.ReadToEnd();
             loadedLanguage = JsonConvert.DeserializeObject<Dictionary<string, object>>(result);

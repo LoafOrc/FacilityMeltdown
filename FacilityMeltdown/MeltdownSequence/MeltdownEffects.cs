@@ -117,7 +117,7 @@ public static class MeltdownEffects {
                 Vector3 position = GetRandomPositionInsideFacility() + Vector3.up;
                 RaycastHit hit;
                 if (Physics.Raycast(new Ray(position, Vector3.up), out hit, 20f, 256)) {
-                    GameObject prefab = Assets.facilityEffects[UnityEngine.Random.Range(0, Assets.facilityEffects.Length)];
+                    GameObject prefab = MeltdownPlugin.assets.facilityEffects[UnityEngine.Random.Range(0, MeltdownPlugin.assets.facilityEffects.Length)];
                     GameObject created = GameObject.Instantiate(prefab);
                     prefab.transform.position = hit.point;
                     created.transform.parent = MeltdownHandler.Instance.transform;
@@ -141,7 +141,7 @@ public static class MeltdownEffects {
     public static IEnumerator WarningAnnouncer(AudioSource source) {
         source.volume = MeltdownConfig.Default.MUSIC_VOLUME.Value;
 
-        AudioClip sound = Assets.warnings[UnityEngine.Random.Range(0, Assets.warnings.Length)];
+        AudioClip sound = MeltdownPlugin.assets.warnings[UnityEngine.Random.Range(0, MeltdownPlugin.assets.warnings.Length)];
         source.clip = sound;
         source.Play();
 

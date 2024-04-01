@@ -1,0 +1,25 @@
+{
+    "lang.missing": "缺失翻译：<translation_id>",
+
+    "reactorscan.error.overheat": "飞船扫描器过热错误！\n使用最后的缓存报告。\n\n",
+    "reactorscan.success": "报告生成中… 已缓存\n扫描器需要 <cooldown> 的冷却时间。\n\n",
+    "reactorscan.result.stable": "反应堆稳定性：100%\n反应堆状态：健康。无需警告。\n\n",
+    "reactorscan.result.unstable": "反应堆稳定性：<instability>%\n反应堆状态：距离核反应堆爆炸预估剩余 <time_left> 秒。",
+    "reactorscan.result.flavour.start": "反应堆即将失去稳定性。建议：即刻离开设施。",
+    "reactorscan.result.flavour.low": "反应堆正在失去稳定性。建议：不要离开飞船，并通知飞船外的所有雇员即刻返回飞船。",
+    "reactorscan.result.flavour.medium": "反应堆已不稳定。建议：在核反应堆爆炸前返回飞船。",
+    "reactorscan.result.flavour.high": "反应堆已彻底失去稳定性。建议：返回飞船的最后机会。对于仍在设施内的雇员，自求多福。",
+
+    "meltdown.dialogue.speaker": "领航员计算机",
+
+    "meltdown.dialogue.start": [
+        "无法连接至反应堆内部控制模块。正在排查问题…",
+        "问题：不稳定的核反应堆。预测核反应堆爆炸的剩余时间…",
+        "距离核反应堆爆炸剩余：<color=\"red\"><meltdown_time> 分钟</color>。"
+    ],
+
+    "meltdown.dialogue.shiptakeoff": [
+        "总部认为目前核辐射水平过高。",
+        "总部不能冒险损坏设备。"
+    ]
+}

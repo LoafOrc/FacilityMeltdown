@@ -24,7 +24,7 @@ namespace FacilityMeltdown.Patches {
             try { // make sure to surround in try catch because this is a prefix
                 if (MeltdownConfig.Instance.OVERRIDE_APPARATUS_VALUE.Value)
                     __instance.scrapValue = MeltdownConfig.Instance.APPARATUS_VALUE.Value;
-                GameObject meltdown = GameObject.Instantiate(Assets.meltdownHandlerPrefab);
+                GameObject meltdown = GameObject.Instantiate(MeltdownPlugin.assets.meltdownHandlerPrefab);
                 meltdown.GetComponent<NetworkObject>().Spawn();
             } catch (Exception ex) {
                 MeltdownPlugin.logger.LogError(ex);
@@ -35,8 +35,8 @@ namespace FacilityMeltdown.Patches {
         internal static void AddRadiationSource(LungProp __instance) {
             try {
                 RadiationSource source = __instance.gameObject.AddComponent<RadiationSource>();
-                source.radiationAmount = 70;
-                source.radiationDistance = 50;
+                source.radiationAmount = 80;
+                source.radiationDistance = 60;
 
                 if (MeltdownConfig.Instance.OVERRIDE_APPARATUS_VALUE.Value)
                     __instance.scrapValue = MeltdownConfig.Instance.APPARATUS_VALUE.Value;
