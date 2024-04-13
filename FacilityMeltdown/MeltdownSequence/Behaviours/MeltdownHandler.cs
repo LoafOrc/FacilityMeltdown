@@ -20,7 +20,7 @@ namespace FacilityMeltdown.MeltdownSequence.Behaviours;
 public class MeltdownHandler : NetworkBehaviour {
     public float TimeLeftUntilMeltdown { get { return meltdownTimer; } }
     public float Progress { get {
-        return 1 - (TimeLeftUntilMeltdown / MeltdownConfig.Instance.MELTDOWN_TIME.Value);
+        return 1 - (TimeLeftUntilMeltdown / MeltdownPlugin.config.MELTDOWN_TIME.Value);
     } }
 
     static PlayerControllerB Player => GameNetworkManager.Instance.localPlayerController;
@@ -38,7 +38,10 @@ public class MeltdownHandler : NetworkBehaviour {
 
     [ClientRpc]
     void StartMeltdownClientRpc() {
-        meltdownTimer = MeltdownConfig.Instance.MELTDOWN_TIME.Value;
+        MeltdownMoonMapper.EnsureMeltdownMoonMapper();
+        MeltdownInteriorMapper.EnsureMeltdownInteriorMapper();
+
+        meltdownTimer = MeltdownPlugin.config.MELTDOWN_TIME.Value;
         Instance = this;
         MeltdownPlugin.logger.LogInfo("Beginning Meltdown Sequence! I'd run if I was you! MeltdownTimer: " + meltdownTimer);
 
@@ -107,7 +110,7 @@ public class MeltdownHandler : NetworkBehaviour {
         #endregion
 
         if(GameNetworkManager.Instance.localPlayerController.IsServer) {
-            List<string> disallowed = MeltdownConfig.Instance.GetDisallowedEnemies();
+            List<string> disallowed = MeltdownPlugin.config.GetDisallowedEnemies();
             List<SpawnableEnemyWithRarity> allowedEnemies = new List<SpawnableEnemyWithRarity>();
             foreach (SpawnableEnemyWithRarity enemy in RoundManager.Instance.currentLevel.Enemies) {
                 if (disallowed.Contains(enemy.enemyType.enemyName)) continue;
@@ -126,7 +129,7 @@ public class MeltdownHandler : NetworkBehaviour {
                 }
             }
             avaliableVents.Shuffle();
-            for (int i = 0; i < Mathf.Min(MeltdownConfig.Instance.MONSTER_SPAWN_AMOUNT.Value, avaliableVents.Count); i++) {
+            for (int i = 0; i < Mathf.Min(MeltdownPlugin.config.MONSTER_SPAWN_AMOUNT.Value, avaliableVents.Count); i++) {
                 EnemyVent vent = avaliableVents[i];
                 int randomWeightedIndex = RoundManager.Instance.GetRandomWeightedIndex([.. spawnProbibilities], RoundManager.Instance.EnemySpawnRandom);
                 if (EnemyCannotBeSpawned(allowedEnemies[randomWeightedIndex].enemyType)) continue;
@@ -143,7 +146,7 @@ public class MeltdownHandler : NetworkBehaviour {
             HUDManager.Instance.DisplayGlobalNotification("Failed to find effect origin... Things will look broken.");
         }
 
-        if (MeltdownConfig.Default.SCREEN_SHAKE.Value) {
+        if (MeltdownPlugin.config.SCREEN_SHAKE.Value) {
             HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
             HUDManager.Instance.ShakeCamera(ScreenShakeType.Long);
         }
@@ -184,7 +187,7 @@ public class MeltdownHandler : NetworkBehaviour {
         DialogueSegment[] dialogue = new DialogueSegment[translatedDialogue.Count];
         for (int i = 0; i < translatedDialogue.Count; i++) {
             dialogue[i] = new DialogueSegment {
-                bodyText = ((string)translatedDialogue[i]).Replace("<meltdown_time>", Math.Round((float)MeltdownConfig.Instance.MELTDOWN_TIME.Value / 60).ToString()),
+                bodyText = ((string)translatedDialogue[i]).Replace("<meltdown_time>", Math.Round((float)MeltdownPlugin.config.MELTDOWN_TIME.Value / 60).ToString()),
                 speakerText = "meltdown.dialogue.speaker".Translate()
             };
         }
@@ -210,9 +213,9 @@ public class MeltdownHandler : NetworkBehaviour {
         if (HasExplosionOccured()) return;
         StartOfRound shipManager = StartOfRound.Instance;
 
-        musicSource.volume = (float)MeltdownConfig.Default.MUSIC_VOLUME.Value / 100f;
+        musicSource.volume = (float)MeltdownPlugin.config.MUSIC_VOLUME.Value / 100f;
 
-        if (!Player.isInsideFactory && !MeltdownConfig.Default.MUSIC_PLAYS_OUTSIDE.Value) {
+        if (!Player.isInsideFactory && !MeltdownPlugin.config.MUSIC_PLAYS_OUTSIDE.Value) {
             musicSource.volume = 0;
         }
 
@@ -231,6 +234,9 @@ public class MeltdownHandler : NetworkBehaviour {
 
             explosion = Instantiate(explosionPrefab);
             explosion.transform.position = effectOrigin;
+            if(!explosion.TryGetComponent<FacilityExplosionHandler>(out var _)) {
+                explosion.AddComponent<FacilityExplosionHandler>();
+            }
         }
     }
 

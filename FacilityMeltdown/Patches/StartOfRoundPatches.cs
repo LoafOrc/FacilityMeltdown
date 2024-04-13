@@ -19,6 +19,9 @@ namespace FacilityMeltdown.Patches
 
             if (MeltdownMoonMapper.Instance)
                 GameObject.Destroy(MeltdownMoonMapper.Instance.gameObject);
+
+            if(MeltdownInteriorMapper.Instance)
+                GameObject.Destroy(MeltdownInteriorMapper.Instance.gameObject);
         }
     }
 }

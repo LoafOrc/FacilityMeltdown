@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FacilityMeltdown")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7c1f75f03a299b0671e06066539d275a82279cd7")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ad1e3f86cf4f2485ea8c1c7ad872707c6bd07705")]
 [assembly: System.Reflection.AssemblyProductAttribute("FacilityMeltdown")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FacilityMeltdown")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

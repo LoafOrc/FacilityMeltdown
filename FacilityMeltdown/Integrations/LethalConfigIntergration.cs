@@ -18,9 +18,9 @@ internal class LethalConfigIntergration {
 
         LethalConfigManager.SetModDescription("Maybe taking the appartus isn't such a great idea...");
 
-        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(MeltdownConfig.Default.OVERRIDE_APPARATUS_VALUE.Entry, true));
+        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(MeltdownPlugin.config.OVERRIDE_APPARATUS_VALUE.Entry, true));
         LethalConfigManager.AddConfigItem(new IntSliderConfigItem(
-            MeltdownConfig.Default.APPARATUS_VALUE.Entry,
+            MeltdownPlugin.config.APPARATUS_VALUE.Entry,
             new IntSliderOptions {
                 Min = 80,
                 Max = 500,
@@ -28,7 +28,7 @@ internal class LethalConfigIntergration {
             }
         ));
         LethalConfigManager.AddConfigItem(new IntSliderConfigItem(
-            MeltdownConfig.Default.MONSTER_SPAWN_AMOUNT.Entry,
+            MeltdownPlugin.config.MONSTER_SPAWN_AMOUNT.Entry,
             new IntSliderOptions {
                 Min = 0,
                 Max = 10,
@@ -36,10 +36,10 @@ internal class LethalConfigIntergration {
             }
         ));
 
-        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(MeltdownConfig.Default.EMERGENCY_LIGHTS.Entry, true));
+        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(MeltdownPlugin.config.EMERGENCY_LIGHTS.Entry, true));
 
         LethalConfigManager.AddConfigItem(new FloatSliderConfigItem(
-            MeltdownConfig.Default.SCAN_COOLDOWN.Entry,
+            MeltdownPlugin.config.SCAN_COOLDOWN.Entry,
             new FloatSliderOptions {
                 Min = 0,
                 Max = 30,
@@ -47,7 +47,7 @@ internal class LethalConfigIntergration {
             }
         ));
         LethalConfigManager.AddConfigItem(new FloatStepSliderConfigItem(
-            MeltdownConfig.Default.SCAN_ACCURACY.Entry,
+            MeltdownPlugin.config.SCAN_ACCURACY.Entry,
             new FloatStepSliderOptions {
                 Min = 0,
                 Step = 1,
@@ -57,7 +57,7 @@ internal class LethalConfigIntergration {
         ));
 
         LethalConfigManager.AddConfigItem(new IntSliderConfigItem(
-            MeltdownConfig.Default.MELTDOWN_TIME.Entry,
+            MeltdownPlugin.config.MELTDOWN_TIME.Entry,
             new IntSliderOptions {
                 Min = 0,
                 Max = 5 * 60,
@@ -66,7 +66,7 @@ internal class LethalConfigIntergration {
         ));
 
         LethalConfigManager.AddConfigItem(new FloatStepSliderConfigItem(
-            MeltdownConfig.Default.MUSIC_VOLUME,
+            MeltdownPlugin.config.MUSIC_VOLUME,
             new FloatStepSliderOptions() {
                 Min = 0,
                 Max = 100,
@@ -74,11 +74,11 @@ internal class LethalConfigIntergration {
                 RequiresRestart = false
             }
         ));
-        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(MeltdownConfig.Default.MUSIC_PLAYS_OUTSIDE, false));
+        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(MeltdownPlugin.config.MUSIC_PLAYS_OUTSIDE, false));
 
-        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(MeltdownConfig.Default.SCREEN_SHAKE, false));
-        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(MeltdownConfig.Default.PARTICLE_EFFECTS, false));
+        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(MeltdownPlugin.config.SCREEN_SHAKE, false));
+        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(MeltdownPlugin.config.PARTICLE_EFFECTS, false));
 
-        LethalConfigManager.AddConfigItem(new TextInputFieldConfigItem(MeltdownConfig.Default.LANGUAGE, true));
+        LethalConfigManager.AddConfigItem(new TextInputFieldConfigItem(MeltdownPlugin.config.LANGUAGE, true));
     }
 }

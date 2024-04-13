@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "AG66FaOmmeMh0B/wM3Z7dG0R5/fyz962Z0Ihf0SXkqZtzx7EWpqFsGJtfNFJpDIMdmrhPUr4TWdg0Lkyjhivfg==",
+  "dgSpecHash": "mOrha/DNg+lzJLXmQnlny6UGTW00PngKIegfZDsNUDT0Kj+nVgg1kyiYKbVXts9Iwlu0eV13R8QYCTpHo9bfqg==",
   "success": true,
   "projectFilePath": "D:\\LethalCompanyModding\\FacilityMeltdown\\FacilityMeltdown\\FacilityMeltdown.csproj",
   "expectedPackageFiles": [
@@ -9,7 +9,7 @@
     "C:\\Users\\rixon\\.nuget\\packages\\bepinex.core\\5.4.21\\bepinex.core.5.4.21.nupkg.sha512",
     "C:\\Users\\rixon\\.nuget\\packages\\evaisa.lethallib\\0.14.4\\evaisa.lethallib.0.14.4.nupkg.sha512",
     "C:\\Users\\rixon\\.nuget\\packages\\harmonyx\\2.7.0\\harmonyx.2.7.0.nupkg.sha512",
-    "C:\\Users\\rixon\\.nuget\\packages\\lethalcompany.gamelibs.steam\\50.0.0-beta.0-ngd.1\\lethalcompany.gamelibs.steam.50.0.0-beta.0-ngd.1.nupkg.sha512",
+    "C:\\Users\\rixon\\.nuget\\packages\\lethalcompany.gamelibs.steam\\50.0.0-beta.4-ngd.0\\lethalcompany.gamelibs.steam.50.0.0-beta.4-ngd.0.nupkg.sha512",
     "C:\\Users\\rixon\\.nuget\\packages\\lethalsettings\\1.4.0\\lethalsettings.1.4.0.nupkg.sha512",
     "C:\\Users\\rixon\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
     "C:\\Users\\rixon\\.nuget\\packages\\microsoft.netcore.targets\\1.1.0\\microsoft.netcore.targets.1.1.0.nupkg.sha512",
@@ -17,8 +17,7 @@
     "C:\\Users\\rixon\\.nuget\\packages\\monomod.runtimedetour\\21.12.13.1\\monomod.runtimedetour.21.12.13.1.nupkg.sha512",
     "C:\\Users\\rixon\\.nuget\\packages\\monomod.utils\\21.12.13.1\\monomod.utils.21.12.13.1.nupkg.sha512",
     "C:\\Users\\rixon\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
-    "C:\\Users\\rixon\\.nuget\\packages\\notatomicbomb.terminalapi\\1.5.2\\notatomicbomb.terminalapi.1.5.2.nupkg.sha512",
-    "C:\\Users\\rixon\\.nuget\\packages\\sigurd.bepinex.csync\\3.1.1\\sigurd.bepinex.csync.3.1.1.nupkg.sha512",
+    "C:\\Users\\rixon\\.nuget\\packages\\sigurd.bepinex.csync\\4.1.0\\sigurd.bepinex.csync.4.1.0.nupkg.sha512",
     "C:\\Users\\rixon\\.nuget\\packages\\system.collections\\4.3.0\\system.collections.4.3.0.nupkg.sha512",
     "C:\\Users\\rixon\\.nuget\\packages\\system.collections.nongeneric\\4.3.0\\system.collections.nongeneric.4.3.0.nupkg.sha512",
     "C:\\Users\\rixon\\.nuget\\packages\\system.collections.specialized\\4.3.0\\system.collections.specialized.4.3.0.nupkg.sha512",
@@ -46,18 +45,8 @@
     "C:\\Users\\rixon\\.nuget\\packages\\system.text.encoding\\4.3.0\\system.text.encoding.4.3.0.nupkg.sha512",
     "C:\\Users\\rixon\\.nuget\\packages\\system.threading\\4.3.0\\system.threading.4.3.0.nupkg.sha512",
     "C:\\Users\\rixon\\.nuget\\packages\\system.threading.tasks\\4.3.0\\system.threading.tasks.4.3.0.nupkg.sha512",
+    "C:\\Users\\rixon\\.nuget\\packages\\teambmx.lobbycompatibility\\1.1.0\\teambmx.lobbycompatibility.1.1.0.nupkg.sha512",
     "C:\\Users\\rixon\\.nuget\\packages\\unityengine.modules\\2022.3.9\\unityengine.modules.2022.3.9.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "NU1701",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Package 'NotAtomicBomb.TerminalApi 1.5.2' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework '.NETStandard,Version=v2.1'. This package may not be fully compatible with your project.",
-      "libraryId": "NotAtomicBomb.TerminalApi",
-      "targetGraphs": [
-        ".NETStandard,Version=v2.1"
-      ]
-    }
-  ]
+  "logs": []
 }

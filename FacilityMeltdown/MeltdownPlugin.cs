@@ -9,6 +9,8 @@ using FacilityMeltdown.Util;
 using FacilityMeltdown.Util.Attributes;
 using HarmonyLib;
 using LethalLib.Modules;
+using LobbyCompatibility.Attributes;
+using LobbyCompatibility.Enums;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -21,16 +23,19 @@ namespace FacilityMeltdown {
     [CompatibleDependency("ainavt.lc.lethalconfig", typeof(LethalConfigIntergration))]
     [CompatibleDependency("com.willis.lc.lethalsettings", typeof(LethalSettingsIntegration))]
     [BepInDependency("com.sigurd.csync")]
-    [BepInDependency("atomic.terminalapi")]
+    [BepInDependency("BMX.LobbyCompatibility")]
+    [LobbyCompatibility(CompatibilityLevel.Everyone, VersionStrictness.Patch)]
     public class MeltdownPlugin : BaseUnityPlugin {
         internal const string modGUID = "me.loaforc.facilitymeltdown";
         internal const string modName = "FacilityMeltdown";
-        internal const string modVersion = "2.5.4";
+        internal const string modVersion = "2.5.7";
 
         internal static MeltdownPlugin instance;
         internal static ManualLogSource logger;
         internal static MeltdownAssets assets { get; private set; }
         public static bool loadedFully { get; private set; } = false;
+
+        internal static MeltdownConfig config { get; private set; }
 
         void Awake() {
             if (instance == null) instance = this; // Signleton
@@ -41,13 +46,10 @@ namespace FacilityMeltdown {
                 assets = new MeltdownAssets();
             })) return;
             if (!RunLoadStep("LangParser.Init", "Getting possible languages", LangParser.Init)) return;
-            if (!RunLoadStep("new MeltdownConfig()", "Setting up config", () => { new MeltdownConfig(Config); })) return;
-            if (!RunLoadStep("LangParser.SetLanguage", "Setting language", () => { LangParser.SetLanguage(MeltdownConfig.Instance.LANGUAGE.Value); })) return;
+            if (!RunLoadStep("new MeltdownConfig()", "Setting up config", () => { config = new MeltdownConfig(Config); })) return;
+            if (!RunLoadStep("LangParser.SetLanguage", "Setting language", () => { LangParser.SetLanguage(MeltdownPlugin.config.LANGUAGE.Value); })) return;
             if (!RunLoadStep("RegisterPatches", "Integrating into LethalCompany", RegisterPatches)) return;
             if (!RunLoadStep("RegisterNetworking", "Making sure everything is networked", RegisterNetworking)) return;
-            if (!RunLoadStep("TerminalHandler.Init", "Adding commands to the terminal", TerminalHandler.Init)) {
-                logger.LogWarning("Failed to initalise terminal commands,");
-            }
             if (!RunLoadStep("RegisterItems", "Adding the Geiger Counter", RegisterItems)) {
                 logger.LogWarning("Failed to register the geiger counter.");
             }
@@ -55,21 +57,8 @@ namespace FacilityMeltdown {
                 logger.LogWarning("Doing something with soft dependencies broke, meltdown itself should be fine.");
             }
 
-            SceneManager.sceneLoaded += (scene, __) => {
-                if (scene.name == "SampleSceneRelay") return;
-                if (scene.name == "CompanyBuilding") return;
-                if(GameNetworkManager.Instance == null) return;
-                if(GameNetworkManager.Instance.localPlayerController == null) return;
-                if(GameObject.FindObjectOfType<MeltdownMoonMapper>() != null) return; // skipping as the moon has its own override
-
-                MeltdownMoonMapper mappings = new GameObject("DefaultMeltdownMappings").AddComponent<MeltdownMoonMapper>();
-                mappings.outsideEmergencyLights = GameObject.Find("Environment").GetComponentsInChildren<Light>().Where((light) => {
-                    return CheckParentForDisallowed(light.transform);
-                }).ToList();
-            };
-
             loadedFully = true;
-            logger.LogInfo(modName + ":" + modVersion + " has succesfully loaded!");
+            logger.LogInfo(modName + ":" + modVersion + " by loaforc has loaded! have fun :3");
             logger.LogInfo(@"         .-_; ;_-.          ");
             logger.LogInfo(@"        / /     \ \        ");
             logger.LogInfo(@"       | |       | |      ");
@@ -82,11 +71,7 @@ namespace FacilityMeltdown {
             logger.LogInfo(@"   '-._  _.-'^'-._  _.-'    ");
         }
 
-        bool CheckParentForDisallowed(Transform child) {
-            if(child.gameObject.name == "Sun" || child.gameObject.name == "ItemShipAnimContainer") return false;
-            if(child.parent == null) return true;
-            return CheckParentForDisallowed(child.parent);
-        }
+        
 
         bool RunLoadStep(string stepName, string descrption, Action callback) {
             try {
