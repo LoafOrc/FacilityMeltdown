@@ -24,11 +24,12 @@ namespace FacilityMeltdown {
     [CompatibleDependency("com.willis.lc.lethalsettings", typeof(LethalSettingsIntegration))]
     [BepInDependency("com.sigurd.csync")]
     [BepInDependency("BMX.LobbyCompatibility")]
+    [BepInDependency("evaisa.lethallib")]
     [LobbyCompatibility(CompatibilityLevel.Everyone, VersionStrictness.Patch)]
     public class MeltdownPlugin : BaseUnityPlugin {
         internal const string modGUID = "me.loaforc.facilitymeltdown";
         internal const string modName = "FacilityMeltdown";
-        internal const string modVersion = "2.5.7";
+        internal const string modVersion = "2.5.0";
 
         internal static MeltdownPlugin instance;
         internal static ManualLogSource logger;
@@ -88,7 +89,7 @@ namespace FacilityMeltdown {
         void RegisterItems() {
             logger.LogInfo("Registering Items");
 
-            //Items.RegisterShopItem(MeltdownPlugin.assets.geigerCounterItemDef, null, null, MeltdownPlugin.assets.geigerCounterNode, 90);
+            Items.RegisterShopItem(MeltdownPlugin.assets.geigerCounterItemDef, null, null, MeltdownPlugin.assets.geigerCounterNode, 90);
         }
 
         void OnDisable() {
