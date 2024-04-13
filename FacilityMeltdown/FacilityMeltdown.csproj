@@ -1,0 +1,53 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<!-- Project Properties -->
+	<PropertyGroup>
+		<TargetFramework>netstandard2.1</TargetFramework>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<LangVersion>latest</LangVersion>
+	</PropertyGroup>
+
+	<!-- Embed Debug Symbols for Easier Debugging -->
+	<!-- Embedded Debug -->
+	<PropertyGroup>
+		<DebugSymbols>true</DebugSymbols>
+		<DebugType>embedded</DebugType>
+		<PathMap>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)'))=./</PathMap>
+	</PropertyGroup>
+	<ItemGroup>
+	  <None Remove="Lang\defs.json" />
+	</ItemGroup>
+	<ItemGroup>
+	  <EmbeddedResource Include="Lang\defs.json" />
+	</ItemGroup>
+
+	<!-- Primary Package References - BepInEx and GameLibs -->
+	<ItemGroup>
+		<PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
+		<PackageReference Include="BepInEx.Core" Version="5.*" PrivateAssets="all" />
+		<PackageReference Include="Evaisa.LethalLib" Version="0.14.*" />
+		<PackageReference Include="LethalCompany.GameLibs.Steam" Version="*-*" PrivateAssets="all" />
+		<PackageReference Include="LethalSettings" Version="1.4.0" />
+		<PackageReference Include="Sigurd.BepInEx.CSync" Version="4.1.0" />
+		<PackageReference Include="TeamBMX.LobbyCompatibility" Version="1.1.*" />
+		<PackageReference Include="UnityEngine.Modules" Version="2022.3.9" IncludeAssets="compile" PrivateAssets="all" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
+		<PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Reference Include="LethalConfig">
+	    <HintPath>..\Dependencies\LethalConfig.dll</HintPath>
+	  </Reference>
+	</ItemGroup>
+
+	<Target Name="NetcodePatcher" AfterTargets="Build">
+		<Message Importance="high" Text="Doing Netcode Patcher stuff." />
+		<!--
+    <NetcodePatch Include="$(TargetPath)" />
+    -->
+		<Exec Command="netcode-patch &quot;$(TargetPath)&quot; @(ReferencePathWithRefAssemblies->'&quot;%(Identity)&quot;', ' ')" />
+	</Target>
+</Project>

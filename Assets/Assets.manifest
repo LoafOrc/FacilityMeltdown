@@ -1,0 +1,10 @@
+ManifestFileVersion: 0
+CRC: 3514754936
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: facilitymeltdown
+      Dependencies: {}
+    Info_1:
+      Name: biodiverse_main
+      Dependencies: {}
