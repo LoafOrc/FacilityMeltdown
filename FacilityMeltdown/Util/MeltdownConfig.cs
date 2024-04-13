@@ -5,11 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using BepInEx;
 using BepInEx.Configuration;
-/*
-using LethalConfig.ConfigItems.Options;
-using LethalConfig.ConfigItems;
-using LethalConfig;
-*/
 using System.Runtime.CompilerServices;
 using LethalSettings.UI;
 using LethalSettings.UI.Components;
@@ -19,7 +14,7 @@ using GameNetcodeStuff;
 using HarmonyLib;
 using System.Runtime.Serialization;
 using CSync.Lib;
-using CSync.Util;
+using CSync.Extensions;
 using FacilityMeltdown.Lang;
 using TMPro;
 

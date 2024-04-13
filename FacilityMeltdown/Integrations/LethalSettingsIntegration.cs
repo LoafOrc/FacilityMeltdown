@@ -16,13 +16,13 @@ internal class LethalSettingsIntegration {
         Enabled = true;
 
         SliderComponent appratusValueSlider = new SliderComponent {
-            Value = MeltdownConfig.Default.APPARATUS_VALUE.Value,
+            Value = MeltdownPlugin.config.APPARATUS_VALUE.LocalValue,
             MinValue = 80,
             MaxValue = 500,
             WholeNumbers = true,
             Text = "Appartus Value",
-            Enabled = MeltdownConfig.Default.OVERRIDE_APPARATUS_VALUE.Value,
-            OnValueChanged = (self, value) => { MeltdownConfig.Default.APPARATUS_VALUE.Value = (int)value; }
+            Enabled = MeltdownPlugin.config.OVERRIDE_APPARATUS_VALUE.LocalValue,
+            OnValueChanged = (self, value) => { MeltdownPlugin.config.APPARATUS_VALUE.LocalValue = (int)value; }
         };
 
         VerticalComponent editableInGame = new() {
@@ -31,37 +31,37 @@ internal class LethalSettingsIntegration {
                         Text = "Audio Settings [Client Side]"
                     },
                     new SliderComponent {
-                        Value = MeltdownConfig.Default.MUSIC_VOLUME.Value,
+                        Value = MeltdownPlugin.config.MUSIC_VOLUME.Value,
                         MinValue = 0,
                         MaxValue = 100,
                         WholeNumbers = true,
                         Text = "Music Volume",
-                        OnValueChanged = (self, value) => MeltdownConfig.Default.MUSIC_VOLUME.Value = (int) value
+                        OnValueChanged = (self, value) => MeltdownPlugin.config.MUSIC_VOLUME.Value = (int) value
                     },
                     new ToggleComponent {
                         Text = "Play Music Outside?",
-                        Value = MeltdownConfig.Default.MUSIC_PLAYS_OUTSIDE.Value,
-                        OnValueChanged = (self, value) => MeltdownConfig.Default.MUSIC_PLAYS_OUTSIDE.Value = value
+                        Value = MeltdownPlugin.config.MUSIC_PLAYS_OUTSIDE.Value,
+                        OnValueChanged = (self, value) => MeltdownPlugin.config.MUSIC_PLAYS_OUTSIDE.Value = value
                     },
                     new LabelComponent {
                         Text = "Visual Settings [Client Side]"
                     },
                     new ToggleComponent {
                         Text = "Screen Shake",
-                        Value = MeltdownConfig.Default.SCREEN_SHAKE.Value,
-                        OnValueChanged = (self, value) => MeltdownConfig.Default.SCREEN_SHAKE.Value = value
+                        Value = MeltdownPlugin.config.SCREEN_SHAKE.Value,
+                        OnValueChanged = (self, value) => MeltdownPlugin.config.SCREEN_SHAKE.Value = value
                     },
                     new ToggleComponent {
                         Text = "Particle Effects",
-                        Value = MeltdownConfig.Default.PARTICLE_EFFECTS.Value,
-                        OnValueChanged = (self, value) => MeltdownConfig.Default.PARTICLE_EFFECTS.Value = value
+                        Value = MeltdownPlugin.config.PARTICLE_EFFECTS.Value,
+                        OnValueChanged = (self, value) => MeltdownPlugin.config.PARTICLE_EFFECTS.Value = value
                     },
                     new LabelComponent {
                         Text = "Language Settings [Client Side]",
                     },
                     new DropdownComponent {
                         Text = "Language",
-                        Value = new TMP_Dropdown.OptionData(LangParser.languages[MeltdownConfig.Default.LANGUAGE.Value]),
+                        Value = new TMP_Dropdown.OptionData(LangParser.languages[MeltdownPlugin.config.LANGUAGE.Value]),
                         Options = LangParser.languages.Values
                             .Select(language => new TMP_Dropdown.OptionData(language))
                             .ToList(),
@@ -75,7 +75,7 @@ internal class LethalSettingsIntegration {
                                 MeltdownPlugin.logger.LogError("Failed to get language! defaulting to english");
                                 language = "en";
                             }
-                            MeltdownConfig.Default.LANGUAGE.Value = language;
+                            MeltdownPlugin.config.LANGUAGE.Value = language;
                             LangParser.SetLanguage(language);
                         }
                     }
@@ -94,36 +94,36 @@ internal class LethalSettingsIntegration {
                     },
                     new ToggleComponent {
                         Text = "Override Appartus Value?",
-                        Value = MeltdownConfig.Default.OVERRIDE_APPARATUS_VALUE.Value,
+                        Value = MeltdownPlugin.config.OVERRIDE_APPARATUS_VALUE.Value,
                         OnValueChanged = (self, value) => {
-                            MeltdownConfig.Default.OVERRIDE_APPARATUS_VALUE.Value = value;
+                            MeltdownPlugin.config.OVERRIDE_APPARATUS_VALUE.LocalValue = value;
                             appratusValueSlider.Enabled = value;
                         }
                     },
                     appratusValueSlider,
                     new SliderComponent {
-                        Value = MeltdownConfig.Default.MONSTER_SPAWN_AMOUNT.Value,
+                        Value = MeltdownPlugin.config.MONSTER_SPAWN_AMOUNT.LocalValue,
                         MinValue = 0,
                         MaxValue = 10,
                         WholeNumbers = true,
                         Text = "Monster Spawn Amount",
-                        OnValueChanged = (self, value) => { MeltdownConfig.Default.MONSTER_SPAWN_AMOUNT.Value = (int)value; }
+                        OnValueChanged = (self, value) => { MeltdownPlugin.config.MONSTER_SPAWN_AMOUNT.LocalValue = (int)value; }
                     },
                     new ToggleComponent {
                         Text = "Facility has Emergency Lights?",
-                        Value = MeltdownConfig.Default.EMERGENCY_LIGHTS.Value,
+                        Value = MeltdownPlugin.config.EMERGENCY_LIGHTS.LocalValue,
                         OnValueChanged = (self, value) => {
-                            MeltdownConfig.Default.EMERGENCY_LIGHTS.Value = value;
+                            MeltdownPlugin.config.EMERGENCY_LIGHTS.LocalValue = value;
                         }
                     },
                     new SliderComponent {
-                        Value = MeltdownConfig.Default.APPARATUS_VALUE.Value,
+                        Value = MeltdownPlugin.config.APPARATUS_VALUE.LocalValue,
                         MinValue = 0,
                         MaxValue = 10 * 60,
                         WholeNumbers = true,
                         Text = "Meltdown Sequence Time [NOT SUPPORTED, EDIT AT YOUR OWN RISK, NOT RECOMMENDED]",
-                        Enabled = MeltdownConfig.Default.OVERRIDE_APPARATUS_VALUE.Value,
-                        OnValueChanged = (self, value) => { MeltdownConfig.Default.MELTDOWN_TIME.Value = (int)value; }
+                        Enabled = MeltdownPlugin.config.OVERRIDE_APPARATUS_VALUE.LocalValue,
+                        OnValueChanged = (self, value) => { MeltdownPlugin.config.MELTDOWN_TIME.LocalValue = (int)value; }
                     },
                     new LabelComponent { Text = "Edit what enemies can spawn in the config file."},
                     editableInGame

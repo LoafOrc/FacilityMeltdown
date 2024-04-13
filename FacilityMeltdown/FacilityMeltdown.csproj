@@ -15,11 +15,6 @@
 		<PathMap>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)'))=./</PathMap>
 	</PropertyGroup>
 	<ItemGroup>
-	  <Content Remove="C:\Users\rixon\.nuget\packages\lethalsettings\1.4.0\contentFiles\any\netstandard2.1\CHANGELOG.md" />
-	  <Content Remove="C:\Users\rixon\.nuget\packages\lethalsettings\1.4.0\contentFiles\any\netstandard2.1\icon.png" />
-	  <Content Remove="C:\Users\rixon\.nuget\packages\lethalsettings\1.4.0\contentFiles\any\netstandard2.1\README.md" />
-	</ItemGroup>
-	<ItemGroup>
 	  <None Remove="Lang\defs.json" />
 	</ItemGroup>
 	<ItemGroup>
@@ -33,8 +28,8 @@
 		<PackageReference Include="Evaisa.LethalLib" Version="0.14.*" />
 		<PackageReference Include="LethalCompany.GameLibs.Steam" Version="*-*" PrivateAssets="all" />
 		<PackageReference Include="LethalSettings" Version="1.4.0" />
-		<PackageReference Include="NotAtomicBomb.TerminalApi" Version="1.5.*" />
-		<PackageReference Include="Sigurd.BepInEx.CSync" Version="3.1.1" />
+		<PackageReference Include="Sigurd.BepInEx.CSync" Version="4.1.0" />
+		<PackageReference Include="TeamBMX.LobbyCompatibility" Version="1.1.*" />
 		<PackageReference Include="UnityEngine.Modules" Version="2022.3.9" IncludeAssets="compile" PrivateAssets="all" />
 	</ItemGroup>
 

@@ -27,7 +27,7 @@ namespace FacilityMeltdown.MeltdownSequence.Behaviours
                 MeltdownPlugin.logger.LogError("Failed to get volumetric fog!");
             }
 
-            if (MeltdownConfig.Default.SCREEN_SHAKE.Value)
+            if (MeltdownPlugin.config.SCREEN_SHAKE.Value)
             {
                 HUDManager.Instance.ShakeCamera(ScreenShakeType.Small);
                 HUDManager.Instance.ShakeCamera(ScreenShakeType.Big);

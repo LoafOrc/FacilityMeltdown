@@ -13,10 +13,10 @@ namespace FacilityMeltdown.MeltdownSequence;
 public static class MeltdownEffects {
     public static void SetupEmergencyLights() {
         for (int i = 0; i < RoundManager.Instance.allPoweredLights.Count; i++) {
-            RoundManager.Instance.allPoweredLights[i].color = MeltdownMoonMapper.Instance.emergencyLightColour;
+            RoundManager.Instance.allPoweredLights[i].color = MeltdownInteriorMapper.Instance.outsideEmergencyLightColour;
         }
         for (int i = 0; i < MeltdownMoonMapper.Instance.outsideEmergencyLights.Count; i++) {
-            MeltdownMoonMapper.Instance.outsideEmergencyLights[i].color = MeltdownMoonMapper.Instance.emergencyLightColour;
+            MeltdownMoonMapper.Instance.outsideEmergencyLights[i].color = MeltdownMoonMapper.Instance.outsideEmergencyLightColour;
         }
     }
 
@@ -112,7 +112,7 @@ public static class MeltdownEffects {
     }
 
     public static void InsideParticleEffects() {
-        if (MeltdownConfig.Default.SCREEN_SHAKE.Value) {
+        if (MeltdownPlugin.config.SCREEN_SHAKE.Value) {
             for (int i = 0; i < UnityEngine.Random.Range(5, 15); i++) {
                 Vector3 position = GetRandomPositionInsideFacility() + Vector3.up;
                 RaycastHit hit;
@@ -128,7 +128,7 @@ public static class MeltdownEffects {
 
         if (GameNetworkManager.Instance.localPlayerController.isInsideFactory)
             GameObject.Instantiate(StartOfRound.Instance.explosionPrefab, GetRandomPositionNearPlayer(), Quaternion.Euler(-90f, 0f, 0f), RoundManager.Instance.mapPropsContainer.transform);
-        if (MeltdownConfig.Default.SCREEN_SHAKE.Value) {
+        if (MeltdownPlugin.config.SCREEN_SHAKE.Value) {
             if (MeltdownHandler.Instance.Progress > .5f) {
                 HUDManager.Instance.ShakeCamera(ScreenShakeType.Big);
             } else {
@@ -139,7 +139,7 @@ public static class MeltdownEffects {
     }
 
     public static IEnumerator WarningAnnouncer(AudioSource source) {
-        source.volume = MeltdownConfig.Default.MUSIC_VOLUME.Value;
+        source.volume = MeltdownPlugin.config.MUSIC_VOLUME.Value;
 
         AudioClip sound = MeltdownPlugin.assets.warnings[UnityEngine.Random.Range(0, MeltdownPlugin.assets.warnings.Length)];
         source.clip = sound;

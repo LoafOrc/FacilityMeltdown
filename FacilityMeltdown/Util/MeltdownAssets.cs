@@ -1,4 +1,5 @@
 ﻿using Biodiversity.Util.Assetloading;
+using FacilityMeltdown.Patches;
 using FacilityMeltdown.Util;
 using System;
 using System.Collections;
@@ -35,11 +36,21 @@ namespace FacilityMeltdown {
         [LoadFromBundle("GeigerCounterNode.asset")]
         public TerminalNode geigerCounterNode { get; private set; }
 
+        [LoadFromBundle("HealthKeyword.asset")]
+        public TerminalKeyword healthKeyword { get; private set; }
+
+        [LoadFromBundle("ReactorKeyword.asset")]
+        public TerminalKeyword reactorKeyword { get; private set; }
+
+        [LoadFromBundle("ReactorHealthReport.asset")]
+        public TerminalNode reactorHealthNode { get; private set; }
+
         public GameObject[] facilityEffects { get; private set; }
         public AudioClip[] warnings { get; private set; }
 
+        // hacky solution cause i couldnt care less
+
         protected override void FinishLoadingAssets(AssetBundle bundle) {
-            MeltdownPlugin.logger.LogDebug(meltdownHandlerPrefab.name);
 
             warnings = [
                 LoadAsset < AudioClip >(bundle, "warning1.mp3"),
@@ -52,6 +63,10 @@ namespace FacilityMeltdown {
                 LoadAsset<GameObject>(bundle, "Dust.prefab"),
                 LoadAsset<GameObject>(bundle, "Waterstream.prefab")
             ];
+
+            TerminalPatch.terminalKeywordsToRegister.Add(healthKeyword);
+            TerminalPatch.terminalKeywordsToRegister.Add(reactorKeyword);
+            TerminalPatch.terminalNodesToRegister.Add(reactorHealthNode);
         }
     }
 }

@@ -59,7 +59,7 @@
           }
         }
       },
-      "LethalCompany.GameLibs.Steam/50.0.0-beta.0-ngd.1": {
+      "LethalCompany.GameLibs.Steam/50.0.0-beta.4-ngd.0": {
         "type": "package",
         "dependencies": {
           "Newtonsoft.JSON": "13.0.3",
@@ -263,16 +263,7 @@
           }
         }
       },
-      "NotAtomicBomb.TerminalApi/1.5.2": {
-        "type": "package",
-        "compile": {
-          "lib/net46/TerminalApi.dll": {}
-        },
-        "runtime": {
-          "lib/net46/TerminalApi.dll": {}
-        }
-      },
-      "Sigurd.BepInEx.CSync/3.1.1": {
+      "Sigurd.BepInEx.CSync/4.1.0": {
         "type": "package",
         "dependencies": {
           "BepInEx.Core": "5.4.21",
@@ -691,6 +682,15 @@
           }
         }
       },
+      "TeamBMX.LobbyCompatibility/1.1.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.1/BMX.LobbyCompatibility.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.1/BMX.LobbyCompatibility.dll": {}
+        }
+      },
       "UnityEngine.Modules/2022.3.9": {
         "type": "package",
         "compile": {
@@ -844,14 +844,14 @@
         "logo_mini.png"
       ]
     },
-    "LethalCompany.GameLibs.Steam/50.0.0-beta.0-ngd.1": {
-      "sha512": "Nb8L3PlRGpPyfm7nhroukVpDw1dQmpCUSEwFGoeOtCwERFEA2EDXXHdEUvudeLMLr4cSA94a4IjoyE/BJrdjAw==",
+    "LethalCompany.GameLibs.Steam/50.0.0-beta.4-ngd.0": {
+      "sha512": "U9V7Htewtn3TytrtZvQvDA/AxkAKP4PTBB6dBtiH0ejZmgKNneAkznjCz43uDmMpgwpvrgbMwg5DpiLbxJSvoA==",
       "type": "package",
-      "path": "lethalcompany.gamelibs.steam/50.0.0-beta.0-ngd.1",
+      "path": "lethalcompany.gamelibs.steam/50.0.0-beta.4-ngd.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "lethalcompany.gamelibs.steam.50.0.0-beta.0-ngd.1.nupkg.sha512",
+        "lethalcompany.gamelibs.steam.50.0.0-beta.4-ngd.0.nupkg.sha512",
         "lethalcompany.gamelibs.steam.nuspec",
         "ref/netstandard2.1/AmazingAssets.TerrainToMesh.dll",
         "ref/netstandard2.1/Assembly-CSharp-firstpass.dll",
@@ -1063,38 +1063,19 @@
         "packageIcon.png"
       ]
     },
-    "NotAtomicBomb.TerminalApi/1.5.2": {
-      "sha512": "SVDUC+Gm5SxGwp4zl3CTHq8m+JrLrx04uEth/X/SCgYvq2ZyfrhRIFKwIAS35jPuMCR3056FQhPnztTTql7aCg==",
+    "Sigurd.BepInEx.CSync/4.1.0": {
+      "sha512": "DNJYpHA/tAFtSsQqJPg9Vb4gWTRTY8Kgg8NZUQeTEhJV2k0cXi/iRtkhuYJ0gxHuWXloeglpixgz1GJQgs1dww==",
       "type": "package",
-      "path": "notatomicbomb.terminalapi/1.5.2",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "LICENSE.md",
-        "README.md",
-        "icon.png",
-        "lib/net46/TerminalApi.dll",
-        "notatomicbomb.terminalapi.1.5.2.nupkg.sha512",
-        "notatomicbomb.terminalapi.nuspec"
-      ]
-    },
-    "Sigurd.BepInEx.CSync/3.1.1": {
-      "sha512": "M9k4OKTLOxjnNi6k+TE6AQEOvkDgcqREmkA85gDHbCFSClL5RynF3IS3wXdHZ+bjBIxhxdqdkzIgHH1X/7Vv2A==",
-      "type": "package",
-      "path": "sigurd.bepinex.csync/3.1.1",
+      "path": "sigurd.bepinex.csync/4.1.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "LICENSE",
         "README.md",
         "icon.png",
-        "lib/net472/com.sigurd.csync.dll",
-        "lib/net472/com.sigurd.csync.xml",
-        "lib/net48/com.sigurd.csync.dll",
-        "lib/net48/com.sigurd.csync.xml",
         "lib/netstandard2.1/com.sigurd.csync.dll",
         "lib/netstandard2.1/com.sigurd.csync.xml",
-        "sigurd.bepinex.csync.3.1.1.nupkg.sha512",
+        "sigurd.bepinex.csync.4.1.0.nupkg.sha512",
         "sigurd.bepinex.csync.nuspec"
       ]
     },
@@ -2770,6 +2751,22 @@
         "system.threading.tasks.nuspec"
       ]
     },
+    "TeamBMX.LobbyCompatibility/1.1.0": {
+      "sha512": "JlenZnjAMYBKSUTvvr/7C9AMhDhw3IVvSbvTzw/3br8RmuvzXSZnlb4z2N2HLx4JjAoJVDKo3XKI2dWtozOb6A==",
+      "type": "package",
+      "path": "teambmx.lobbycompatibility/1.1.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "CHANGELOG.md",
+        "README.md",
+        "icon_128x128.png",
+        "lib/net472/BMX.LobbyCompatibility.dll",
+        "lib/netstandard2.1/BMX.LobbyCompatibility.dll",
+        "teambmx.lobbycompatibility.1.1.0.nupkg.sha512",
+        "teambmx.lobbycompatibility.nuspec"
+      ]
+    },
     "UnityEngine.Modules/2022.3.9": {
       "sha512": "sSxqZjd05U0NWlX+eappdlsEuXFvDRHkUaClDVTocGRzCmIwNvgGJIPh22lGklIpNZ3cJZneYJkIUnEIazR8VA==",
       "type": "package",
@@ -2986,8 +2983,8 @@
       "Evaisa.LethalLib >= 0.14.*",
       "LethalCompany.GameLibs.Steam >= *-*",
       "LethalSettings >= 1.4.0",
-      "NotAtomicBomb.TerminalApi >= 1.5.*",
-      "Sigurd.BepInEx.CSync >= 3.1.1",
+      "Sigurd.BepInEx.CSync >= 4.1.0",
+      "TeamBMX.LobbyCompatibility >= 1.1.*",
       "UnityEngine.Modules >= 2022.3.9"
     ]
   },
@@ -3060,13 +3057,13 @@
             "target": "Package",
             "version": "[1.4.0, )"
           },
-          "NotAtomicBomb.TerminalApi": {
-            "target": "Package",
-            "version": "[1.5.*, )"
-          },
           "Sigurd.BepInEx.CSync": {
             "target": "Package",
-            "version": "[3.1.1, )"
+            "version": "[4.1.0, )"
+          },
+          "TeamBMX.LobbyCompatibility": {
+            "target": "Package",
+            "version": "[1.1.*, )"
           },
           "UnityEngine.Modules": {
             "include": "Compile",
@@ -3094,17 +3091,5 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.201\\RuntimeIdentifierGraph.json"
       }
     }
-  },
-  "logs": [
-    {
-      "code": "NU1701",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Package 'NotAtomicBomb.TerminalApi 1.5.2' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework '.NETStandard,Version=v2.1'. This package may not be fully compatible with your project.",
-      "libraryId": "NotAtomicBomb.TerminalApi",
-      "targetGraphs": [
-        ".NETStandard,Version=v2.1"
-      ]
-    }
-  ]
+  }
 }
