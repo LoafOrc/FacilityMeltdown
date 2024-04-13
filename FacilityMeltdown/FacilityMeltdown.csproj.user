@@ -1,0 +1,25 @@
+<Project>
+    <!-- Custom Variables -->
+    <PropertyGroup>
+        <PluginDirectory>C:\Users\rixon\AppData\Roaming\r2modmanPlus-local\LethalCompany\profiles\qweiojvvrvngjjnvqwerovnnqwroknfjkn\BepInEx\plugins\loaforc-FacilityMeltdown\FacilityMeltdown\</PluginDirectory>
+    </PropertyGroup>
+
+    <!-- Copy to Plugin Directory for Quicker Testing -->
+    <Target Name="CopyFiles" DependsOnTargets="NetcodePatcher" AfterTargets="PostBuildEvent">
+        <Message Importance="high" Text="Collecting lang files!" />
+        <ItemGroup>
+            <LangFiles Include="$(ProjectDir)Lang/*.json" Exclude="$(ProjectDir)Lang/defs.json">
+                <!-- Adjust the path as per your folder structure -->
+                <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            </LangFiles>
+        </ItemGroup>
+
+        <MakeDir Directories="$(TargetDir)lang" Condition="!Exists('$(TargetDir)lang')"   />
+        <Copy SourceFiles="@(LangFiles)" DestinationFolder="$(TargetDir)lang\"/>
+
+        <Message Importance="high" Text="Copying to r2modman profile." />
+        <Copy SourceFiles="$(TargetPath);$(ProjectDir)\..\Assets\facilitymeltdown" DestinationFolder="$(PluginDirectory)"/>
+        <MakeDir Directories="$(PluginDirectory)lang" Condition="!Exists('$(PluginDirectory)lang')"  />
+        <Copy SourceFiles="@(LangFiles)" DestinationFolder="$(PluginDirectory)lang\"/>
+    </Target>
+</Project>

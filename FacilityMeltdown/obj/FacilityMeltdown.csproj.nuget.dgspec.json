@@ -1,0 +1,109 @@
+{
+  "format": 1,
+  "restore": {
+    "D:\\LethalCompanyModding\\FacilityMeltdown\\FacilityMeltdown\\FacilityMeltdown.csproj": {}
+  },
+  "projects": {
+    "D:\\LethalCompanyModding\\FacilityMeltdown\\FacilityMeltdown\\FacilityMeltdown.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\LethalCompanyModding\\FacilityMeltdown\\FacilityMeltdown\\FacilityMeltdown.csproj",
+        "projectName": "FacilityMeltdown",
+        "projectPath": "D:\\LethalCompanyModding\\FacilityMeltdown\\FacilityMeltdown\\FacilityMeltdown.csproj",
+        "packagesPath": "C:\\Users\\rixon\\.nuget\\packages\\",
+        "outputPath": "D:\\LethalCompanyModding\\FacilityMeltdown\\FacilityMeltdown\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "D:\\LethalCompanyModding\\NuGet.Config",
+          "C:\\Users\\rixon\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {},
+          "https://nuget.bepinex.dev/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "targetAlias": "netstandard2.1",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "targetAlias": "netstandard2.1",
+          "dependencies": {
+            "BepInEx.Analyzers": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[1.*, )"
+            },
+            "BepInEx.Core": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[5.*, )"
+            },
+            "Evaisa.LethalLib": {
+              "target": "Package",
+              "version": "[0.14.*, )"
+            },
+            "LethalCompany.GameLibs.Steam": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[*-*, )"
+            },
+            "LethalSettings": {
+              "target": "Package",
+              "version": "[1.4.0, )"
+            },
+            "Sigurd.BepInEx.CSync": {
+              "target": "Package",
+              "version": "[4.1.0, )"
+            },
+            "TeamBMX.LobbyCompatibility": {
+              "target": "Package",
+              "version": "[1.1.*, )"
+            },
+            "UnityEngine.Modules": {
+              "include": "Compile",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2022.3.9, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "NETStandard.Library": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.201\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

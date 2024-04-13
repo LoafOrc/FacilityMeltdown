@@ -1,0 +1,11 @@
+D:\LethalCompanyModding\FacilityMeltdown\FacilityMeltdown\bin\Debug\netstandard2.1\FacilityMeltdown.deps.json
+D:\LethalCompanyModding\FacilityMeltdown\FacilityMeltdown\bin\Debug\netstandard2.1\FacilityMeltdown.dll
+D:\LethalCompanyModding\FacilityMeltdown\FacilityMeltdown\obj\Debug\netstandard2.1\FacilityMeltdown.csproj.AssemblyReference.cache
+D:\LethalCompanyModding\FacilityMeltdown\FacilityMeltdown\obj\Debug\netstandard2.1\FacilityMeltdown.GeneratedMSBuildEditorConfig.editorconfig
+D:\LethalCompanyModding\FacilityMeltdown\FacilityMeltdown\obj\Debug\netstandard2.1\FacilityMeltdown.AssemblyInfoInputs.cache
+D:\LethalCompanyModding\FacilityMeltdown\FacilityMeltdown\obj\Debug\netstandard2.1\FacilityMeltdown.AssemblyInfo.cs
+D:\LethalCompanyModding\FacilityMeltdown\FacilityMeltdown\obj\Debug\netstandard2.1\FacilityMeltdown.csproj.CoreCompileInputs.cache
+D:\LethalCompanyModding\FacilityMeltdown\FacilityMeltdown\obj\Debug\netstandard2.1\FacilityMeltdown.sourcelink.json
+D:\LethalCompanyModding\FacilityMeltdown\FacilityMeltdown\obj\Debug\netstandard2.1\FacilityMeltdown.dll
+D:\LethalCompanyModding\FacilityMeltdown\FacilityMeltdown\bin\Debug\netstandard2.1\LethalConfig.dll
+D:\LethalCompanyModding\FacilityMeltdown\FacilityMeltdown\obj\Debug\netstandard2.1\Facility.FD929BDB.Up2Date
