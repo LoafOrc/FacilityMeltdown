@@ -38,11 +38,12 @@ public class MeltdownHandler : NetworkBehaviour {
 
     [ClientRpc]
     void StartMeltdownClientRpc() {
+        Instance = this;
+
         MeltdownMoonMapper.EnsureMeltdownMoonMapper();
         MeltdownInteriorMapper.EnsureMeltdownInteriorMapper();
 
         meltdownTimer = MeltdownPlugin.config.MELTDOWN_TIME.Value;
-        Instance = this;
         MeltdownPlugin.logger.LogInfo("Beginning Meltdown Sequence! I'd run if I was you! MeltdownTimer: " + meltdownTimer);
 
         musicSource = gameObject.AddComponent<AudioSource>();
@@ -65,38 +66,48 @@ public class MeltdownHandler : NetworkBehaviour {
         StartCoroutine(
             MeltdownEffects.WithDelay(
                 MeltdownEffects.RepeatUntilEndOfMeltdown(
-                    MeltdownEffects.WithDynamicRandomDelay(
-                        MeltdownEffects.WarningAnnouncer(warningSource)
-                    )
+                    () => {
+                        return MeltdownEffects.WithDynamicRandomDelay(
+                            MeltdownEffects.WarningAnnouncer(warningSource)
+                        );
+                    }
                 )
             , 10)
         );
 
         StartCoroutine(
             MeltdownEffects.RepeatUntilEndOfMeltdown(
-                MeltdownEffects.WithDynamicRandomDelay(
-                    MeltdownEffects.InsideParticleEffects
-                )
+                () => {
+                    return MeltdownEffects.WithDynamicRandomDelay(
+                        MeltdownEffects.InsideParticleEffects
+                    );
+                }
             )
         );
 
-        MeltdownEffects.SetupEmergencyLights();
-        StartCoroutine(
-            MeltdownEffects.RepeatUntilEndOfMeltdown(
-                MeltdownEffects.EmergencyLights(2, 5)
-            )
-        );
-
-        StartCoroutine(
-            MeltdownEffects.RepeatUntilEndOfMeltdown(
-                MeltdownEffects.WithRandomDelay(
-                    () => {
-                        if(shockwave != null) GameObject.Destroy(shockwave);
-
-                        shockwave = GameObject.Instantiate(MeltdownPlugin.assets.shockwavePrefab);
-                        shockwave.transform.position = effectOrigin;
+        if(MeltdownPlugin.config.EMERGENCY_LIGHTS.Value) {
+            MeltdownEffects.SetupEmergencyLights();
+            StartCoroutine(
+                MeltdownEffects.RepeatUntilEndOfMeltdown(
+                    () => { 
+                        return MeltdownEffects.EmergencyLights(2, 5);  
                     }
-                , 25, 35)
+                )
+            );
+        }
+
+        StartCoroutine(
+            MeltdownEffects.RepeatUntilEndOfMeltdown(
+                () => {
+                    return MeltdownEffects.WithRandomDelay(
+                        () => {
+                            if(shockwave != null) GameObject.Destroy(shockwave);
+
+                            shockwave = GameObject.Instantiate(MeltdownPlugin.assets.shockwavePrefab);
+                            shockwave.transform.position = effectOrigin;
+                        }
+                    , 25, 35);
+                }
             )
         );
 
@@ -159,13 +170,6 @@ public class MeltdownHandler : NetworkBehaviour {
         readyPlayers.Add(clientId);
 
         if (readyPlayers.Count == StartOfRound.Instance.GetConnectedPlayers().Count) {
-            MeltdownPlugin.logger.LogDebug($"Instance == null? {Instance == null}");
-            if(Instance != null) {
-                Destroy(gameObject);
-                return;
-            }
-            Instance = this;
-
             StartMeltdownClientRpc();
         }
     }
@@ -195,6 +199,8 @@ public class MeltdownHandler : NetworkBehaviour {
     }
 
     void OnDisable() {
+        if(Instance != this) return;
+
         MeltdownPlugin.logger.LogInfo("Cleaning up MeltdownHandler.");
 
         Instance = null;
