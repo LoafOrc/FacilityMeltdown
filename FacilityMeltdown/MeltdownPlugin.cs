@@ -29,7 +29,7 @@ namespace FacilityMeltdown {
     public class MeltdownPlugin : BaseUnityPlugin {
         internal const string modGUID = "me.loaforc.facilitymeltdown";
         internal const string modName = "FacilityMeltdown";
-        internal const string modVersion = "2.5.0";
+        internal const string modVersion = "2.5.1";
 
         internal static MeltdownPlugin instance;
         internal static ManualLogSource logger;

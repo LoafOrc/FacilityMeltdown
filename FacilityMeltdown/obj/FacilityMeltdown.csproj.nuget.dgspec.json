@@ -64,7 +64,7 @@
             "LethalCompany.GameLibs.Steam": {
               "suppressParent": "All",
               "target": "Package",
-              "version": "[*-*, )"
+              "version": "[50.0.0-ngd.0, )"
             },
             "LethalSettings": {
               "target": "Package",
