@@ -20,11 +20,11 @@ public static class MeltdownEffects {
         }
     }
 
-    public static IEnumerator RepeatUntilEndOfMeltdown(IEnumerator enumerator) {
-        while(MeltdownHandler.Instance != null) {
-            yield return enumerator;
+    public static IEnumerator RepeatUntilEndOfMeltdown(Func<IEnumerator> enumerator) {
+        while(true) { // we be a bit silly :3
+            MeltdownPlugin.logger.LogDebug("looping effect");
+            yield return enumerator();
         }
-        yield break;
     }
     public static IEnumerator WithDelay(IEnumerator enumerator, float delay) {
         yield return new WaitForSeconds(delay);
@@ -92,6 +92,7 @@ public static class MeltdownEffects {
     }
 
     public static IEnumerator EmergencyLights(float onTime, float offTime) {
+        MeltdownPlugin.logger.LogDebug("Switching lights ON");
         for (int i = 0; i < RoundManager.Instance.allPoweredLightsAnimators.Count; i++) {
             RoundManager.Instance.allPoweredLightsAnimators[i].SetBool("on", true);
         }
@@ -100,6 +101,7 @@ public static class MeltdownEffects {
         }
 
         yield return new WaitForSeconds(onTime);
+        MeltdownPlugin.logger.LogDebug("Switching lights OFF");
 
         for (int i = 0; i < RoundManager.Instance.allPoweredLightsAnimators.Count; i++) {
             RoundManager.Instance.allPoweredLightsAnimators[i].SetBool("on", false);

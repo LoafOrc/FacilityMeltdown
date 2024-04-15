@@ -8,3 +8,8 @@
 - TerminalAPI is no longer needed, meltdown handles the terminal command itself
 - Meltdown depends on LobbyCompatibility.
 - Update to CSync v4.0.0
+- Russian Translation (forgot to add this, woops), thanks Singularia!
+
+### v2.5.1
+- Slightly change Korean Transation
+- Fix certain effects during the meltdown sequence to not correctly loop.

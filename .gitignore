@@ -7,3 +7,5 @@ packages/**
 .vs/**
 .vs/FacilityMeltdown/v17/.suo
 .suo
+
+**/obj/**

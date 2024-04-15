@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "mOrha/DNg+lzJLXmQnlny6UGTW00PngKIegfZDsNUDT0Kj+nVgg1kyiYKbVXts9Iwlu0eV13R8QYCTpHo9bfqg==",
+  "dgSpecHash": "D320niLD+1tw8nOfGYLNVE5BcEI+KQUzxzIhnBF8jPbVmLT4XzJMfCbPQaL1nwnGiRTqDlQMI+8nJpZNVR/BsA==",
   "success": true,
   "projectFilePath": "D:\\LethalCompanyModding\\FacilityMeltdown\\FacilityMeltdown\\FacilityMeltdown.csproj",
   "expectedPackageFiles": [
@@ -9,7 +9,7 @@
     "C:\\Users\\rixon\\.nuget\\packages\\bepinex.core\\5.4.21\\bepinex.core.5.4.21.nupkg.sha512",
     "C:\\Users\\rixon\\.nuget\\packages\\evaisa.lethallib\\0.14.4\\evaisa.lethallib.0.14.4.nupkg.sha512",
     "C:\\Users\\rixon\\.nuget\\packages\\harmonyx\\2.7.0\\harmonyx.2.7.0.nupkg.sha512",
-    "C:\\Users\\rixon\\.nuget\\packages\\lethalcompany.gamelibs.steam\\50.0.0-beta.4-ngd.0\\lethalcompany.gamelibs.steam.50.0.0-beta.4-ngd.0.nupkg.sha512",
+    "C:\\Users\\rixon\\.nuget\\packages\\lethalcompany.gamelibs.steam\\50.0.0-ngd.0\\lethalcompany.gamelibs.steam.50.0.0-ngd.0.nupkg.sha512",
     "C:\\Users\\rixon\\.nuget\\packages\\lethalsettings\\1.4.0\\lethalsettings.1.4.0.nupkg.sha512",
     "C:\\Users\\rixon\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
     "C:\\Users\\rixon\\.nuget\\packages\\microsoft.netcore.targets\\1.1.0\\microsoft.netcore.targets.1.1.0.nupkg.sha512",
