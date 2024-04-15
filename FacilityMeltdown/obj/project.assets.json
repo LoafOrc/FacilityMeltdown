@@ -59,7 +59,7 @@
           }
         }
       },
-      "LethalCompany.GameLibs.Steam/50.0.0-beta.4-ngd.0": {
+      "LethalCompany.GameLibs.Steam/50.0.0-ngd.0": {
         "type": "package",
         "dependencies": {
           "Newtonsoft.JSON": "13.0.3",
@@ -844,14 +844,14 @@
         "logo_mini.png"
       ]
     },
-    "LethalCompany.GameLibs.Steam/50.0.0-beta.4-ngd.0": {
-      "sha512": "U9V7Htewtn3TytrtZvQvDA/AxkAKP4PTBB6dBtiH0ejZmgKNneAkznjCz43uDmMpgwpvrgbMwg5DpiLbxJSvoA==",
+    "LethalCompany.GameLibs.Steam/50.0.0-ngd.0": {
+      "sha512": "zJWqJLYPt2v76W+UrOYv1EX9YAx+wiPTpdnTVksK6QWk3N5KIbWGK8JBQh6mVvIPN033AEnJoWAHoKOy3I/UPw==",
       "type": "package",
-      "path": "lethalcompany.gamelibs.steam/50.0.0-beta.4-ngd.0",
+      "path": "lethalcompany.gamelibs.steam/50.0.0-ngd.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "lethalcompany.gamelibs.steam.50.0.0-beta.4-ngd.0.nupkg.sha512",
+        "lethalcompany.gamelibs.steam.50.0.0-ngd.0.nupkg.sha512",
         "lethalcompany.gamelibs.steam.nuspec",
         "ref/netstandard2.1/AmazingAssets.TerrainToMesh.dll",
         "ref/netstandard2.1/Assembly-CSharp-firstpass.dll",
@@ -2981,7 +2981,7 @@
       "BepInEx.Analyzers >= 1.*",
       "BepInEx.Core >= 5.*",
       "Evaisa.LethalLib >= 0.14.*",
-      "LethalCompany.GameLibs.Steam >= *-*",
+      "LethalCompany.GameLibs.Steam >= 50.0.0-ngd.0",
       "LethalSettings >= 1.4.0",
       "Sigurd.BepInEx.CSync >= 4.1.0",
       "TeamBMX.LobbyCompatibility >= 1.1.*",
@@ -3051,7 +3051,7 @@
           "LethalCompany.GameLibs.Steam": {
             "suppressParent": "All",
             "target": "Package",
-            "version": "[*-*, )"
+            "version": "[50.0.0-ngd.0, )"
           },
           "LethalSettings": {
             "target": "Package",
