@@ -23,6 +23,13 @@ public class MeltdownHandler : NetworkBehaviour {
         return 1 - (TimeLeftUntilMeltdown / MeltdownPlugin.config.MELTDOWN_TIME.Value);
     } }
 
+    private float delta;
+    private bool repeat = true;
+    private float delta2;
+    private HangarShipDoor hangarShipDoor;
+    private Queue<(Light, Color)> colors;
+    private List<(Light, bool)> toggleGroup;
+    
     static PlayerControllerB Player => GameNetworkManager.Instance.localPlayerController;
     private AudioSource musicSource, warningSource;
     internal static MeltdownHandler Instance { get; private set; }
@@ -44,7 +51,7 @@ public class MeltdownHandler : NetworkBehaviour {
         MeltdownInteriorMapper.EnsureMeltdownInteriorMapper();
 
         meltdownTimer = MeltdownPlugin.config.MELTDOWN_TIME.Value;
-        MeltdownPlugin.logger.LogInfo("Beginning Meltdown Sequence! I'd run if I was you! MeltdownTimer: " + meltdownTimer);
+        MeltdownPlugin.logger.LogInfo("Beginning Meltdown Sequence! I'd run if I were you! MeltdownTimer: " + meltdownTimer);
 
         musicSource = gameObject.AddComponent<AudioSource>();
         musicSource.clip = MeltdownPlugin.assets.defaultMusic;
@@ -203,6 +210,25 @@ public class MeltdownHandler : NetworkBehaviour {
 
         MeltdownPlugin.logger.LogInfo("Cleaning up MeltdownHandler.");
 
+        if (MeltdownPlugin.config.ENABLE_SHIP_MALFUNCTION)
+        {
+            foreach ((Light l, Color c) in Instance.colors)
+                l.color = c;
+            Instance.colors.Clear();
+
+            if (MeltdownPlugin.config.EMERGENCY_LIGHTS)
+            {
+                foreach ((Light l, bool b) in Instance.toggleGroup)
+                {
+                    l.enabled = b;
+                }
+            }
+
+            Instance.toggleGroup.Clear();
+
+            ReviveSystems();
+        }
+        
         Instance = null;
         if (explosion != null)
             Destroy(explosion);
@@ -226,9 +252,57 @@ public class MeltdownHandler : NetworkBehaviour {
         }
 
         meltdownTimer -= Time.deltaTime;
+        
+        if (MeltdownPlugin.config.ENABLE_SHIP_MALFUNCTION.Value)
+        {
+            StartCoroutine(LightAlarm());
+            if (MeltdownPlugin.config.EMERGENCY_LIGHTS.Value)
+            {
 
-        if (meltdownTimer <= 3 && !shipManager.shipIsLeaving) {
-            StartCoroutine(ShipTakeOff());
+                if (delta > 0.5 + (1f - Progress) * 5)
+                {
+
+                    foreach ((Light l, bool b) in toggleGroup)
+                    {
+                        l.enabled = b && !l.enabled;
+                    }
+
+                    shipManager.shipRoomLights.ToggleShipLights();
+                    delta = 0;
+                }
+                else
+                {
+                    delta += Time.deltaTime;
+                }
+            }
+
+            if (delta2 > 10)
+            {
+                hangarShipDoor.shipDoorsAnimator.SetBool("Closed", repeat);
+
+                repeat = !repeat;
+                delta2 = 0;
+            }
+            else if (Progress <= 0.9f)
+            {
+                delta2 += Time.deltaTime;
+            }
+            
+            if (meltdownTimer <= 30)
+            {
+                StartCoroutine(MostSystemsDead());
+            }
+        }
+
+        if (meltdownTimer <= 3)
+        {
+            if (!MeltdownPlugin.config.ENABLE_SHIP_MALFUNCTION && !shipManager.shipIsLeaving)
+            {
+                StartCoroutine(ShipTakeOff());
+            }
+            else if (MeltdownPlugin.config.ENABLE_SHIP_MALFUNCTION)
+                StartCoroutine(ShipCantTakeOff());
+            
         }
 
         if (meltdownTimer <= 0) {
@@ -271,6 +345,61 @@ public class MeltdownHandler : NetworkBehaviour {
 
         yield return new WaitForSeconds(9.5f);
 
+        yield break;
+    }
+    
+    IEnumerator MostSystemsDead()
+    {
+        hangarShipDoor.hydraulicsDisplay.SetActive(false);
+        StartOfRound.Instance.mapScreen.SwitchScreenOn(false);
+        StartOfRound.Instance.deadlineMonitorText.enabled = false;
+        StartOfRound.Instance.deadlineMonitorBGImage.enabled = false;
+        StartOfRound.Instance.profitQuotaMonitorText.enabled = false;
+        StartOfRound.Instance.profitQuotaMonitorBGImage.enabled = false;
+        
+        yield break;
+    }
+
+    public void ReviveSystems()
+    {
+        hangarShipDoor.hydraulicsDisplay.SetActive(true);
+        StartOfRound.Instance.mapScreen.SwitchScreenOn(true);
+        StartOfRound.Instance.deadlineMonitorText.enabled = true;
+        StartOfRound.Instance.deadlineMonitorBGImage.enabled = true;
+        StartOfRound.Instance.profitQuotaMonitorText.enabled = true;
+        StartOfRound.Instance.profitQuotaMonitorBGImage.enabled = true;
+    }
+    
+
+    IEnumerator ShipCantTakeOff() {
+        StartMatchLever startMatchLever = FindObjectOfType<StartMatchLever>();
+        startMatchLever.triggerScript.interactable = false;
+        yield break;
+    }
+
+    IEnumerator LightAlarm()
+    {
+        StartOfRound shipManager = StartOfRound.Instance;
+        
+        colors ??= new Queue<(Light, Color)>();
+        toggleGroup ??= new List<(Light, bool)>();
+        Light[] interior = shipManager.shipRoomLights.GetComponentsInChildren<Light>();
+        if (colors.Count == 0)
+        {
+            foreach (Light l in shipManager.shipAnimator.GetComponentsInChildren<Light>())
+            {
+                colors.Enqueue((l, l.color));
+                l.color = Color.red;
+                if (!interior.Contains(l))
+                {
+                    toggleGroup.Add((l, l.enabled));
+                }
+            }
+        }
+        
+        hangarShipDoor = FindObjectOfType<HangarShipDoor>();
+        hangarShipDoor.SetDoorButtonsEnabled(false);
+        
         yield break;
     }
 

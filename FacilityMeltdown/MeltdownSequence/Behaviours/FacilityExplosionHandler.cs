@@ -75,7 +75,8 @@ namespace FacilityMeltdown.MeltdownSequence.Behaviours
 
         bool ShouldIgnorePlayer()
         {
-            return player.isPlayerDead || player.isInElevator && StartOfRound.Instance.shipIsLeaving;
+            return player.isPlayerDead || (!MeltdownPlugin.config.ENABLE_SHIP_MALFUNCTION &&
+                                           player.isInElevator && StartOfRound.Instance.shipIsLeaving);
         }
 
         float TimeToSize(float time)

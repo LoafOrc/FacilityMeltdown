@@ -24,7 +24,7 @@ namespace FacilityMeltdown.Util {
         [DataMember]
         internal SyncedEntry<int> MONSTER_SPAWN_AMOUNT, APPARATUS_VALUE, MELTDOWN_TIME;
         [DataMember]
-        internal SyncedEntry<bool> OVERRIDE_APPARATUS_VALUE, EMERGENCY_LIGHTS;
+        internal SyncedEntry<bool> OVERRIDE_APPARATUS_VALUE, EMERGENCY_LIGHTS, ENABLE_SHIP_MALFUNCTION;
         [DataMember]
         internal SyncedEntry<float> SCAN_COOLDOWN, SCAN_ACCURACY;
         
@@ -46,7 +46,8 @@ namespace FacilityMeltdown.Util {
             APPARATUS_VALUE = file.BindSyncedEntry("GameBalance", "AppartusValue", 240, "What the value of the appartus should be set as IF override appartus value is `true`");
             MONSTER_SPAWN_AMOUNT = file.BindSyncedEntry("GameBalance", "MonsterSpawnAmount", 5, "How many monsters should spawn during the meltdown sequence? Set to 0 to disable.");
             EMERGENCY_LIGHTS = file.BindSyncedEntry("GameBalance", "EmergencyLights", true, "Should the lights turn on periodically? Disabling this option makes them permanently off. (Matches Vanilla Behaviour)");
-
+            ENABLE_SHIP_MALFUNCTION = file.BindSyncedEntry("GameBalance", "ShipMalfunction", false, "Should the ship panic during the meltdown sequence? Lights, shipdoor, screens, and even the lever will start to bug as the reactor core gets more and more unstable");
+            
             DISALLOWED_ENEMIES = file.BindSyncedEntry("GameBalance", "DisallowedEnemies", "Centipede,Hoarding bug", "What enemies to exclude from spawning in the meltdown sequence. Comma seperated list. \"Should\" support modded entities");
 
             MELTDOWN_TIME = file.BindSyncedEntry("Unsupported", "MeltdownTime", 120, "ABSOLUETLY NOT SUPPORTED OR RECOMMENDED! Change the length of the meltdown sequence. If this breaks I am not fixing it, you have been warned.");
