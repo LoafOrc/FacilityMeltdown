@@ -20,7 +20,7 @@ namespace FacilityMeltdown.MeltdownSequence.Behaviours;
 public class MeltdownHandler : NetworkBehaviour {
     public float TimeLeftUntilMeltdown { get { return meltdownTimer; } }
     public float Progress { get {
-        return 1 - (TimeLeftUntilMeltdown / MeltdownPlugin.config.MELTDOWN_TIME.Value);
+        return 1 - (TimeLeftUntilMeltdown / MeltdownPlugin.config.MeltdownTime);
     } }
 
     static PlayerControllerB Player => GameNetworkManager.Instance.localPlayerController;
@@ -43,7 +43,7 @@ public class MeltdownHandler : NetworkBehaviour {
         MeltdownMoonMapper.EnsureMeltdownMoonMapper();
         MeltdownInteriorMapper.EnsureMeltdownInteriorMapper();
 
-        meltdownTimer = MeltdownPlugin.config.MELTDOWN_TIME.Value;
+        meltdownTimer = MeltdownPlugin.config.MeltdownTime;
         MeltdownPlugin.logger.LogInfo("Beginning Meltdown Sequence! I'd run if I was you! MeltdownTimer: " + meltdownTimer);
 
         musicSource = gameObject.AddComponent<AudioSource>();
@@ -85,7 +85,7 @@ public class MeltdownHandler : NetworkBehaviour {
             )
         );
 
-        if(MeltdownPlugin.config.EMERGENCY_LIGHTS.Value) {
+        if(MeltdownPlugin.config.EmergencyLights) {
             MeltdownEffects.SetupEmergencyLights();
             StartCoroutine(
                 MeltdownEffects.RepeatUntilEndOfMeltdown(
@@ -140,7 +140,7 @@ public class MeltdownHandler : NetworkBehaviour {
                 }
             }
             avaliableVents.Shuffle();
-            for (int i = 0; i < Mathf.Min(MeltdownPlugin.config.MONSTER_SPAWN_AMOUNT.Value, avaliableVents.Count); i++) {
+            for (int i = 0; i < Mathf.Min(MeltdownPlugin.config.MonsterSpawnAmount, avaliableVents.Count); i++) {
                 EnemyVent vent = avaliableVents[i];
                 int randomWeightedIndex = RoundManager.Instance.GetRandomWeightedIndex([.. spawnProbibilities], RoundManager.Instance.EnemySpawnRandom);
                 if (EnemyCannotBeSpawned(allowedEnemies[randomWeightedIndex].enemyType)) continue;
@@ -157,7 +157,7 @@ public class MeltdownHandler : NetworkBehaviour {
             HUDManager.Instance.DisplayGlobalNotification("Failed to find effect origin... Things will look broken.");
         }
 
-        if (MeltdownPlugin.config.SCREEN_SHAKE.Value) {
+        if (MeltdownPlugin.clientConfig.ScreenShake) {
             HUDManager.Instance.ShakeCamera(ScreenShakeType.VeryStrong);
             HUDManager.Instance.ShakeCamera(ScreenShakeType.Long);
         }
@@ -191,7 +191,7 @@ public class MeltdownHandler : NetworkBehaviour {
         DialogueSegment[] dialogue = new DialogueSegment[translatedDialogue.Count];
         for (int i = 0; i < translatedDialogue.Count; i++) {
             dialogue[i] = new DialogueSegment {
-                bodyText = ((string)translatedDialogue[i]).Replace("<meltdown_time>", Math.Round((float)MeltdownPlugin.config.MELTDOWN_TIME.Value / 60).ToString()),
+                bodyText = ((string)translatedDialogue[i]).Replace("<meltdown_time>", Math.Round((float)MeltdownPlugin.config.MeltdownTime / 60).ToString()),
                 speakerText = "meltdown.dialogue.speaker".Translate()
             };
         }
@@ -219,9 +219,9 @@ public class MeltdownHandler : NetworkBehaviour {
         if (HasExplosionOccured()) return;
         StartOfRound shipManager = StartOfRound.Instance;
 
-        musicSource.volume = (float)MeltdownPlugin.config.MUSIC_VOLUME.Value / 100f;
+        musicSource.volume = MeltdownPlugin.clientConfig.MusicVolume / 100f;
 
-        if (!Player.isInsideFactory && !MeltdownPlugin.config.MUSIC_PLAYS_OUTSIDE.Value) {
+        if (!Player.isInsideFactory && !MeltdownPlugin.clientConfig.MusicPlaysOutside) {
             musicSource.volume = 0;
         }
 
@@ -235,7 +235,7 @@ public class MeltdownHandler : NetworkBehaviour {
             musicSource.Stop();
 
             GameObject explosionPrefab = MeltdownMoonMapper.Instance.explosionPrefab;
-            if (explosionPrefab == null)
+            if(explosionPrefab == null)
                 explosionPrefab = MeltdownPlugin.assets.facilityExplosionPrefab;
 
             explosion = Instantiate(explosionPrefab);

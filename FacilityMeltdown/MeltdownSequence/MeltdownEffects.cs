@@ -114,7 +114,7 @@ public static class MeltdownEffects {
     }
 
     public static void InsideParticleEffects() {
-        if (MeltdownPlugin.config.SCREEN_SHAKE.Value) {
+        if (MeltdownPlugin.clientConfig.ScreenShake) {
             for (int i = 0; i < UnityEngine.Random.Range(5, 15); i++) {
                 Vector3 position = GetRandomPositionInsideFacility() + Vector3.up;
                 RaycastHit hit;
@@ -130,7 +130,7 @@ public static class MeltdownEffects {
 
         if (GameNetworkManager.Instance.localPlayerController.isInsideFactory)
             GameObject.Instantiate(StartOfRound.Instance.explosionPrefab, GetRandomPositionNearPlayer(), Quaternion.Euler(-90f, 0f, 0f), RoundManager.Instance.mapPropsContainer.transform);
-        if (MeltdownPlugin.config.SCREEN_SHAKE.Value) {
+        if (MeltdownPlugin.clientConfig.ScreenShake) {
             if (MeltdownHandler.Instance.Progress > .5f) {
                 HUDManager.Instance.ShakeCamera(ScreenShakeType.Big);
             } else {
@@ -141,7 +141,7 @@ public static class MeltdownEffects {
     }
 
     public static IEnumerator WarningAnnouncer(AudioSource source) {
-        source.volume = MeltdownPlugin.config.MUSIC_VOLUME.Value;
+        source.volume = MeltdownPlugin.clientConfig.MusicVolume;
 
         AudioClip sound = MeltdownPlugin.assets.warnings[UnityEngine.Random.Range(0, MeltdownPlugin.assets.warnings.Length)];
         source.clip = sound;
