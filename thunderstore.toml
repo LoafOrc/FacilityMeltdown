@@ -11,7 +11,6 @@ containsNsfwContent = false
 [package.dependencies]
 BepInEx-BepInExPack = "5.4.2100"
 BMX-LobbyCompatibility="1.1.0"
-Sigurd-CSync = "4.1.0"
 Evaisa-LethalLib = "0.15.1"
 
 [build]
