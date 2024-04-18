@@ -1,9 +1,12 @@
-﻿using FacilityMeltdown.Util;
+﻿using BepInEx.Configuration;
+using FacilityMeltdown.Util;
+using FacilityMeltdown.Util.Config;
 using LethalConfig;
 using LethalConfig.ConfigItems;
 using LethalConfig.ConfigItems.Options;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 
@@ -18,67 +21,79 @@ internal class LethalConfigIntergration {
 
         LethalConfigManager.SetModDescription("Maybe taking the appartus isn't such a great idea...");
 
-        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(MeltdownPlugin.config.OVERRIDE_APPARATUS_VALUE.Entry, true));
-        LethalConfigManager.AddConfigItem(new IntSliderConfigItem(
-            MeltdownPlugin.config.APPARATUS_VALUE.Entry,
-            new IntSliderOptions {
-                Min = 80,
-                Max = 500,
-                RequiresRestart = true
-            }
-        ));
-        LethalConfigManager.AddConfigItem(new IntSliderConfigItem(
-            MeltdownPlugin.config.MONSTER_SPAWN_AMOUNT.Entry,
-            new IntSliderOptions {
-                Min = 0,
-                Max = 10,
-                RequiresRestart = true
-            }
-        ));
+        HandleConfig(MeltdownPlugin.config);
+        HandleConfig(MeltdownPlugin.clientConfig);
+    }
 
-        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(MeltdownPlugin.config.EMERGENCY_LIGHTS.Entry, true));
+    static void HandleConfig<T>(LoafConfig<T> config) where T : LoafConfig<T> {
+        bool defaultRequiresRestart = true;
+        if(config.GetType().GetCustomAttribute<RequiresRestartAttribute>() != null)
+            defaultRequiresRestart = config.GetType().GetCustomAttribute<RequiresRestartAttribute>().RequiresRestart;
+        foreach((PropertyInfo property, object uncastedEntry) in config.configEntries) {
+            bool requiresRestart = defaultRequiresRestart;
+            RequiresRestartAttribute propertyRequiresRestart = property.GetCustomAttribute<RequiresRestartAttribute>();
+            if(propertyRequiresRestart != null)
+                requiresRestart = propertyRequiresRestart.RequiresRestart;
 
-        LethalConfigManager.AddConfigItem(new FloatSliderConfigItem(
-            MeltdownPlugin.config.SCAN_COOLDOWN.Entry,
-            new FloatSliderOptions {
-                Min = 0,
-                Max = 30,
-                RequiresRestart = true
+            ConfigRangeAttribute rangeAttribute = property.GetCustomAttribute<ConfigRangeAttribute>();
+
+            if(property.PropertyType == typeof(int)) {
+                if(rangeAttribute != null) {
+                    LethalConfigManager.AddConfigItem(new IntSliderConfigItem(
+                        (ConfigEntry<int>)uncastedEntry,
+                        new IntSliderOptions {
+                            Min = (int)rangeAttribute.Min,
+                            Max = (int)rangeAttribute.Max,
+                            RequiresRestart = requiresRestart
+                        }
+                    ));
+                    if(!requiresRestart) {
+                        ((ConfigEntry<int>)uncastedEntry).SettingChanged += (obj, args) => {
+                            property.SetValue(config, ((ConfigEntry<int>)uncastedEntry).Value);
+                        };
+                    }
+                } else {
+                    throw new NotImplementedException($"{property.Name}: config entry of type: int, must have a range attribute, because i was too lazy lmao");
+                }
             }
-        ));
-        LethalConfigManager.AddConfigItem(new FloatStepSliderConfigItem(
-            MeltdownPlugin.config.SCAN_ACCURACY.Entry,
-            new FloatStepSliderOptions {
-                Min = 0,
-                Step = 1,
-                Max = 50,
-                RequiresRestart = true
+            if(property.PropertyType == typeof(float)) {
+                if(rangeAttribute != null) {
+                    LethalConfigManager.AddConfigItem(new FloatSliderConfigItem(
+                        (ConfigEntry<float>)uncastedEntry,
+                        new FloatSliderOptions {
+                            Min = rangeAttribute.Min,
+                            Max = rangeAttribute.Max,
+                            RequiresRestart = requiresRestart
+                        }
+                    ));
+                    if(!requiresRestart) {
+                        ((ConfigEntry<float>)uncastedEntry).SettingChanged += (obj, args) => {
+                            property.SetValue(config, ((ConfigEntry<float>)uncastedEntry).Value);
+                        };
+                    }
+                } else {
+                    throw new NotImplementedException($"{property.Name}: config entry of type: float, must have a range attribute, because i was too lazy lmao");
+                }
             }
-        ));
-
-        LethalConfigManager.AddConfigItem(new IntSliderConfigItem(
-            MeltdownPlugin.config.MELTDOWN_TIME.Entry,
-            new IntSliderOptions {
-                Min = 0,
-                Max = 5 * 60,
-                RequiresRestart = true
+            if(property.PropertyType == typeof(bool)) {
+                LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(
+                    (ConfigEntry<bool>)uncastedEntry,
+                    requiresRestart
+                ));
+                if(!requiresRestart) {
+                    ((ConfigEntry<bool>)uncastedEntry).SettingChanged += (obj, args) => {
+                        property.SetValue(config, ((ConfigEntry<bool>)uncastedEntry).Value);
+                    };
+                }
             }
-        ));
-
-        LethalConfigManager.AddConfigItem(new FloatStepSliderConfigItem(
-            MeltdownPlugin.config.MUSIC_VOLUME,
-            new FloatStepSliderOptions() {
-                Min = 0,
-                Max = 100,
-                Step = 1,
-                RequiresRestart = false
+            if(property.PropertyType == typeof(string)) {
+                LethalConfigManager.AddConfigItem(new TextInputFieldConfigItem((ConfigEntry<string>)uncastedEntry, requiresRestart));
+                if(!requiresRestart) {
+                    ((ConfigEntry<string>)uncastedEntry).SettingChanged += (obj, args) => {
+                        property.SetValue(config, ((ConfigEntry<string>)uncastedEntry).Value);
+                    };
+                }
             }
-        ));
-        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(MeltdownPlugin.config.MUSIC_PLAYS_OUTSIDE, false));
-
-        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(MeltdownPlugin.config.SCREEN_SHAKE, false));
-        LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(MeltdownPlugin.config.PARTICLE_EFFECTS, false));
-
-        LethalConfigManager.AddConfigItem(new TextInputFieldConfigItem(MeltdownPlugin.config.LANGUAGE, true));
+        }
     }
 }

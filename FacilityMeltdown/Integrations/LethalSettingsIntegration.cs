@@ -1,8 +1,12 @@
-﻿using FacilityMeltdown.Lang;
+﻿using BepInEx.Configuration;
+using FacilityMeltdown.Lang;
 using FacilityMeltdown.Util;
+using FacilityMeltdown.Util.Config;
 using LethalSettings.UI;
 using LethalSettings.UI.Components;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using TMPro;
 
@@ -15,72 +19,7 @@ internal class LethalSettingsIntegration {
     static void Initialize() {
         Enabled = true;
 
-        SliderComponent appratusValueSlider = new SliderComponent {
-            Value = MeltdownPlugin.config.APPARATUS_VALUE.LocalValue,
-            MinValue = 80,
-            MaxValue = 500,
-            WholeNumbers = true,
-            Text = "Appartus Value",
-            Enabled = MeltdownPlugin.config.OVERRIDE_APPARATUS_VALUE.LocalValue,
-            OnValueChanged = (self, value) => { MeltdownPlugin.config.APPARATUS_VALUE.LocalValue = (int)value; }
-        };
-
-        VerticalComponent editableInGame = new() {
-            Children = [
-                    new LabelComponent {
-                        Text = "Audio Settings [Client Side]"
-                    },
-                    new SliderComponent {
-                        Value = MeltdownPlugin.config.MUSIC_VOLUME.Value,
-                        MinValue = 0,
-                        MaxValue = 100,
-                        WholeNumbers = true,
-                        Text = "Music Volume",
-                        OnValueChanged = (self, value) => MeltdownPlugin.config.MUSIC_VOLUME.Value = (int) value
-                    },
-                    new ToggleComponent {
-                        Text = "Play Music Outside?",
-                        Value = MeltdownPlugin.config.MUSIC_PLAYS_OUTSIDE.Value,
-                        OnValueChanged = (self, value) => MeltdownPlugin.config.MUSIC_PLAYS_OUTSIDE.Value = value
-                    },
-                    new LabelComponent {
-                        Text = "Visual Settings [Client Side]"
-                    },
-                    new ToggleComponent {
-                        Text = "Screen Shake",
-                        Value = MeltdownPlugin.config.SCREEN_SHAKE.Value,
-                        OnValueChanged = (self, value) => MeltdownPlugin.config.SCREEN_SHAKE.Value = value
-                    },
-                    new ToggleComponent {
-                        Text = "Particle Effects",
-                        Value = MeltdownPlugin.config.PARTICLE_EFFECTS.Value,
-                        OnValueChanged = (self, value) => MeltdownPlugin.config.PARTICLE_EFFECTS.Value = value
-                    },
-                    new LabelComponent {
-                        Text = "Language Settings [Client Side]",
-                    },
-                    new DropdownComponent {
-                        Text = "Language",
-                        Value = new TMP_Dropdown.OptionData(LangParser.languages[MeltdownPlugin.config.LANGUAGE.Value]),
-                        Options = LangParser.languages.Values
-                            .Select(language => new TMP_Dropdown.OptionData(language))
-                            .ToList(),
-                        OnValueChanged = (self, value) => {
-                            // code absouletely shloinged from @willis
-                            var language = LangParser.languages
-                                .Where(x => x.Value == value.text)
-                                .Select(x => x.Key)
-                                .FirstOrDefault();
-                            if(language == null) {
-                                MeltdownPlugin.logger.LogError("Failed to get language! defaulting to english");
-                                language = "en";
-                            }
-                            MeltdownPlugin.config.LANGUAGE.Value = language;
-                            LangParser.SetLanguage(language);
-                        }
-                    }
-                ]
-        };
+        VerticalComponent editableInGame = BuildConfig(MeltdownPlugin.clientConfig);
 
         ModMenu.RegisterMod(new ModMenu.ModSettingsConfig {
             Name = MeltdownPlugin.modName,
@@ -89,43 +28,7 @@ internal class LethalSettingsIntegration {
             Description = "Maybe taking the appartus isn't such a great idea...",
 
             MenuComponents = [
-                    new LabelComponent {
-                        Text = "Game Balance Settings [Synced]"
-                    },
-                    new ToggleComponent {
-                        Text = "Override Appartus Value?",
-                        Value = MeltdownPlugin.config.OVERRIDE_APPARATUS_VALUE.Value,
-                        OnValueChanged = (self, value) => {
-                            MeltdownPlugin.config.OVERRIDE_APPARATUS_VALUE.LocalValue = value;
-                            appratusValueSlider.Enabled = value;
-                        }
-                    },
-                    appratusValueSlider,
-                    new SliderComponent {
-                        Value = MeltdownPlugin.config.MONSTER_SPAWN_AMOUNT.LocalValue,
-                        MinValue = 0,
-                        MaxValue = 10,
-                        WholeNumbers = true,
-                        Text = "Monster Spawn Amount",
-                        OnValueChanged = (self, value) => { MeltdownPlugin.config.MONSTER_SPAWN_AMOUNT.LocalValue = (int)value; }
-                    },
-                    new ToggleComponent {
-                        Text = "Facility has Emergency Lights?",
-                        Value = MeltdownPlugin.config.EMERGENCY_LIGHTS.LocalValue,
-                        OnValueChanged = (self, value) => {
-                            MeltdownPlugin.config.EMERGENCY_LIGHTS.LocalValue = value;
-                        }
-                    },
-                    new SliderComponent {
-                        Value = MeltdownPlugin.config.APPARATUS_VALUE.LocalValue,
-                        MinValue = 0,
-                        MaxValue = 10 * 60,
-                        WholeNumbers = true,
-                        Text = "Meltdown Sequence Time [NOT SUPPORTED, EDIT AT YOUR OWN RISK, NOT RECOMMENDED]",
-                        Enabled = MeltdownPlugin.config.OVERRIDE_APPARATUS_VALUE.LocalValue,
-                        OnValueChanged = (self, value) => { MeltdownPlugin.config.MELTDOWN_TIME.LocalValue = (int)value; }
-                    },
-                    new LabelComponent { Text = "Edit what enemies can spawn in the config file."},
+                    BuildConfig(MeltdownPlugin.config),
                     editableInGame
                 ]
         });
@@ -139,5 +42,97 @@ internal class LethalSettingsIntegration {
                     editableInGame
                 ]
         }, false, true);
+    }
+
+    static VerticalComponent BuildConfig<T>(LoafConfig<T> config) where T : LoafConfig<T> {
+        bool defaultRequiresRestart = true;
+        if(config.GetType().GetCustomAttribute<RequiresRestartAttribute>() != null)
+            defaultRequiresRestart = config.GetType().GetCustomAttribute<RequiresRestartAttribute>().RequiresRestart;
+
+        List<MenuComponent> children = [];
+        string currentHeader = "Misc";
+
+        foreach((PropertyInfo property, object uncastedEntry) in config.configEntries) {
+            bool requiresRestart = defaultRequiresRestart;
+            RequiresRestartAttribute propertyRequiresRestart = property.GetCustomAttribute<RequiresRestartAttribute>();
+            if(propertyRequiresRestart != null)
+                requiresRestart = propertyRequiresRestart.RequiresRestart;
+
+            ConfigGroupAttribute headerAttribute = (ConfigGroupAttribute)property.GetCustomAttribute(typeof(ConfigGroupAttribute));
+            if(headerAttribute != null) {
+                currentHeader = headerAttribute.Group;
+                children.Add(
+                    new LabelComponent {
+                        Text = currentHeader,
+                    });
+            } else if(currentHeader == "Misc") {
+                children.Add(
+                    new LabelComponent {
+                        Text = currentHeader,
+                    });
+            }
+
+            ConfigRangeAttribute rangeAttribute = property.GetCustomAttribute<ConfigRangeAttribute>();
+
+            if(property.PropertyType == typeof(int)) {
+                children.Add(
+                    new SliderComponent {
+                        Value = (int)property.GetValue(config),
+                        WholeNumbers = true,
+                        MinValue = rangeAttribute.Min,
+                        MaxValue = rangeAttribute.Max,
+                        Text = property.Name,
+                        OnValueChanged = (self, value) => {
+                            ((ConfigEntry<int>)uncastedEntry).Value = (int)value;
+                            if(requiresRestart) return;
+                            property.SetValue(config, value);
+                        }
+                    }
+                );
+            }
+            if(property.PropertyType == typeof(float)) {
+                children.Add(
+                    new SliderComponent {
+                        Value = (float)property.GetValue(config),
+                        MinValue = rangeAttribute.Min,
+                        MaxValue = rangeAttribute.Max,
+                        Text = property.Name,
+                        OnValueChanged = (self, value) => {
+                            ((ConfigEntry<float>)uncastedEntry).Value = value;
+                            if(requiresRestart) return;
+                            property.SetValue(config, value);
+                        }
+                    }
+                );
+            }
+            if(property.PropertyType == typeof(bool)) {
+                children.Add(
+                    new ToggleComponent {
+                        Text = property.Name,
+                        Value = (bool)property.GetValue(config),
+                        OnValueChanged = (self, value) => {
+                            ((ConfigEntry<bool>) uncastedEntry).Value = value;
+                            if(requiresRestart) return;
+                            property.SetValue(config, value);
+                        }
+                    }
+                );
+            }
+            if(property.PropertyType == typeof(string)) {
+                children.Add(
+                    new InputComponent {
+                        Placeholder = property.Name,
+                        Value = (string)property.GetValue(config),
+                        OnValueChanged = (self, value) => {
+                            ((ConfigEntry<string>)uncastedEntry).Value = value;
+                            if(requiresRestart) return;
+                            property.SetValue(config, value);
+                        }
+                    }
+                );
+            }
+        }
+        
+        return null;
     }
 }
