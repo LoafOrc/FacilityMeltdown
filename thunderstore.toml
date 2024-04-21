@@ -4,7 +4,7 @@ schemaVersion = "0.0.1"
 [package]
 namespace = "loaforc"
 name = "FacilityMeltdown"
-versionNumber = "2.5.1"
+versionNumber = "2.6.1"
 description = "Maybe taking the apparatus out isn't such a great idea... (v50)"
 websiteUrl = "https://github.com/LoafOrc/FacilityMeltdown"
 containsNsfwContent = false

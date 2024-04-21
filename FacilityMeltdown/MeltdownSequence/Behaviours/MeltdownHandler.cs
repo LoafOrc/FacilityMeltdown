@@ -38,13 +38,17 @@ public class MeltdownHandler : NetworkBehaviour {
 
     [ClientRpc]
     void StartMeltdownClientRpc() {
+        if(Instance != null) return;
         Instance = this;
+        MeltdownPlugin.logger.LogInfo("Beginning Meltdown Sequence! I'd run if I were you!");
 
         MeltdownMoonMapper.EnsureMeltdownMoonMapper();
         MeltdownInteriorMapper.EnsureMeltdownInteriorMapper();
 
+        if(MeltdownInteriorMapper.Instance == null) MeltdownPlugin.logger.LogError("WHAT. Just ensured that the interior mapper exists and it doesnt?!?");
+        if(MeltdownMoonMapper.Instance == null) MeltdownPlugin.logger.LogError("WHAT. Just ensured that the moon mapper exists and it doesnt?!?");
+
         meltdownTimer = MeltdownPlugin.config.MeltdownTime;
-        MeltdownPlugin.logger.LogInfo("Beginning Meltdown Sequence! I'd run if I was you! MeltdownTimer: " + meltdownTimer);
 
         musicSource = gameObject.AddComponent<AudioSource>();
         musicSource.clip = MeltdownPlugin.assets.defaultMusic;
@@ -86,7 +90,11 @@ public class MeltdownHandler : NetworkBehaviour {
         );
 
         if(MeltdownPlugin.config.EmergencyLights) {
-            MeltdownEffects.SetupEmergencyLights();
+            try {
+                MeltdownEffects.SetupEmergencyLights();
+            } catch(Exception e) {
+                MeltdownPlugin.logger.LogError($"Failed to set the emergency light colour: {e}");
+            }
             StartCoroutine(
                 MeltdownEffects.RepeatUntilEndOfMeltdown(
                     () => { 
