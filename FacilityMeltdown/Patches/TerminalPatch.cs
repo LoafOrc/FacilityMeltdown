@@ -15,13 +15,13 @@ internal class TerminalPatch {
         public float generatedAt = Time.time;
 
         public string GetFlavourText() {
-            if(timeRemaining / MeltdownPlugin.config.MELTDOWN_TIME.Value > .75f) {
+            if(timeRemaining / MeltdownPlugin.config.MeltdownTime > .75f) {
                 return "reactorscan.result.flavour.start";
-            } else if(timeRemaining / MeltdownPlugin.config.MELTDOWN_TIME.Value > .5f) {
+            } else if(timeRemaining / MeltdownPlugin.config.MeltdownTime > .5f) {
                 return "reactorscan.result.flavour.low";
-            } else if(timeRemaining / MeltdownPlugin.config.MELTDOWN_TIME.Value > .33f) {
+            } else if(timeRemaining / MeltdownPlugin.config.MeltdownTime > .33f) {
                 return "reactorscan.result.flavour.medium";
-            } else if(timeRemaining / MeltdownPlugin.config.MELTDOWN_TIME.Value > .15f) {
+            } else if(timeRemaining / MeltdownPlugin.config.MeltdownTime > .15f) {
                 return "reactorscan.result.flavour.high";
             }
             return "";
@@ -43,7 +43,7 @@ internal class TerminalPatch {
 
         StringBuilder builder = new StringBuilder(text);
 
-        builder.Replace("<cooldown>", MeltdownPlugin.config.SCAN_COOLDOWN.Value.ToString());
+        builder.Replace("<cooldown>", MeltdownPlugin.config.ShipScanCooldown.ToString());
         builder.Replace("<instability>", lastReport.reactorInstability.ToString());
         builder.Replace("<time_left>", lastReport.timeRemaining.ToString());
 
@@ -67,14 +67,14 @@ internal class TerminalPatch {
     }
 
     internal static bool ReactorHealthCheckReady() {
-        return Time.time >= lastHealthCheck + MeltdownPlugin.config.SCAN_COOLDOWN.Value;
+        return Time.time >= lastHealthCheck + MeltdownPlugin.config.ShipScanCooldown;
     }
 
     internal static ReactorHealthReport GetNewReactorHealthReport() {
-        float reactorInstability = ((MeltdownPlugin.config.MELTDOWN_TIME.Value - MeltdownHandler.Instance.meltdownTimer) / MeltdownPlugin.config.MELTDOWN_TIME.Value) * 100; // this is at perfect accuracy
-        reactorInstability = Mathf.Round(reactorInstability / MeltdownPlugin.config.SCAN_ACCURACY.Value) * MeltdownPlugin.config.SCAN_ACCURACY.Value; // now the ship is not 100% perfect but still consistent (unlike a random value)
+        float reactorInstability = ((MeltdownPlugin.config.MeltdownTime - MeltdownHandler.Instance.meltdownTimer) / MeltdownPlugin.config.MeltdownTime) * 100; // this is at perfect accuracy
+        reactorInstability = Mathf.Round(reactorInstability / MeltdownPlugin.config.ShipScanAccuracy) * MeltdownPlugin.config.ShipScanAccuracy; // now the ship is not 100% perfect but still consistent (unlike a random value)
 
-        float timeRemaining = (1 - (reactorInstability / 100)) * MeltdownPlugin.config.MELTDOWN_TIME.Value; // not perfectly accurate either
+        float timeRemaining = (1 - (reactorInstability / 100)) * MeltdownPlugin.config.MeltdownTime; // not perfectly accurate either
 
         ReactorHealthReport report = new ReactorHealthReport {
             reactorInstability = reactorInstability,

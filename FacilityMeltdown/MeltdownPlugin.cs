@@ -1,11 +1,11 @@
 ﻿using BepInEx;
 using BepInEx.Logging;
 using FacilityMeltdown.Behaviours;
+using FacilityMeltdown.Config;
 using FacilityMeltdown.Equipment;
 using FacilityMeltdown.Integrations;
 using FacilityMeltdown.Lang;
 using FacilityMeltdown.MeltdownSequence.Behaviours;
-using FacilityMeltdown.Util;
 using FacilityMeltdown.Util.Attributes;
 using HarmonyLib;
 using LethalLib.Modules;
@@ -18,25 +18,26 @@ using UnityEngine;
 using UnityEngine.InputSystem.HID;
 using UnityEngine.SceneManagement;
 
-namespace FacilityMeltdown {
+namespace FacilityMeltdown
+{
     [BepInPlugin(modGUID, modName, modVersion)]
     [CompatibleDependency("ainavt.lc.lethalconfig", typeof(LethalConfigIntergration))]
     [CompatibleDependency("com.willis.lc.lethalsettings", typeof(LethalSettingsIntegration))]
-    [BepInDependency("com.sigurd.csync")]
     [BepInDependency("BMX.LobbyCompatibility")]
     [BepInDependency("evaisa.lethallib")]
     [LobbyCompatibility(CompatibilityLevel.Everyone, VersionStrictness.Patch)]
     public class MeltdownPlugin : BaseUnityPlugin {
         internal const string modGUID = "me.loaforc.facilitymeltdown";
         internal const string modName = "FacilityMeltdown";
-        internal const string modVersion = "2.5.1";
+        internal const string modVersion = "2.6.1";
 
         internal static MeltdownPlugin instance;
         internal static ManualLogSource logger;
         internal static MeltdownAssets assets { get; private set; }
         public static bool loadedFully { get; private set; } = false;
 
-        internal static MeltdownConfig config { get; private set; }
+        internal static MeltdownConfig config { get; set; }
+        internal static MeltdownClientConfig clientConfig{ get; private set; }
 
         void Awake() {
             if (instance == null) instance = this; // Signleton
@@ -47,8 +48,11 @@ namespace FacilityMeltdown {
                 assets = new MeltdownAssets();
             })) return;
             if (!RunLoadStep("LangParser.Init", "Getting possible languages", LangParser.Init)) return;
-            if (!RunLoadStep("new MeltdownConfig()", "Setting up config", () => { config = new MeltdownConfig(Config); })) return;
-            if (!RunLoadStep("LangParser.SetLanguage", "Setting language", () => { LangParser.SetLanguage(MeltdownPlugin.config.LANGUAGE.Value); })) return;
+            if (!RunLoadStep("new MeltdownConfig()", "Setting up config", () => { 
+                config = new MeltdownConfig(Config);
+                clientConfig = new MeltdownClientConfig(Config);
+            })) return;
+            if (!RunLoadStep("LangParser.SetLanguage", "Setting language", () => { LangParser.SetLanguage(clientConfig.Language); })) return;
             if (!RunLoadStep("RegisterPatches", "Integrating into LethalCompany", RegisterPatches)) return;
             if (!RunLoadStep("RegisterNetworking", "Making sure everything is networked", RegisterNetworking)) return;
             if (!RunLoadStep("RegisterItems", "Adding the Geiger Counter", RegisterItems)) {
