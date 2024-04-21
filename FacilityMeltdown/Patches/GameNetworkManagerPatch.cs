@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using FacilityMeltdown.Config;
+using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,6 +18,11 @@ namespace FacilityMeltdown.Patches {
                 MeltdownPlugin.logger.LogDebug($"Registered {prefab.name} as a network prefab.");
             }
             MeltdownPlugin.logger.LogInfo($"Succesfully registered {networkPrefabsToRegister.Count} network prefabs.");
+        }
+
+        [HarmonyPostfix, HarmonyPatch(nameof(GameNetworkManager.StartDisconnect))]
+        public static void PlayerLeave() {
+            MeltdownPlugin.config = MeltdownConfig.Default;
         }
     }
 }

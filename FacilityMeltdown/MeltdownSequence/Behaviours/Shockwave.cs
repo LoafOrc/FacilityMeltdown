@@ -41,7 +41,7 @@ namespace FacilityMeltdown.MeltdownSequence.Behaviours
             else
             {
                 renderer.enabled = true;
-                if (PlayerIsInsideShockwave() && !localPlayerCameraShake && MeltdownPlugin.config.SCREEN_SHAKE.Value)
+                if (PlayerIsInsideShockwave() && !localPlayerCameraShake && MeltdownPlugin.clientConfig.ScreenShake)
                 {
                     ScreenShake();
                     localPlayerCameraShake = true;
