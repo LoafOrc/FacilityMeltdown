@@ -69,13 +69,6 @@ internal abstract class LoafConfig<T> where T : LoafConfig<T>
         }
 
         // kill all the orphans :3
-
-        PropertyInfo orphanedEntriesProp = configFile.GetType().GetProperty("OrphanedEntries", BindingFlags.NonPublic | BindingFlags.Instance);
-
-        var orphanedEntries = (Dictionary<ConfigDefinition, string>)orphanedEntriesProp.GetValue(configFile, null);
-
-        orphanedEntries.Clear(); // Clear orphaned entries (Unbinded/Abandoned entries)
-        configFile.Save(); // Save the config file
     }
 
     protected void BindProperty<V>(PropertyInfo property, string header, ConfigDescription description) {

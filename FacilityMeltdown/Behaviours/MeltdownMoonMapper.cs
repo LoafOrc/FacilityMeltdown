@@ -50,7 +50,7 @@ public class MeltdownMoonMapper : MonoBehaviour {
     }
 
     static bool CheckParentForDisallowed(Transform child) {
-        if(child.gameObject.name == "Sun" || child.gameObject.name == "ItemShipAnimContainer") return false;
+        if(child.gameObject.name == "Sun" || child.gameObject.name == "ItemShipAnimContainer" || child.gameObject.name == "MapPropsContainer") return false;
         if(child.parent == null) return true;
         return CheckParentForDisallowed(child.parent);
     }
