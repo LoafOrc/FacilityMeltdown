@@ -1,4 +1,5 @@
 ﻿using BepInEx;
+using BepInEx.Configuration;
 using BepInEx.Logging;
 using FacilityMeltdown.Behaviours;
 using FacilityMeltdown.Config;
@@ -12,6 +13,7 @@ using LethalLib.Modules;
 using LobbyCompatibility.Attributes;
 using LobbyCompatibility.Enums;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
@@ -29,7 +31,7 @@ namespace FacilityMeltdown
     public class MeltdownPlugin : BaseUnityPlugin {
         internal const string modGUID = "me.loaforc.facilitymeltdown";
         internal const string modName = "FacilityMeltdown";
-        internal const string modVersion = "2.6.1";
+        internal const string modVersion = "2.6.3";
 
         internal static MeltdownPlugin instance;
         internal static ManualLogSource logger;
@@ -51,6 +53,8 @@ namespace FacilityMeltdown
             if (!RunLoadStep("new MeltdownConfig()", "Setting up config", () => { 
                 config = new MeltdownConfig(Config);
                 clientConfig = new MeltdownClientConfig(Config);
+
+                Config.ClearOrphans();
             })) return;
             if (!RunLoadStep("LangParser.SetLanguage", "Setting language", () => { LangParser.SetLanguage(clientConfig.Language); })) return;
             if (!RunLoadStep("RegisterPatches", "Integrating into LethalCompany", RegisterPatches)) return;
@@ -77,12 +81,12 @@ namespace FacilityMeltdown
         }
 
         
-
+        
         bool RunLoadStep(string stepName, string descrption, Action callback) {
             try {
                 callback();
             } catch(Exception e) {
-                logger.LogError($"`{stepName}` caused a fatal exception to be thrown.");
+                logger.LogError($"`{stepName}` caused an exception to be thrown, meltdown may or may not work, look for more errors.");
                 logger.LogError(e);
                 return false;
             }

@@ -91,17 +91,17 @@ public class MeltdownHandler : NetworkBehaviour {
 
         if(MeltdownPlugin.config.EmergencyLights) {
             try {
-                MeltdownEffects.SetupEmergencyLights();
+                List<(Light, Color)> originalLightColours = MeltdownEffects.SetupEmergencyLights();
+                StartCoroutine(
+                    MeltdownEffects.RepeatUntilEndOfMeltdown(
+                        () => { 
+                            return MeltdownEffects.EmergencyLights(2, 5, originalLightColours);  
+                        }
+                    )
+                );
             } catch(Exception e) {
                 MeltdownPlugin.logger.LogError($"Failed to set the emergency light colour: {e}");
             }
-            StartCoroutine(
-                MeltdownEffects.RepeatUntilEndOfMeltdown(
-                    () => { 
-                        return MeltdownEffects.EmergencyLights(2, 5);  
-                    }
-                )
-            );
         }
 
         StartCoroutine(

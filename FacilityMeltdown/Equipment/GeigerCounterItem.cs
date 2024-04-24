@@ -19,6 +19,7 @@ namespace FacilityMeltdown.Equipment
 
         public override void ItemActivate(bool used, bool buttonDown = true)
         {
+            base.ItemActivate(used, buttonDown);
             MeltdownPlugin.logger.LogInfo("ACTIVATED GEIGER COUNTER");
             SwitchPoweredState(used);
 
@@ -37,7 +38,6 @@ namespace FacilityMeltdown.Equipment
 
         public void SwitchPoweredState(bool on)
         {
-            isBeingUsed = !isBeingUsed;
             MeltdownPlugin.logger.LogInfo($"me when the on value is {on}. :rofl::rofl::rofl:");
 
             if (isBeingUsed)
@@ -79,9 +79,8 @@ namespace FacilityMeltdown.Equipment
 
                 float needleTurnAmount = Mathf.Clamp01(radiation / maxDetection) * (maxRotation * 2);
                 needleTurnAmount -= maxRotation;
-                needleTurnAmount *= -1;
 
-                needle.transform.localEulerAngles = new Vector3(0, needleTurnAmount, 0);
+                needle.transform.localEulerAngles = new Vector3(-90, needleTurnAmount, 0);
             }
         }
     }

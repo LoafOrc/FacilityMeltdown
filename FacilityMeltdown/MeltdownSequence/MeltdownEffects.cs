@@ -11,13 +11,15 @@ using UnityEngine;
 
 namespace FacilityMeltdown.MeltdownSequence;
 public static class MeltdownEffects {
-    public static void SetupEmergencyLights() {
+    public static List<(Light light, Color originalColour)> SetupEmergencyLights() {
         for (int i = 0; i < RoundManager.Instance.allPoweredLights.Count; i++) {
             RoundManager.Instance.allPoweredLights[i].color = MeltdownInteriorMapper.Instance.outsideEmergencyLightColour;
         }
+        List<(Light light, Color originalColour)> outsideLights = [];
         for (int i = 0; i < MeltdownMoonMapper.Instance.outsideEmergencyLights.Count; i++) {
-            MeltdownMoonMapper.Instance.outsideEmergencyLights[i].color = MeltdownMoonMapper.Instance.outsideEmergencyLightColour;
+            outsideLights.Add((MeltdownMoonMapper.Instance.outsideEmergencyLights[i], MeltdownMoonMapper.Instance.outsideEmergencyLights[i].color));
         }
+        return outsideLights;
     }
 
     public static IEnumerator RepeatUntilEndOfMeltdown(Func<IEnumerator> enumerator) {
@@ -91,13 +93,13 @@ public static class MeltdownEffects {
         }
     }
 
-    public static IEnumerator EmergencyLights(float onTime, float offTime) {
+    public static IEnumerator EmergencyLights(float onTime, float offTime, List<(Light light, Color originalColour)> originalLightColours) {
         MeltdownPlugin.logger.LogDebug("Switching lights ON");
         for (int i = 0; i < RoundManager.Instance.allPoweredLightsAnimators.Count; i++) {
             RoundManager.Instance.allPoweredLightsAnimators[i].SetBool("on", true);
         }
         for (int i = 0; i < MeltdownMoonMapper.Instance.outsideEmergencyLights.Count; i++) {
-            MeltdownMoonMapper.Instance.outsideEmergencyLights[i].enabled = true;
+            MeltdownMoonMapper.Instance.outsideEmergencyLights[i].color = MeltdownMoonMapper.Instance.outsideEmergencyLightColour;
         }
 
         yield return new WaitForSeconds(onTime);
@@ -106,8 +108,9 @@ public static class MeltdownEffects {
         for (int i = 0; i < RoundManager.Instance.allPoweredLightsAnimators.Count; i++) {
             RoundManager.Instance.allPoweredLightsAnimators[i].SetBool("on", false);
         }
-        for (int i = 0; i < MeltdownMoonMapper.Instance.outsideEmergencyLights.Count; i++) {
-            MeltdownMoonMapper.Instance.outsideEmergencyLights[i].enabled = false;
+
+        foreach((Light light, Color originalColour) in originalLightColours) {
+            light.color = originalColour;
         }
 
         yield return new WaitForSeconds(offTime);
