@@ -1,4 +1,5 @@
-﻿using FacilityMeltdown.Lang;
+﻿using BepInEx.Configuration;
+using FacilityMeltdown.Lang;
 using GameNetcodeStuff;
 using System;
 using System.Collections.Generic;
@@ -41,6 +42,15 @@ namespace FacilityMeltdown
 
         internal static string Translate(this string text) {
             return LangParser.GetTranslation(text);
+        }
+
+        internal static void ClearOrphans(this ConfigFile config) { // kill all the orphans :3
+            PropertyInfo orphanedEntriesProp = config.GetType().GetProperty("OrphanedEntries", BindingFlags.NonPublic | BindingFlags.Instance);
+
+            var orphanedEntries = (Dictionary<ConfigDefinition, string>)orphanedEntriesProp.GetValue(config, null);
+
+            orphanedEntries.Clear(); // Clear orphaned entries (Unbinded/Abandoned entries)
+            config.Save(); // Save the config file
         }
     }
 }
