@@ -13,3 +13,6 @@
 - Fixed Geiger Counter
 - Fixed ship and map props lights turning red.
 - Changed how the outside lights flash, should no longer be an all consuming void. 
+
+### v2.6.4
+- Hopefully fixed some windows locales being unable to load meltdown.

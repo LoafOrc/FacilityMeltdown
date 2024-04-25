@@ -2,6 +2,7 @@
 using FacilityMeltdown.Patches;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Text;
@@ -21,7 +22,7 @@ internal abstract class AssetBundleLoader<T> where T : AssetBundleLoader<T> {
             if(loadInstruction == null) continue;
 
             MeltdownPlugin.logger.LogDebug($"[Assets] Got LoadFromBundle attribute on `{field.Name}`. Loading asset: `{loadInstruction.BundleFile}` into the [roperty.");
-            field.SetValue(this, LoadAsset<UnityEngine.Object>(bundle, loadInstruction.BundleFile.ToLower()));
+            field.SetValue(this, LoadAsset<UnityEngine.Object>(bundle, loadInstruction.BundleFile.ToLower(CultureInfo.GetCultureInfo("en-GB"))));
         }
 
         foreach(GameObject gameObject in bundle.LoadAllAssets<GameObject>()) {
