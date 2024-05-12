@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
+using Newtonsoft.Json.Serialization;
 using Unity.Collections;
 using Unity.Netcode;
 
@@ -75,8 +76,31 @@ internal static class PlayerControllerPatch {
 
         MeltdownPlugin.logger.LogDebug(Encoding.UTF8.GetString(data));
 
-        MeltdownPlugin.config = JsonConvert.DeserializeObject<MeltdownConfig>(Encoding.UTF8.GetString(data));
+        MeltdownPlugin.config = JsonConvert.DeserializeObject<MeltdownConfig>(Encoding.UTF8.GetString(data), new JsonSerializerSettings {
+            ContractResolver = new IncludePrivateSetterContractResolver()
+        });
+        MeltdownPlugin.logger.LogDebug("Deserialized values are: "); 
 
+        foreach (PropertyInfo property in MeltdownPlugin.config.GetType().GetProperties()) {
+            MeltdownPlugin.logger.LogDebug($"{property.Name} => {property.GetValue(MeltdownPlugin.config)}");
+        }
+        
         MeltdownPlugin.logger.LogInfo("Successfully synced config with host.");
+    }
+}
+
+internal class IncludePrivateSetterContractResolver : DefaultContractResolver
+{
+    protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
+    {
+        JsonProperty property = base.CreateProperty(member, memberSerialization);
+
+        // If the property is not writable and it's a property with a private setter, set it to writable
+        if (!property.Writable && member is PropertyInfo propInfo)
+        {
+            property.Writable = propInfo.GetSetMethod(true) != null;
+        }
+
+        return property;
     }
 }

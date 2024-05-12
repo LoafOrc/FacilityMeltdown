@@ -3,7 +3,9 @@ The apparatus was a vital part of the upkeep of the facility's nuclear reactor -
 
 With the facility meltdown mod the appartus has a lot more risk (and reward) attached to it. When you take it out the entire facility spirals into a self destruction sequence! You'll have 2 minutes to escape and take off before you get vaporized.
 
-FacilityMeltdown will work with custom moons and interiors.
+FacilityMeltdown will work with most custom moons and all interiors.
+### HELP! When meltdown happenes this modded moon turns red!
+This is known and comes from modded moon creators not setting up in the exact way that vanilla moons are setup (which is fine). They will need to add explict support as it's not something I can really fix on my end. If you're a moon creator and this issue is happening to you, ask in my thread on the modded lethal company discord how to add support!
 
 If you are strugling with playing the mod have a look at the bottom of this readme to find some useful tips and tricks. Or you can modify certain things in the config.
 

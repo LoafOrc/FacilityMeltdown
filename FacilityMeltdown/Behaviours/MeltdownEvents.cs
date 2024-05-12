@@ -23,16 +23,12 @@ public class MeltdownEvents : MonoBehaviour {
 
     [SerializeField]
     List<Marker> markers = new List<Marker>();
-
-    void HandleMeltdownStart() {
-        OnMeltdownStart.Invoke();
-    }
-
+    
     void OnEnable() {
-        MeltdownAPI.OnMeltdownStart += HandleMeltdownStart;
+        MeltdownAPI.OnMeltdownStart += OnMeltdownStart.Invoke;
     }
     void OnDisable() {
-        MeltdownAPI.OnMeltdownStart -= HandleMeltdownStart;
+        MeltdownAPI.OnMeltdownStart -= OnMeltdownStart.Invoke;
     }
 
     void Update() {

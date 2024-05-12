@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using BepInEx;
@@ -18,9 +19,13 @@ using CSync.Extensions;
 using FacilityMeltdown.Lang;
 using TMPro;
 using FacilityMeltdown.Util.Config;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace FacilityMeltdown.Config
 {
+    
+    
     internal class MeltdownConfig(ConfigFile file) : LoafSyncedConfig<MeltdownConfig>(file)
     {
 
@@ -38,6 +43,10 @@ namespace FacilityMeltdown.Config
 
         [ConfigDesc("Should the lights turn on periodically? Disabling this option makes them permanently off. (Matches Vanilla Behaviour)")]
         public bool EmergencyLights { get; private set; } = true;
+
+        [ConfigDesc("How many people need to be nearby to the apparatus for it to be collectable? Will go UP TO the value, e.g. if it's set to 3 and there are only 2 people in the lobby, everyone will need to be there.\nThis value is ignored and anybody can grab it from 9PM")]
+        [ConfigRange(1, 10)]
+        public int MinPeopleToPullApparatus { get; private set; } = 2;
 
 
         // todo: look into maybe a custom tomltypeconverter and make this cleaner?
