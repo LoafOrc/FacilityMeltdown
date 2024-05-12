@@ -9,3 +9,5 @@ packages/**
 .suo
 
 **/obj/**
+FacilityMeltdown.sln.DotSettings.user
+.idea/

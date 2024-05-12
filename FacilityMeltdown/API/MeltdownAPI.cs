@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace FacilityMeltdown.API;
 public static class MeltdownAPI {
-    public static bool MeltdownStarted { get { return MeltdownHandler.Instance != null; } }
+    public static bool MeltdownStarted => MeltdownHandler.Instance != null;
 
     internal static Action OnMeltdownStart = delegate { };
 

@@ -52,5 +52,24 @@ namespace FacilityMeltdown
             orphanedEntries.Clear(); // Clear orphaned entries (Unbinded/Abandoned entries)
             config.Save(); // Save the config file
         }
+        
+        internal static IEnumerable<Type> GetLoadableTypes(this Assembly assembly) {
+            if(assembly == null) {
+                throw new ArgumentNullException(nameof(assembly));
+            }
+
+            try {
+                return assembly.GetTypes();
+            } catch(ReflectionTypeLoadException ex) {
+                return ex.Types.Where(t => t != null);
+            }
+        }
+        
+        internal static (int hours, int minutes) GetCurrentTime(this TimeOfDay timeOfDay) {
+            int totalMinutes = Mathf.FloorToInt((timeOfDay.normalizedTimeOfDay * 60f * timeOfDay.numberOfHours) + 360);
+            int hour = Mathf.FloorToInt(totalMinutes / 60);
+
+            return (hour, totalMinutes % 60);
+        }
     }
 }
