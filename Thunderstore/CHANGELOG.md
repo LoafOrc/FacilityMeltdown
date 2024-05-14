@@ -34,3 +34,9 @@
 
 ### v2.6.9
 - Removed GeneralImprovements hotfix as it was fixed in v1.2.7 :3
+
+### v2.6.10
+- Reapplied the hotfix LMAO.
+
+### v2.6.11
+- Undid the reapplied hotfix. :skull:
