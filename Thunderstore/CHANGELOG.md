@@ -40,3 +40,6 @@
 
 ### v2.6.11
 - Undid the reapplied hotfix. :skull:
+
+### v2.6.12
+- v55 compatibility

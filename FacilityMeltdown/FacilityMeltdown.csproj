@@ -27,7 +27,7 @@
 		<PackageReference Include="BepInEx.Core" Version="5.*" PrivateAssets="all" />
 		<PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.1" PrivateAssets="all"/>
 		<PackageReference Include="Evaisa.LethalLib" Version="0.14.*" />
-		<PackageReference Include="LethalCompany.GameLibs.Steam" Version="50.0.0-ngd.0" PrivateAssets="all" />
+		<PackageReference Include="LethalCompany.GameLibs.Steam" Version="55.0.0-beta.0-ngd.0" PrivateAssets="all" />
 		<PackageReference Include="LethalSettings" Version="1.4.0" />
 		<PackageReference Include="Sigurd.BepInEx.CSync" Version="4.1.0" />
 		<PackageReference Include="TeamBMX.LobbyCompatibility" Version="1.1.*" />
