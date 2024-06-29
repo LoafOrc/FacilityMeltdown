@@ -1,7 +1,7 @@
 <Project>
     <!-- Custom Variables -->
     <PropertyGroup>
-        <PluginDirectory>C:\Program Files (x86)\Steam\steamapps\common\Lethal Company\BepInEx\plugins\FacilityMeltdown\</PluginDirectory>
+        <PluginDirectory>C:\Users\rixon\AppData\Roaming\com.kesomannen.gale\lethal-company\profiles\modded\BepInEx\plugins\loaforc-FacilityMeltdown\FacilityMeltdown\</PluginDirectory>
     </PropertyGroup>
 
     <!-- Copy to Plugin Directory for Quicker Testing -->
