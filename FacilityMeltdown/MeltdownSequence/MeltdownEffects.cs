@@ -8,6 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace FacilityMeltdown.MeltdownSequence;
 public static class MeltdownEffects {
@@ -23,6 +24,7 @@ public static class MeltdownEffects {
     }
 
     public static IEnumerator RepeatUntilEndOfMeltdown(Func<IEnumerator> enumerator) {
+        yield return new WaitForSeconds(Random.Range(0f, 1f));
         while(true) { // we be a bit silly :3
             MeltdownPlugin.logger.LogDebug("looping effect");
             yield return enumerator();
@@ -56,41 +58,6 @@ public static class MeltdownEffects {
             yield return null;
         }
         callback();
-    }
-
-    public static IEnumerator WithDynamicRandomDelay(IEnumerator enumerator) {
-        yield return enumerator;
-        switch (MeltdownHandler.Instance.Progress) {
-            case > .75f:
-                yield return new WaitForSeconds(UnityEngine.Random.Range(10f, 14f));
-                break;
-            case > .5f:
-                yield return new WaitForSeconds(UnityEngine.Random.Range(6f, 10f));
-                break;
-            case > .25f:
-                yield return new WaitForSeconds(UnityEngine.Random.Range(5f, 6.5f));
-                break;
-            default:
-                yield return new WaitForSeconds(UnityEngine.Random.Range(3f, 4f));
-                break;
-        }
-    }
-    public static IEnumerator WithDynamicRandomDelay(Action callback) {
-        callback();
-        switch (MeltdownHandler.Instance.Progress) {
-            case > .75f:
-                yield return new WaitForSeconds(UnityEngine.Random.Range(10f, 14f));
-                break;
-            case > .5f:
-                yield return new WaitForSeconds(UnityEngine.Random.Range(6f, 10f));
-                break;
-            case > .25f:
-                yield return new WaitForSeconds(UnityEngine.Random.Range(5f, 6.5f));
-                break;
-            default:
-                yield return new WaitForSeconds(UnityEngine.Random.Range(3f, 4f));
-                break;
-        }
     }
 
     public static IEnumerator EmergencyLights(float onTime, float offTime, List<(Light light, Color originalColour)> originalLightColours) {
@@ -155,7 +122,7 @@ public static class MeltdownEffects {
 
     #region HELPER FUNCTIONS
     private static Vector3 PlacePositionInsideFacility(Vector3 position, float radius = 10f) {
-        return RoundManager.Instance.GetRandomNavMeshPositionInBoxPredictable(position, 10f, layerMask: -1, randomSeed: new System.Random());
+        return RoundManager.Instance.GetRandomNavMeshPositionInRadius(position, radius);
     }
 
     private static Vector3 GetRandomPositionNearPlayer(float radius = 15f) {

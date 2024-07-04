@@ -23,8 +23,14 @@ public class MeltdownMoonMapper : MonoBehaviour {
     [field: SerializeField]
     public GameObject explosionPrefab { get; private set; }
 
+    [field: SerializeField]
+    public Vector3 EffectOrigin { get; private set; }
+    
     private void Awake() {
         Instance = this;
+        if (EffectOrigin == Vector3.zero) {
+            EffectOrigin = RoundManager.FindMainEntrancePosition(false, true);
+        }
     }
 
     private void OnDisable() {
@@ -32,17 +38,11 @@ public class MeltdownMoonMapper : MonoBehaviour {
             Instance = null;
     }
 
-#if DEBUG
-    private void Update() {
-        if(Keyboard.current.rightBracketKey.wasPressedThisFrame) {
-            MeltdownAPI.StartMeltdown("DEBUG KEY PRESSED");
-        }
-    }
-#endif
-
     internal static void EnsureMeltdownMoonMapper() {
+        if(Instance != null) return;
         if(GameObject.FindObjectOfType<MeltdownMoonMapper>() != null) return; // skipping as the moon has its own override
 
+        MeltdownPlugin.logger.LogInfo("Creating MoonMapper!");
         Instance = new GameObject("DefaultMeltdownMappings").AddComponent<MeltdownMoonMapper>();
         Instance.outsideEmergencyLights = GameObject.Find("Environment").GetComponentsInChildren<Light>().Where((light) => {
             return CheckParentForDisallowed(light.transform);

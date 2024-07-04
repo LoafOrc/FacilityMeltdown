@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace FacilityMeltdown
@@ -35,7 +36,12 @@ namespace FacilityMeltdown
         public static void SpawnEnemy(this EnemyVent vent, SpawnableEnemyWithRarity enemy) {
             Vector3 position = vent.floorNode.position;
             float y = vent.floorNode.eulerAngles.y;
-            RoundManager.Instance.SpawnEnemyOnServer(position, y, RoundManager.Instance.currentLevel.Enemies.IndexOf(enemy));
+            
+            GameObject gameObject = GameObject.Instantiate(enemy.enemyType.enemyPrefab, position, Quaternion.Euler(new Vector3(0f, y, 0f)));
+            EnemyAI enemyAI = gameObject.GetComponent<EnemyAI>();
+            enemyAI.NetworkObject.Spawn(true);
+            RoundManager.Instance.SpawnedEnemies.Add(enemyAI);
+            
             vent.OpenVentClientRpc();
             vent.occupied = false;
         }

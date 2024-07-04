@@ -36,6 +36,9 @@ namespace FacilityMeltdown.Patches {
 
         [HarmonyPrefix, HarmonyPatch(nameof(LungProp.Start))]
         internal static void AddRadiationSource(LungProp __instance) {
+            MeltdownMoonMapper.EnsureMeltdownMoonMapper();
+            MeltdownInteriorMapper.EnsureMeltdownInteriorMapper();
+            
             try {
                 RadiationSource source = __instance.gameObject.AddComponent<RadiationSource>();
                 source.radiationAmount = 80;
