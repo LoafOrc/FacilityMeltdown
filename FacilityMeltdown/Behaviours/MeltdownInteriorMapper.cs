@@ -22,8 +22,10 @@ public class MeltdownInteriorMapper : MonoBehaviour {
     }
 
     internal static void EnsureMeltdownInteriorMapper() {
+        if(Instance != null) return;
         if(GameObject.FindObjectOfType<MeltdownInteriorMapper>() != null) return; // skipping as the moon has its own override
 
+        MeltdownPlugin.logger.LogInfo("Creating InteriorMapper!");
         Instance = new GameObject("DefaultMeltdownInteriorMappings").AddComponent<MeltdownInteriorMapper>();
     }
 }
