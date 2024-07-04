@@ -37,7 +37,7 @@ public class MeltdownHandler : NetworkBehaviour
     AudioSource meltdownMusic, warningSource;
 
     Vector3 effectOrigin => MeltdownMoonMapper.Instance.EffectOrigin;
-    
+
     [ClientRpc]
     void StartMeltdownClientRpc()
     {
@@ -45,27 +45,27 @@ public class MeltdownHandler : NetworkBehaviour
         Instance = this;
 
         Stopwatch timer = new Stopwatch();
-        
+
         MeltdownPlugin.logger.LogInfo("Beginning Meltdown Sequence! I'd run if I were you!");
 
         timer.Start();
         MeltdownMoonMapper.EnsureMeltdownMoonMapper();
         MeltdownInteriorMapper.EnsureMeltdownInteriorMapper();
-        
-        
+
+
         if (MeltdownInteriorMapper.Instance == null) MeltdownPlugin.logger.LogError("WHAT. Just ensured that the interior mapper exists and it doesnt?!?");
         if (MeltdownMoonMapper.Instance == null) MeltdownPlugin.logger.LogError("WHAT. Just ensured that the moon mapper exists and it doesnt?!?");
 
         timer.Stop();
         MeltdownPlugin.logger.LogDebug($"Ensuring data objects exist: {timer.ElapsedMilliseconds}ms");
-        
+
         meltdownTimer = MeltdownPlugin.config.MeltdownTime;
 
         timer.Restart();
 
         timer.Stop();
         MeltdownPlugin.logger.LogDebug($"Creating audio: {timer.ElapsedMilliseconds}ms");
-        
+
         timer.Restart();
         #region EFFECTS
         StartCoroutine(
@@ -150,7 +150,7 @@ public class MeltdownHandler : NetworkBehaviour
         }
 
         timer.Restart();
-        
+
         if (effectOrigin == Vector3.zero)
         {
             MeltdownPlugin.logger.LogError("Effect Origin is Vector3.Zero! We couldn't find the effect origin");
@@ -164,7 +164,7 @@ public class MeltdownHandler : NetworkBehaviour
         }
         timer.Stop();
         MeltdownPlugin.logger.LogDebug($"Getting effect origin: {timer.ElapsedMilliseconds}ms");
-        
+
         timer.Restart();
         MeltdownAPI.OnMeltdownStart();
         timer.Stop();
@@ -172,42 +172,45 @@ public class MeltdownHandler : NetworkBehaviour
         meltdownStarted = true;
     }
 
-    void SpawnEnemies() {
+    void SpawnEnemies()
+    {
         Stopwatch timer = Stopwatch.StartNew();
         List<string> disallowed = MeltdownPlugin.config.GetDisallowedEnemies();
-        List<SpawnableEnemyWithRarity> spawnProbibilities = RoundManager.Instance.currentLevel.Enemies.Where(enemy => {
+        List<SpawnableEnemyWithRarity> spawnProbibilities = RoundManager.Instance.currentLevel.Enemies.Where(enemy =>
+        {
             return !EnemyCannotBeSpawned(enemy.enemyType) && !disallowed.Contains(enemy.enemyType.enemyName);
         }).ToList();
-        
+
         timer.Stop();
         MeltdownPlugin.logger.LogDebug($"Filtering enemies: {timer.ElapsedMilliseconds}ms");
 
         timer.Restart();
         List<EnemyVent> avaliableVents = RoundManager.Instance.allEnemyVents.Where(vent => !vent.occupied).ToList();
         timer.Stop();
-        MeltdownPlugin.logger.LogDebug($"Filtering vents: {timer.ElapsedMilliseconds}ms");    
+        MeltdownPlugin.logger.LogDebug($"Filtering vents: {timer.ElapsedMilliseconds}ms");
         timer.Restart();
 
-        
+
         for (int i = 0; i < Mathf.Min(MeltdownPlugin.config.MonsterSpawnAmount, avaliableVents.Count); i++)
         {
             EnemyVent vent = avaliableVents[Random.Range(0, avaliableVents.Count)];
             avaliableVents.Remove(vent);
             SpawnableEnemyWithRarity enemy = spawnProbibilities[Random.Range(0, avaliableVents.Count)];
-            
+
             RoundManager.Instance.currentEnemyPower += enemy.enemyType.PowerLevel;
             MeltdownPlugin.logger.LogInfo("Spawning a " + enemy.enemyType.enemyName + " during the meltdown sequence");
             vent.SpawnEnemy(enemy);
         }
-        
+
         timer.Stop();
         MeltdownPlugin.logger.LogDebug($"Spawning enemies: {timer.ElapsedMilliseconds}ms");
-        
+
     }
-    
+
     public override void OnNetworkSpawn()
     {
-        if (!MeltdownPlugin.loadedFully || !IsHost) {
+        if (!MeltdownPlugin.loadedFully || !IsHost)
+        {
             return;
         }
         StartMeltdownClientRpc();

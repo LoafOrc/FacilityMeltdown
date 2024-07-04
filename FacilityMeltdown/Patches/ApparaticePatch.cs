@@ -12,34 +12,42 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace FacilityMeltdown.Patches {
+namespace FacilityMeltdown.Patches
+{
     [HarmonyPatch(typeof(LungProp))]
-    internal class ApparaticePatch {
+    internal class ApparaticePatch
+    {
         [HarmonyPrefix, HarmonyPatch(nameof(LungProp.EquipItem))]
-        internal static void BeginMeltdownSequence(LungProp __instance, ref bool ___isLungDocked) {
+        internal static void BeginMeltdownSequence(LungProp __instance, ref bool ___isLungDocked)
+        {
             if (!__instance.IsHost) return;
             if (!___isLungDocked) return;
             if (MeltdownAPI.MeltdownStarted) return;
 
             // We just took it out
-            try { // make sure to surround in try catch because this is a prefix
+            try
+            { // make sure to surround in try catch because this is a prefix
                 if (MeltdownPlugin.config.OverrideApparatusValue)
                     __instance.scrapValue = MeltdownPlugin.config.ApparatusValue;
                 GameObject meltdown = GameObject.Instantiate(MeltdownPlugin.assets.meltdownHandlerPrefab);
                 meltdown.GetComponent<NetworkObject>().Spawn();
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 MeltdownPlugin.logger.LogError(ex);
             }
         }
 
-        
+
 
         [HarmonyPrefix, HarmonyPatch(nameof(LungProp.Start))]
-        internal static void AddRadiationSource(LungProp __instance) {
+        internal static void AddRadiationSource(LungProp __instance)
+        {
             MeltdownMoonMapper.EnsureMeltdownMoonMapper();
             MeltdownInteriorMapper.EnsureMeltdownInteriorMapper();
-            
-            try {
+
+            try
+            {
                 RadiationSource source = __instance.gameObject.AddComponent<RadiationSource>();
                 source.radiationAmount = 80;
                 source.radiationDistance = 60;
@@ -50,8 +58,10 @@ namespace FacilityMeltdown.Patches {
                     __instance.scrapValue = MeltdownPlugin.config.ApparatusValue;
                 MeltdownPlugin.logger.LogDebug(__instance.scrapValue);
                 //___isLungDocked = false; // fix joining late
-            } catch (Exception ex) {
-                MeltdownPlugin.logger.LogError  (ex);
+            }
+            catch (Exception ex)
+            {
+                MeltdownPlugin.logger.LogError(ex);
             }
         }
     }
