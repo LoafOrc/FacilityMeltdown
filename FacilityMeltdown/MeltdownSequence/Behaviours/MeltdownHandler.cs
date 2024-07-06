@@ -79,9 +79,9 @@ public class MeltdownHandler : NetworkBehaviour
             MeltdownEffects.WithDelay(
                 MeltdownEffects.RepeatUntilEndOfMeltdown(
                     () => MeltdownEffects.WithRandomDelay(
-                        MeltdownEffects.WarningAnnouncer(warningSource),
-                        15,
-                        20
+                        () => MeltdownEffects.WarningAnnouncer(warningSource),
+                        10,
+                        15
                     ))
             , 10)
         );

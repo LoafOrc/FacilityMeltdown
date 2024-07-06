@@ -48,9 +48,9 @@ public static class MeltdownEffects
         callback();
     }
 
-    public static IEnumerator WithRandomDelay(IEnumerator enumerator, float min, float max)
+    public static IEnumerator WithRandomDelay(Func<IEnumerator> enumerator, float min, float max)
     {
-        yield return WithDelay(enumerator, UnityEngine.Random.Range(min, max));
+        yield return WithDelay(enumerator(), UnityEngine.Random.Range(min, max));
     }
     public static IEnumerator WithRandomDelay(Action callback, float min, float max)
     {
