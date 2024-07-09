@@ -43,9 +43,4 @@
 
 ### v2.6.12
 - v55 compatibility
-
-### v2.6.13
 - Minimised stutter when starting the meltdown sequence.
-
-### v2.6.14
-- unity moment

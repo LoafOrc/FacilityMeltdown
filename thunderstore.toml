@@ -3,9 +3,9 @@ schemaVersion = "0.0.1"
 
 [package]
 namespace = "loaforc"
-name = "FacilityMeltdownExperimental"
-versionNumber = "2.6.14"
-description = "v55 version of FacilityMeltdown"
+name = "FacilityMeltdown"
+versionNumber = "2.6.12"
+description = "Maybe taking the apparatus out isn't such a great idea... (v56)"
 websiteUrl = "https://github.com/LoafOrc/FacilityMeltdown"
 containsNsfwContent = false
 [package.dependencies]
@@ -14,8 +14,8 @@ BMX-LobbyCompatibility="1.1.0"
 Evaisa-LethalLib = "0.16.0"
 
 [build]
-icon = "./Thunderstore/icon_beta.png"
-readme = "./Thunderstore/README_BETA.md"
+icon = "./Thunderstore/icon.png"
+readme = "./Thunderstore/README.md"
 outdir = "./build"
 
 [[build.copy]]
