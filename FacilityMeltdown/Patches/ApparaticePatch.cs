@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FacilityMeltdown.API;
 using FacilityMeltdown.Behaviours;
+using FacilityMeltdown.Integrations;
 using FacilityMeltdown.Util;
 using GameNetcodeStuff;
 using HarmonyLib;
@@ -28,7 +29,7 @@ namespace FacilityMeltdown.Patches
             try
             { // make sure to surround in try catch because this is a prefix
                 if (MeltdownPlugin.config.OverrideApparatusValue)
-                    __instance.scrapValue = MeltdownPlugin.config.ApparatusValue;
+                    __instance.scrapValue = Mathf.RoundToInt(MeltdownPlugin.config.ApparatusValue * WeatherRegistryIntegration.GetWeatherMultiplier());
                 GameObject meltdown = GameObject.Instantiate(MeltdownPlugin.assets.meltdownHandlerPrefab);
                 meltdown.GetComponent<NetworkObject>().Spawn();
             }
@@ -55,7 +56,7 @@ namespace FacilityMeltdown.Patches
                 MeltdownMoonMapper.EnsureMeltdownMoonMapper();
 
                 if (MeltdownPlugin.config.OverrideApparatusValue)
-                    __instance.scrapValue = MeltdownPlugin.config.ApparatusValue;
+                    __instance.scrapValue = Mathf.RoundToInt(MeltdownPlugin.config.ApparatusValue * WeatherRegistryIntegration.GetWeatherMultiplier());
                 MeltdownPlugin.logger.LogDebug(__instance.scrapValue);
                 //___isLungDocked = false; // fix joining late
             }

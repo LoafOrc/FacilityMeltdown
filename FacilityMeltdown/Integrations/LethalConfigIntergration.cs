@@ -11,7 +11,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace FacilityMeltdown.Integrations;
-internal class LethalConfigIntergration {
+class LethalConfigIntergration {
     public static bool Enabled { get; private set; } // If you want to check compatibility locally
 
     // This method will be called automatically if the compatible mod is loaded.

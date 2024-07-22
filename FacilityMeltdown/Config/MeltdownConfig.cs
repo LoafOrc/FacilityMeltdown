@@ -14,8 +14,6 @@ using Unity.Netcode;
 using GameNetcodeStuff;
 using HarmonyLib;
 using System.Runtime.Serialization;
-using CSync.Lib;
-using CSync.Extensions;
 using FacilityMeltdown.Lang;
 using TMPro;
 using FacilityMeltdown.Util.Config;
