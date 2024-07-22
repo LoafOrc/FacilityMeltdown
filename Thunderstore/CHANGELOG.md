@@ -47,3 +47,7 @@
 
 ### v2.6.13
 - git moment
+
+### v2.6.14
+- added intergration with weather registry, toggleable in config
+- fixed geiger counter having no battery
