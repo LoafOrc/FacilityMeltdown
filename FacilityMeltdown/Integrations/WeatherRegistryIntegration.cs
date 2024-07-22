@@ -1,4 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
+using FacilityMeltdown.Config;
 using WeatherRegistry;
 
 namespace FacilityMeltdown.Integrations;
@@ -14,7 +15,7 @@ class WeatherRegistryIntegration {
 
 	[MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
 	internal static float GetWeatherMultiplier() {
-		if (Enabled) return 1;
+		if (Enabled || !MeltdownPlugin.config.WeatherRegistryIntegration) return 1;
 		return WeatherManager.GetCurrentWeather(RoundManager.Instance.currentLevel).ScrapValueMultiplier;
 	}
 }

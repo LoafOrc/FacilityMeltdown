@@ -59,6 +59,10 @@ namespace FacilityMeltdown.Config
         [ConfigRange(0, 100)]
         public float ShipScanAccuracy { get; private set; } = 15f;
 
+        [ConfigGroup("Integrations")]
+        [ConfigDesc("Should the apparatus value be multiplied by the current weather. Requires WeatherRegistry to work.")]
+        public bool WeatherRegistryIntegration { get; private set; } = true;
+        
         [ConfigGroup("UNSUPPORTED")]
         [ConfigDesc("ABSOLUETLY NOT SUPPORTED OR RECOMMENDED! Change the length of the meltdown sequence. If this breaks I am not fixing it, you have been warned.")]
         [ConfigRange(60, 5 * 60)]
