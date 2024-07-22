@@ -44,3 +44,6 @@
 ### v2.6.12
 - v55 compatibility
 - Minimised stutter when starting the meltdown sequence.
+
+### v2.6.13
+- git moment
