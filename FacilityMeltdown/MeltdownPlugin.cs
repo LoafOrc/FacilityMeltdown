@@ -28,6 +28,7 @@ namespace FacilityMeltdown;
 [CompatibleDependency("ainavt.lc.lethalconfig", typeof(LethalConfigIntergration))]
 [CompatibleDependency("com.willis.lc.lethalsettings", typeof(LethalSettingsIntegration))]
 [CompatibleDependency("BMX.LobbyCompatibility", typeof(LobbyCompatibilityIntegration))]
+[CompatibleDependency("mrov.WeatherRegistry", typeof(WeatherRegistryIntegration))]
 [BepInDependency("evaisa.lethallib")]
 public class MeltdownPlugin : BaseUnityPlugin
 {

@@ -16,7 +16,7 @@ using UnityEngine.SceneManagement;
 namespace FacilityMeltdown.Patches
 {
     [HarmonyPatch(typeof(LungProp))]
-    internal class ApparaticePatch
+    static class ApparaticePatch
     {
         [HarmonyPrefix, HarmonyPatch(nameof(LungProp.EquipItem))]
         internal static void BeginMeltdownSequence(LungProp __instance, ref bool ___isLungDocked)
