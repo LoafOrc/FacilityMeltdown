@@ -51,3 +51,6 @@
 ### v2.6.14
 - added intergration with weather registry, toggleable in config
 - fixed geiger counter having no battery
+
+### v2.6.15
+- oops

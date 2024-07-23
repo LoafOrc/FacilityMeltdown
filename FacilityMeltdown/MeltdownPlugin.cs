@@ -34,7 +34,7 @@ public class MeltdownPlugin : BaseUnityPlugin
 {
     internal const string modGUID = "me.loaforc.facilitymeltdown";
     internal const string modName = "FacilityMeltdown";
-    internal const string modVersion = "2.6.14";
+    internal const string modVersion = "2.6.15";
 
     internal static MeltdownPlugin instance;
     internal static ManualLogSource logger;
