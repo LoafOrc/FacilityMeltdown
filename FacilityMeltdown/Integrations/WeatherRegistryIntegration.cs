@@ -1,16 +1,16 @@
 ﻿using System.Runtime.CompilerServices;
+using BepInEx.Bootstrap;
 using FacilityMeltdown.Config;
 using WeatherRegistry;
 
 namespace FacilityMeltdown.Integrations;
 
 class WeatherRegistryIntegration {
-	public static bool Enabled { get; private set; } // If you want to check compatibility locally
+	public static bool Enabled => Chainloader.PluginInfos.ContainsKey("mrov.WeatherRegistry");
 	
 	// This method will be called automatically if the compatible mod is loaded.
 	[MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
 	static void Initialize() {
-		Enabled = true;
 	}
 
 	[MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
